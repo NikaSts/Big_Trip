@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Veronika Stasyuk](https://up.htmlacademy.ru/ecmascript/11/user/501771).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Балесный](https://htmlacademy.ru/profile/id221665).
 
 ---
 
