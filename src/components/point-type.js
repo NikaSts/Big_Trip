@@ -1,6 +1,6 @@
 import {capitalizeFirstLetter} from '../utils';
 
-const createEventTypeTemplate = (types) => {
+const createPointTypeTemplate = (types) => {
   return types
     .map((type, index) => {
       const capitalizedType = capitalizeFirstLetter(type);
@@ -13,4 +13,4 @@ const createEventTypeTemplate = (types) => {
     }).join(`\n`);
 };
 
-export {createEventTypeTemplate};
+export {createPointTypeTemplate};

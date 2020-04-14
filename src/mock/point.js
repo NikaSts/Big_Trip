@@ -23,7 +23,7 @@ const Type = {
   RESTAURANT: `restaurant`,
 };
 
-const EVENT_TYPES = [Type.TAXI, Type.BUS, Type.TRAIN, Type.FLIGHT, Type.SHIP, Type.TRANSPORT, Type.DRIVE, Type.SIGHTSEEING, Type.CHECK_IN, Type.RESTAURANT];
+const POINT_TYPES = [Type.TAXI, Type.BUS, Type.TRAIN, Type.FLIGHT, Type.SHIP, Type.TRANSPORT, Type.DRIVE, Type.SIGHTSEEING, Type.CHECK_IN, Type.RESTAURANT];
 
 const pointTypeToOffers = {
   [Type.TAXI]: [`Order Uber`],
@@ -38,7 +38,7 @@ const pointTypeToOffers = {
   [Type.RESTAURANT]: [`Lunch in city`],
 };
 
-const eventGroupToType = {
+const pointGroupToType = {
   'transfer': [Type.TAXI, Type.BUS, Type.TRAIN, Type.FLIGHT, Type.SHIP, Type.TRANSPORT, Type.DRIVE],
   'activity': [Type.SIGHTSEEING, Type.CHECK_IN, Type.RESTAURANT],
 };
@@ -92,8 +92,8 @@ const generateOffers = (type) => {
   });
 };
 
-const generateEvent = () => {
-  const type = getRandomItem(EVENT_TYPES);
+const generatePoint = () => {
+  const type = getRandomItem(POINT_TYPES);
   const startDate = getRandomDate(MIN_DAY_COUNT, MAX_DAY_COUNT) + getRandomNumber(MIN_DURATION, MAX_DURATION);
   const duration = getRandomNumber(MIN_DURATION, MAX_DURATION);
   const endDate = startDate + duration;
@@ -108,10 +108,10 @@ const generateEvent = () => {
   });
 };
 
-const generateEvents = (count) => {
+const generatePoints = (count) => {
   return new Array(count)
     .fill(``)
-    .map(generateEvent);
+    .map(generatePoint);
 };
 
-export {eventGroupToType, EVENT_TYPES, generateEvents};
+export {pointGroupToType, generatePoints};

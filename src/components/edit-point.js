@@ -1,19 +1,19 @@
-import {createEventTypeTemplate} from './event-type';
+import {createPointTypeTemplate} from './point-type';
 import {createAvailableOfferTemplate} from './offer';
 import {getFormattedDate, capitalizeFirstLetter} from '../utils';
-import {eventGroupToType} from '../mock/event';
+import {pointGroupToType} from '../mock/point';
 
 
-const transferTypes = createEventTypeTemplate(eventGroupToType[`transfer`]);
-const activityTypes = createEventTypeTemplate(eventGroupToType[`activity`]);
+const transferTypes = createPointTypeTemplate(pointGroupToType[`transfer`]);
+const activityTypes = createPointTypeTemplate(pointGroupToType[`activity`]);
 
-const createEditEventTemplate = (event) => {
-  const {type, startDate, endDate, basePrice, destination, offers} = event;
+const createEditPointTemplate = (point) => {
+  const {type, startDate, endDate, basePrice, destination, offers} = point;
   const capitalizedType = capitalizeFirstLetter(type);
   const start = getFormattedDate(startDate);
   const end = getFormattedDate(endDate);
   const availableOffers = offers ? createAvailableOfferTemplate(offers) : ``;
-  const transferGroup = eventGroupToType[`transfer`].includes(type);
+  const transferGroup = pointGroupToType[`transfer`].includes(type);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -100,4 +100,4 @@ const createEditEventTemplate = (event) => {
   );
 };
 
-export {createEditEventTemplate};
+export {createEditPointTemplate};

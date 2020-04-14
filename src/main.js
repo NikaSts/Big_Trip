@@ -3,42 +3,42 @@ import {createFiltersTemplate} from './components/filters';
 import {createTripInfoTemplate} from './components/trip-info';
 import {createTripDaysTemplate} from './components/trip-days';
 import {createSortTemplate} from './components/sort';
-import {createEditEventTemplate} from './components/edit-event';
-import {generateEvents} from './mock/event';
+import {createEditPointTemplate} from './components/edit-point';
+import {generatePoints} from './mock/point';
 
 
 const MONTH_NAMES = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`];
-const EVENT_COUNT = 20;
+const POINT_COUNT = 20;
 
-const events = generateEvents(EVENT_COUNT);
-const editEventPoint = events.shift();
+const points = generatePoints(POINT_COUNT);
+const editPoint = points.shift();
 
 const renderComponent = (container, template, position = `beforeend`) => {
   return container.insertAdjacentHTML(position, template);
 };
 
 //  DEFAULT SORTING BY DAY ///
-const getDayEvents = (acc, event) => {
-  const day = (new Date(event.startDate).getDate());
-  const month = (new Date(event.startDate).getMonth());
+const getDayPoints = (acc, point) => {
+  const day = (new Date(point.startDate).getDate());
+  const month = (new Date(point.startDate).getMonth());
   const date = `${MONTH_NAMES[month]} ${day}`;
   if (!acc[date]) {
     acc[date] = [];
   }
-  acc[date].push(event);
+  acc[date].push(point);
   return acc;
 };
 
-const groups = events.reduce(getDayEvents, {});
+const groups = points.reduce(getDayPoints, {});
 
 const tripDays = Object.keys(groups)
   .map((date) => {
     return {
       date,
-      events: groups[date],
+      points: groups[date],
     };
   })
-  .sort((a, b) => a.events[0].startDate - b.events[0].startDate);
+  .sort((a, b) => a.points[0].startDate - b.points[0].startDate);
 
 
 // HEADER TEMPLATE///
@@ -52,11 +52,11 @@ renderComponent(tripControls, createFiltersTemplate());
 
 // SORTING TEMPLATE ///
 const pageMain = document.querySelector(`.page-main`);
-const tripEvents = pageMain.querySelector(`.trip-events`);
-renderComponent(tripEvents, createSortTemplate());
+const tripPoints = pageMain.querySelector(`.trip-events`);
+renderComponent(tripPoints, createSortTemplate());
 
-// EDIT-EVENT TEMPLATE ///
-renderComponent(tripEvents, createEditEventTemplate(editEventPoint));
+// EDIT-POINT TEMPLATE ///
+renderComponent(tripPoints, createEditPointTemplate(editPoint));
 
-// EVENTS LIST TEMPLATE ///
-renderComponent(tripEvents, createTripDaysTemplate(tripDays));
+// POINTS LIST TEMPLATE ///
+renderComponent(tripPoints, createTripDaysTemplate(tripDays));

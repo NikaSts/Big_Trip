@@ -1,4 +1,4 @@
-import {createEventTemplate} from './event';
+import {createPointTemplate} from './point';
 
 const createTripDaysTemplate = (tripDays) => {
   const days = tripDays.slice();
@@ -6,10 +6,10 @@ const createTripDaysTemplate = (tripDays) => {
   return (
     `<ul class="trip-days">
   ${days.map((day, index) => {
-      const {date, events} = day;
-      const eventsToShow = events
+      const {date, points} = day;
+      const pointsToShow = points
           .sort((a, b) => a.startDate - b.startDate)
-          .map((event) => createEventTemplate(event));
+          .map((point) => createPointTemplate(point));
 
       return (
         `<li class="trip-days__item  day">
@@ -19,7 +19,7 @@ const createTripDaysTemplate = (tripDays) => {
           </div>
 
           <ul class="trip-events__list">
-          ${eventsToShow}
+          ${pointsToShow}
           </ul>
         </li>`);
     })

@@ -1,9 +1,9 @@
 import {getFormattedDate, getDuration, capitalizeFirstLetter} from '../utils';
-import {eventGroupToType} from '../mock/event';
+import {pointGroupToType} from '../mock/point';
 
 
-const createEventTemplate = (event) => {
-  const {type, startDate, endDate, destination, basePrice, offers} = event;
+const createPointTemplate = (point) => {
+  const {type, startDate, endDate, destination, basePrice, offers} = point;
   const capitalizedType = capitalizeFirstLetter(type);
   const start = getFormattedDate(startDate);
   const end = getFormattedDate(endDate);
@@ -11,7 +11,7 @@ const createEventTemplate = (event) => {
 
   const availableOffers = offers ? offers.slice() : null;
   const offersToShow = availableOffers ? availableOffers.slice(0, 3) : null;
-  const transferGroup = eventGroupToType[`transfer`].includes(type);
+  const transferGroup = pointGroupToType[`transfer`].includes(type);
 
   return (
     `<li class="trip-events__item">
@@ -52,4 +52,4 @@ const createEventTemplate = (event) => {
   );
 };
 
-export {createEventTemplate};
+export {createPointTemplate};
