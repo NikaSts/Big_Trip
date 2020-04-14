@@ -1,9 +1,15 @@
+const LUCKY_NUMBER = 0.5;
+
 const getRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
 const getRandomItem = (items) => {
   return items[getRandomNumber(0, items.length)];
+};
+
+const getRandomBoolean = () => {
+  return Math.random() > LUCKY_NUMBER;
 };
 
 const getPadded = (dateTime) => {
@@ -34,4 +40,9 @@ const getDuration = (diff) => {
   return `${getPadded(Math.round(minutes))}M`;
 };
 
-export {getRandomNumber, getRandomItem, getFormattedDate, getDuration};
+const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+
+export {getRandomNumber, getRandomItem, getRandomBoolean, getFormattedDate, getDuration, capitalizeFirstLetter};

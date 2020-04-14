@@ -60,4 +60,3 @@ renderComponent(tripEvents, createEditEventTemplate(editEventPoint));
 
 // EVENTS LIST TEMPLATE ///
 renderComponent(tripEvents, createTripDaysTemplate(tripDays));
-

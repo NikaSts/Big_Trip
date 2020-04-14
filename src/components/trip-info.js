@@ -2,8 +2,7 @@ const createTripInfoTemplate = (tripDays) => {
   const firstTripDay = tripDays[0].date;
   const lastTripDay = tripDays[tripDays.length - 1].date;
   const firstVisitedCity = tripDays[0].events[0].destination.name;
-  // const lastVisitedCity = tripDays[tripDays.length - 1].events[events.length - 1].destination.name; // ПОЧЕМУ НЕ РАБОТАЕТ???
-  const lastVisitedCity = tripDays[tripDays.length - 1].events[0].destination.name;
+  const lastVisitedCity = tripDays.slice().pop().events.pop().destination.name;
 
   return (
     `<section class="trip-main__trip-info  trip-info">

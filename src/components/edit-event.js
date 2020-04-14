@@ -1,18 +1,19 @@
 import {createEventTypeTemplate} from './event-type';
 import {createAvailableOfferTemplate} from './offer';
-import {getFormattedDate} from '../utils';
+import {getFormattedDate, capitalizeFirstLetter} from '../utils';
+import {eventGroupToType} from '../mock/event';
 
 
-const transferTypes = createEventTypeTemplate(`transfer`);
-const activityTypes = createEventTypeTemplate(`activity`);
+const transferTypes = createEventTypeTemplate(eventGroupToType[`transfer`]);
+const activityTypes = createEventTypeTemplate(eventGroupToType[`activity`]);
 
 const createEditEventTemplate = (event) => {
   const {type, startDate, endDate, basePrice, destination, offers} = event;
-
+  const capitalizedType = capitalizeFirstLetter(type);
   const start = getFormattedDate(startDate);
   const end = getFormattedDate(endDate);
-  const availableOffers = offers.slice().filter((offer) => offer.events.includes(type.name));
-  const availableOffersList = createAvailableOfferTemplate(availableOffers);
+  const availableOffers = offers ? createAvailableOfferTemplate(offers) : ``;
+  const transferGroup = eventGroupToType[`transfer`].includes(type);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -20,7 +21,7 @@ const createEditEventTemplate = (event) => {
 				<div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${type.name}.png" alt="Event type icon">
+            <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
@@ -39,7 +40,7 @@ const createEditEventTemplate = (event) => {
           </div>
 				<div class="event__field-group  event__field-group--destination">
 					<label class="event__label  event__type-output" for="event-destination-1">
-						${type.name} ${type.id === `transfer` ? `to` : `in`}
+						${capitalizedType} ${transferGroup ? `to` : `in`}
 					</label>
 					<input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
 					<datalist id="destination-list-1">
@@ -76,7 +77,7 @@ const createEditEventTemplate = (event) => {
 					<h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
 					<div class="event__available-offers">
-          ${availableOffersList}
+          ${availableOffers}
 
           </div>
 				</section>

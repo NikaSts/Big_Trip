@@ -1,21 +1,25 @@
-import {getFormattedDate, getDuration} from '../utils';
+import {getFormattedDate, getDuration, capitalizeFirstLetter} from '../utils';
+import {eventGroupToType} from '../mock/event';
 
 
 const createEventTemplate = (event) => {
   const {type, startDate, endDate, destination, basePrice, offers} = event;
-
+  const capitalizedType = capitalizeFirstLetter(type);
   const start = getFormattedDate(startDate);
   const end = getFormattedDate(endDate);
   const duration = getDuration(endDate - startDate);
-  const availableOffers = offers.slice().filter((offer) => offer.events.includes(type.name));
+
+  const availableOffers = offers ? offers.slice() : null;
+  const offersToShow = availableOffers ? availableOffers.slice(0, 3) : null;
+  const transferGroup = eventGroupToType[`transfer`].includes(type);
 
   return (
     `<li class="trip-events__item">
 			<div class="event">
 				<div class="event__type">
-					<img class="event__type-icon" width="42" height="42" src="img/icons/${type.name}.png" alt="Event type icon">
+					<img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
 				</div>
-				<h3 class="event__title">${type.name} ${type.id === `transfer` ? `to` : `in`} ${destination.name}</h3>
+				<h3 class="event__title">${capitalizedType} ${transferGroup ? `to` : `in`} ${destination.name}</h3>
 
 				<div class="event__schedule">
 					<p class="event__time">
@@ -32,7 +36,7 @@ const createEventTemplate = (event) => {
 
 				<h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-        ${availableOffers ? availableOffers.map((offer) =>
+        ${offersToShow ? offersToShow.map((offer) =>
       `<li class="event__offer">
 						<span class="event__offer-title">${offer.title}</span>
 						&plus;
