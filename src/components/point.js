@@ -1,5 +1,5 @@
 import {getFormattedDate, getDuration, capitalizeFirstLetter} from '../utils';
-import {pointGroupToType} from '../mock/point';
+import {pointGroupToType, TypeGroup} from '../mock/point';
 
 
 const createPointTemplate = (point) => {
@@ -8,10 +8,11 @@ const createPointTemplate = (point) => {
   const start = getFormattedDate(startDate);
   const end = getFormattedDate(endDate);
   const duration = getDuration(endDate - startDate);
+  const availableOffers = offers
+    .filter((offer) => offer.isChecked)
+    .slice(0, 3);
 
-  const availableOffers = offers ? offers.slice() : null;
-  const offersToShow = availableOffers ? availableOffers.slice(0, 3) : null;
-  const transferGroup = pointGroupToType[`transfer`].includes(type);
+  const transferGroup = pointGroupToType[TypeGroup.TRANSFER].includes(type);
 
   return (
     `<li class="trip-events__item">
@@ -23,9 +24,9 @@ const createPointTemplate = (point) => {
 
 				<div class="event__schedule">
 					<p class="event__time">
-						<time class="event__start-time" datetime="${new Date(startDate)}">${start.hours}:${start.minutes}</time>
+						<time class="event__start-time" datetime="${start.fullYear}-${start.month}-${start.day}T${start.hours}:${start.minutes}">${start.hours}:${start.minutes}</time>
 						&mdash;
-						<time class="event__end-time" datetime="${new Date(endDate)}">${end.hours}:${end.minutes}</time>
+						<time class="event__end-time" datetime="${end.fullYear}-${end.month}-${end.day}T${end.hours}:${end.minutes}">${end.hours}:${end.minutes}</time>
 					</p>
 					<p class="event__duration">${duration}</p>
 				</div>
@@ -36,12 +37,12 @@ const createPointTemplate = (point) => {
 
 				<h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-        ${offersToShow ? offersToShow.map((offer) =>
+        ${availableOffers ? availableOffers.map((offer) =>
       `<li class="event__offer">
 						<span class="event__offer-title">${offer.title}</span>
 						&plus;
 						&euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
-						</li>`).join(`\n`) : ``}
+					</li>`).join(` `) : ``}
 				</ul>
 
 				<button class="event__rollup-btn" type="button">

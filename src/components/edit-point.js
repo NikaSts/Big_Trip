@@ -1,19 +1,21 @@
 import {createPointTypeTemplate} from './point-type';
 import {createAvailableOfferTemplate} from './offer';
 import {getFormattedDate, capitalizeFirstLetter} from '../utils';
-import {pointGroupToType} from '../mock/point';
+import {TypeGroup, pointGroupToType, CITY_NAMES} from '../mock/point';
 
 
-const transferTypes = createPointTypeTemplate(pointGroupToType[`transfer`]);
-const activityTypes = createPointTypeTemplate(pointGroupToType[`activity`]);
+const transferTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.TRANSFER]);
+const activityTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.ACTIVITY]);
 
 const createEditPointTemplate = (point) => {
   const {type, startDate, endDate, basePrice, destination, offers} = point;
   const capitalizedType = capitalizeFirstLetter(type);
   const start = getFormattedDate(startDate);
   const end = getFormattedDate(endDate);
-  const availableOffers = offers ? createAvailableOfferTemplate(offers) : ``;
-  const transferGroup = pointGroupToType[`transfer`].includes(type);
+  const hasOffers = offers.length > 0;
+  const availableOffers = hasOffers ? createAvailableOfferTemplate(offers) : ``;
+
+  const transferGroup = pointGroupToType[TypeGroup.TRANSFER].includes(type);
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -43,11 +45,10 @@ const createEditPointTemplate = (point) => {
 						${capitalizedType} ${transferGroup ? `to` : `in`}
 					</label>
 					<input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
-					<datalist id="destination-list-1">
-						<option value="Amsterdam"></option>
-						<option value="Geneva"></option>
-						<option value="Chamonix"></option>
-						<option value="Saint Petersburg"></option>
+          <datalist id="destination-list-1">
+          ${CITY_NAMES.map((city) =>
+      `<option value=${city}></option>`
+    ).join(` `)}
 					</datalist>
 				</div>
 
@@ -62,9 +63,9 @@ const createEditPointTemplate = (point) => {
 				<div class="event__field-group  event__field-group--price">
 					<label class="event__label" for="event-price-1">
 						<span class="visually-hidden">Price</span>
-						&euro; ${basePrice}
+						&euro;
 					</label>
-					<input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+					<input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
 				</div>
 
 				<button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -73,10 +74,10 @@ const createEditPointTemplate = (point) => {
 
       <section class="event__details">
 
-				<section class="event__section  event__section--offers">
+				<section class="event__section  event__section--offers${!hasOffers ? ` visually-hidden` : ``}">
 					<h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
-					<div class="event__available-offers">
+					<div class="event__available-offers${!hasOffers ? ` visually-hidden` : ``}">
           ${availableOffers}
 
           </div>

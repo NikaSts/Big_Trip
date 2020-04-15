@@ -25,22 +25,70 @@ const Type = {
 
 const POINT_TYPES = [Type.TAXI, Type.BUS, Type.TRAIN, Type.FLIGHT, Type.SHIP, Type.TRANSPORT, Type.DRIVE, Type.SIGHTSEEING, Type.CHECK_IN, Type.RESTAURANT];
 
+const Offer = {
+  LUGGAGE: {
+    id: `luggage`,
+    title: `Add luggage`
+  },
+  COMFORT: {
+    id: `comfort`,
+    title: `Switch to comfort class`
+  },
+  MEAL: {
+    id: `meal`,
+    title: `Add meal`,
+  },
+  SEATS: {
+    id: `seats`,
+    title: `Choose seats`,
+  },
+  TRAIN: {
+    id: `train`,
+    title: `Travel by train`,
+  },
+  UBER: {
+    id: `uber`,
+    title: `Order Uber`,
+  },
+  LUNCH: {
+    id: `lunch`,
+    title: `Lunch in city`,
+  },
+  CAR: {
+    id: `car`,
+    title: `Rent a car`,
+  },
+  TICKETS: {
+    id: `tickets`,
+    title: `Book tickets`,
+  },
+  BREAKFAST: {
+    id: `breakfast`,
+    title: `Add breakfast`,
+  }
+};
+
 const pointTypeToOffers = {
-  [Type.TAXI]: [`Order Uber`],
-  [Type.BUS]: [`Choose seats`, `Book tickets`],
-  [Type.TRAIN]: [`Choose seats`, `Book tickets`, `Switch to comfort class`],
-  [Type.FLIGHT]: [`Choose seats`, `Book tickets`, `Switch to comfort class`, `Add luggage`, `Add meal`],
-  [Type.SHIP]: [`Book tickets`, `Switch to comfort class`],
-  [Type.TRANSPORT]: [`Choose seats`, `Book tickets`, `Switch to comfort class`, `Add luggage`, `Add meal`, `Travel by train`],
-  [Type.DRIVE]: [`Rent a car`],
-  [Type.SIGHTSEEING]: [`Book tickets`, `Lunch in city`],
-  [Type.CHECK_IN]: [`Add breakfast`],
-  [Type.RESTAURANT]: [`Lunch in city`],
+  [Type.TAXI]: [Offer.UBER],
+  [Type.BUS]: [Offer.SEATS, Offer.TICKETS],
+  [Type.TRAIN]: [Offer.SEATS, Offer.TICKETS, Offer.COMFORT],
+  [Type.FLIGHT]: [Offer.SEATS, Offer.TICKETS, Offer.COMFORT, Offer.LUGGAGE, Offer.MEAL],
+  [Type.SHIP]: [Offer.TICKETS, Offer.COMFORT],
+  [Type.TRANSPORT]: [Offer.SEATS, Offer.TICKETS, Offer.COMFORT, Offer.LUGGAGE, Offer.MEAL, Offer.TRAIN],
+  [Type.DRIVE]: [Offer.CAR],
+  [Type.SIGHTSEEING]: [Offer.TICKETS, Offer.LUNCH],
+  [Type.CHECK_IN]: [Offer.BREAKFAST],
+  [Type.RESTAURANT]: [Offer.LUNCH],
+};
+
+const TypeGroup = {
+  TRANSFER: `transfer`,
+  ACTIVITY: `activity`,
 };
 
 const pointGroupToType = {
-  'transfer': [Type.TAXI, Type.BUS, Type.TRAIN, Type.FLIGHT, Type.SHIP, Type.TRANSPORT, Type.DRIVE],
-  'activity': [Type.SIGHTSEEING, Type.CHECK_IN, Type.RESTAURANT],
+  [TypeGroup.TRANSFER]: [Type.TAXI, Type.BUS, Type.TRAIN, Type.FLIGHT, Type.SHIP, Type.TRANSPORT, Type.DRIVE],
+  [TypeGroup.ACTIVITY]: [Type.SIGHTSEEING, Type.CHECK_IN, Type.RESTAURANT],
 };
 
 const getRandomDate = (from, to) => {
@@ -82,10 +130,10 @@ const getRandomPrice = () => {
 
 const generateOffers = (type) => {
   const availableOffers = pointTypeToOffers[type];
-
   return availableOffers.map((offer) => {
     return {
-      title: offer,
+      id: offer.id,
+      title: offer.title,
       price: getRandomPrice(),
       isChecked: getRandomBoolean(),
     };
@@ -103,7 +151,7 @@ const generatePoint = () => {
     startDate,
     endDate,
     basePrice: getRandomNumber(MIN_PRICE, MAX_PRICE) + `0`,
-    offers: getRandomBoolean() ? generateOffers(type) : null,
+    offers: getRandomBoolean() ? generateOffers(type) : [],
     destination: destinations[getRandomNumber(0, CITY_NAMES.length)],
   });
 };
@@ -114,4 +162,4 @@ const generatePoints = (count) => {
     .map(generatePoint);
 };
 
-export {pointGroupToType, generatePoints};
+export {TypeGroup, pointGroupToType, generatePoints, CITY_NAMES};

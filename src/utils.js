@@ -1,4 +1,5 @@
 const LUCKY_NUMBER = 0.5;
+const MONTH_NAMES = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`];
 
 const getRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min)) + min;
@@ -16,12 +17,16 @@ const getPadded = (dateTime) => {
   return dateTime.toString().padStart(2, `0`);
 };
 
+const getMonthName = (date) => MONTH_NAMES[date.getMonth()];
+
 const getFormattedDate = (date) => {
-  const newDate = new Date(date);
+  const newDate = new Date(Number(date));
   return ({
     day: getPadded(newDate.getDate()),
     month: getPadded(newDate.getMonth() + 1),
+    monthName: getMonthName(newDate),
     year: newDate.getFullYear().toString().slice(2),
+    fullYear: newDate.getFullYear(),
     hours: getPadded(newDate.getHours()),
     minutes: getPadded(newDate.getMinutes()),
   });
@@ -43,6 +48,5 @@ const getDuration = (diff) => {
 const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
-
 
 export {getRandomNumber, getRandomItem, getRandomBoolean, getFormattedDate, getDuration, capitalizeFirstLetter};

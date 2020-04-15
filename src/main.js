@@ -7,7 +7,6 @@ import {createEditPointTemplate} from './components/edit-point';
 import {generatePoints} from './mock/point';
 
 
-const MONTH_NAMES = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`];
 const POINT_COUNT = 20;
 
 const points = generatePoints(POINT_COUNT);
@@ -19,9 +18,8 @@ const renderComponent = (container, template, position = `beforeend`) => {
 
 //  DEFAULT SORTING BY DAY ///
 const getDayPoints = (acc, point) => {
-  const day = (new Date(point.startDate).getDate());
-  const month = (new Date(point.startDate).getMonth());
-  const date = `${MONTH_NAMES[month]} ${day}`;
+  const date = new Date(point.startDate).setHours(0, 0, 0, 0);
+
   if (!acc[date]) {
     acc[date] = [];
   }

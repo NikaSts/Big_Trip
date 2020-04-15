@@ -10,7 +10,7 @@ const createPointTypeTemplate = (types) => {
           <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${index}">${capitalizedType}</label>
         </div>`
       );
-    }).join(`\n`);
+    }).join(` `);
 };
 
 export {createPointTypeTemplate};
