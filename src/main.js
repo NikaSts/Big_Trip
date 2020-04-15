@@ -1,48 +1,60 @@
 import {createMenuTemplate} from './components/menu';
 import {createFiltersTemplate} from './components/filters';
 import {createTripInfoTemplate} from './components/trip-info';
-import {createTripCostTemplate} from './components/trip-cost';
-import {createDayListTemplate} from './components/trip-days';
-import {createDayTemplate} from './components/day';
+import {createTripDaysTemplate} from './components/trip-days';
 import {createSortTemplate} from './components/sort';
-import {createEditEventTemplate} from './components/edit-event';
-import {createEventTypeTemplate} from './components/event-type';
-import {createAvailableOfferTemplate} from './components/available-offer';
-import {createEventTemplate} from './components/event';
+import {createEditPointTemplate} from './components/edit-point';
+import {generatePoints} from './mock/point';
 
-const EVENT_COUNT = 3;
+
+const POINT_COUNT = 20;
+
+const points = generatePoints(POINT_COUNT);
+const editPoint = points.shift();
 
 const renderComponent = (container, template, position = `beforeend`) => {
   return container.insertAdjacentHTML(position, template);
 };
 
+//  DEFAULT SORTING BY DAY ///
+const getDayPoints = (acc, point) => {
+  const date = new Date(point.startDate).setHours(0, 0, 0, 0);
+
+  if (!acc[date]) {
+    acc[date] = [];
+  }
+  acc[date].push(point);
+  return acc;
+};
+
+const groups = points.reduce(getDayPoints, {});
+
+const tripDays = Object.keys(groups)
+  .map((date) => {
+    return {
+      date,
+      points: groups[date],
+    };
+  })
+  .sort((a, b) => a.points[0].startDate - b.points[0].startDate);
+
+
+// HEADER TEMPLATE///
 const tripDetails = document.querySelector(`.trip-main`);
-renderComponent(tripDetails, createTripInfoTemplate(), `afterbegin`);
-
-const tripInfo = document.querySelector(`.trip-info`);
-renderComponent(tripInfo, createTripCostTemplate());
-
+renderComponent(tripDetails, createTripInfoTemplate(tripDays), `afterbegin`);
 const tripControls = document.querySelector(`.trip-controls`);
 const tripViewTitle = tripControls.querySelector(`h2`);
 renderComponent(tripViewTitle, createMenuTemplate(), `afterend`);
 renderComponent(tripControls, createFiltersTemplate());
 
+
+// SORTING TEMPLATE ///
 const pageMain = document.querySelector(`.page-main`);
-const tripEvents = pageMain.querySelector(`.trip-events`);
-renderComponent(tripEvents, createSortTemplate());
-renderComponent(tripEvents, createEditEventTemplate());
+const tripPoints = pageMain.querySelector(`.trip-events`);
+renderComponent(tripPoints, createSortTemplate());
 
-const eventTypeGroup = document.querySelector(`.event__type-group`);
-renderComponent(eventTypeGroup, createEventTypeTemplate());
-const availableOffers = document.querySelector(`.event__available-offers`);
-renderComponent(availableOffers, createAvailableOfferTemplate());
+// EDIT-POINT TEMPLATE ///
+renderComponent(tripPoints, createEditPointTemplate(editPoint));
 
-renderComponent(tripEvents, createDayListTemplate());
-
-const tripDays = tripEvents.querySelector(`.trip-days`);
-renderComponent(tripDays, createDayTemplate());
-
-const eventList = tripDays.querySelector(`.trip-events__list`);
-for (let i = 0; i < EVENT_COUNT; i += 1) {
-  renderComponent(eventList, createEventTemplate());
-}
+// POINTS LIST TEMPLATE ///
+renderComponent(tripPoints, createTripDaysTemplate(tripDays));
