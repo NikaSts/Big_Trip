@@ -77,7 +77,7 @@ const createEditPointTemplate = (point) => {
 				<section class="event__section  event__section--offers${!hasOffers ? ` visually-hidden` : ``}">
 					<h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
-					<div class="event__available-offers${!hasOffers ? ` visually-hidden` : ``}">
+					<div class="event__available-offers">
           ${availableOffers}
 
           </div>
