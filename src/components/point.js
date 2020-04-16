@@ -1,4 +1,4 @@
-import {getFormattedDate, getDuration, capitalizeFirstLetter} from '../utils';
+import {getFormattedDate, getDuration, capitalizeFirstLetter, createElement} from '../utils';
 import {pointGroupToType, TypeGroup} from '../mock/point';
 
 
@@ -54,4 +54,22 @@ const createPointTemplate = (point) => {
   );
 };
 
-export {createPointTemplate};
+export default class PointComponent {
+  constructor(point) {
+    this._point = point;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPointTemplate(this._point);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -1,4 +1,4 @@
-import {getFormattedDate} from '../utils';
+import {getFormattedDate, createElement} from '../utils';
 
 const createTripInfoTemplate = (tripDays) => {
   const totalPrice = tripDays.reduce((acc, item) => {
@@ -30,4 +30,22 @@ const createTripInfoTemplate = (tripDays) => {
   );
 };
 
-export {createTripInfoTemplate};
+export default class TripInfoComponent {
+  constructor(days) {
+    this._days = days;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripInfoTemplate(this._days);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}

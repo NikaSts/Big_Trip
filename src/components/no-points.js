@@ -1,20 +1,18 @@
-import {createElement} from '../utils';
+import {createElement} from "../utils";
 
-
-const createTripDaysTemplate = () => {
+const createNoPointsTemplate = () => {
   return (
-    `<ul class="trip-days">
-    </ul>`
+    `<p class="trip-events__msg">Click New Event to create your first point</p>`
   );
 };
 
-export default class TripDaysComponent {
+export default class NoPoints {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createTripDaysTemplate();
+    return createNoPointsTemplate();
   }
   getElement() {
     if (!this._element) {

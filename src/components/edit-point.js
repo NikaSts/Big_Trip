@@ -1,6 +1,6 @@
-import {createPointTypeTemplate} from './point-type';
-import {createAvailableOfferTemplate} from './offer';
-import {getFormattedDate, capitalizeFirstLetter} from '../utils';
+import {createPointTypeTemplate} from './helpers/point-type';
+import {createAvailableOfferTemplate} from './helpers/offer';
+import {getFormattedDate, capitalizeFirstLetter, createElement} from '../utils';
 import {TypeGroup, pointGroupToType, CITY_NAMES} from '../mock/point';
 
 
@@ -101,4 +101,22 @@ const createEditPointTemplate = (point) => {
   );
 };
 
-export {createEditPointTemplate};
+export default class EditPointComponent {
+  constructor(point) {
+    this._point = point;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEditPointTemplate(this._point);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}
