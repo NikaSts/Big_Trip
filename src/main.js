@@ -38,25 +38,20 @@ const tripDays = Object.keys(groups)
   });
 
 // HEADER ///
-const tripDetails = document.querySelector(`.trip-main`);
-renderComponent(tripDetails, new TripInfoComponent(tripDays).getElement(), Position.AFTERBEGIN);
-const tripControls = document.querySelector(`.trip-controls`);
-const tripViewTitle = tripControls.querySelector(`h2`);
-renderComponent(tripViewTitle, new MenuComponent().getElement(), Position.AFTEREND);
-renderComponent(tripControls, new FiltersComponent().getElement());
+const pageMain = document.querySelector(`.page-main`);
+const tripContainer = pageMain.querySelector(`.trip-events`);
 
+const tripDetails = document.querySelector(`.trip-main`);
+const tripControls = tripDetails.querySelector(`.trip-controls`);
+const tripViewTitle = tripControls.querySelector(`h2`);
 
 const renderPoint = (container, point) => {
-  const sortBoard = tripContainer.querySelector(`.trip-sort`);
   const openEditForm = () => {
-    pointComponent.removeElement();
-    renderComponent(sortBoard, editPointComponent.getElement(), Position.AFTEREND);
+    container.replaceChild(editPointComponent.getElement(), pointComponent.getElement());
   };
 
   const closeEditForm = () => {
-    editPointComponent.getElement().remove();
-    editPointComponent.removeElement();
-    pointComponent.getElement();
+    container.replaceChild(pointComponent.getElement(), editPointComponent.getElement());
   };
 
   const onEscKeyDown = (evt) => {
@@ -105,14 +100,8 @@ const renderTripContainer = (container, days) => {
   renderComponent(container, tripDaysList.getElement());
 };
 
-const pageMain = document.querySelector(`.page-main`);
-const tripContainer = pageMain.querySelector(`.trip-events`);
+renderComponent(tripDetails, new TripInfoComponent(tripDays).getElement(), Position.AFTERBEGIN);
+renderComponent(tripViewTitle, new MenuComponent().getElement(), Position.AFTEREND);
+renderComponent(tripControls, new FiltersComponent().getElement());
 
 renderTripContainer(tripContainer, tripDays);
-
-// POINTS LIST TEMPLATE ///
-
-// renderComponent(tripDaysList, )
-//        const pointsToShow = points
-//          .sort((a, b) => a.startDate - b.startDate)
-//          .map((point) => renderComponent(point));
