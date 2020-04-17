@@ -47,11 +47,11 @@ const tripViewTitle = tripControls.querySelector(`h2`);
 
 const renderPoint = (container, point) => {
   const openEditForm = () => {
-    container.replaceChild(editPointComponent.getElement(), pointComponent.getElement());
+    pointComponent.getElement().replaceWith(editPointComponent.getElement());
   };
 
   const closeEditForm = () => {
-    container.replaceChild(pointComponent.getElement(), editPointComponent.getElement());
+    editPointComponent.getElement().replaceWith(pointComponent.getElement());
   };
 
   const onEscKeyDown = (evt) => {
