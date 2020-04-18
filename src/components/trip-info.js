@@ -1,6 +1,13 @@
-import {getFormattedDate} from '../utils';
+import {getFormattedDate, createElement} from '../utils';
 
 const createTripInfoTemplate = (tripDays) => {
+  const totalPrice = tripDays.reduce((acc, item) => {
+    for (const point of item.points) {
+      acc += Number(point.basePrice);
+    }
+    // acc += item.points.forEach((point) => Number(point.basePrice)); // с foreEach не работает
+    return acc;
+  }, 0);
   const firstTripDate = getFormattedDate(tripDays[0].date);
   const [lastTripDay] = tripDays.slice(-1);
   const lastTripDate = getFormattedDate(lastTripDay.date);
@@ -17,10 +24,28 @@ const createTripInfoTemplate = (tripDays) => {
         <p class="trip-info__dates">${firstTripDate.monthName} ${firstTripDate.day}&nbsp;&mdash;&nbsp;${lastTripDate.monthName} ${lastTripDate.day}</p>
       </div>
       <p class="trip-info__cost">
-        Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
+        Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>
       </p>
     </section>`
   );
 };
 
-export {createTripInfoTemplate};
+export default class TripInfoComponent {
+  constructor(days) {
+    this._days = days;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripInfoTemplate(this._days);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}

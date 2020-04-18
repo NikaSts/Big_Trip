@@ -25,60 +25,60 @@ const Type = {
 
 const POINT_TYPES = [Type.TAXI, Type.BUS, Type.TRAIN, Type.FLIGHT, Type.SHIP, Type.TRANSPORT, Type.DRIVE, Type.SIGHTSEEING, Type.CHECK_IN, Type.RESTAURANT];
 
-const Offer = {
-  LUGGAGE: {
+const offer = {
+  luggage: {
     id: `luggage`,
     title: `Add luggage`
   },
-  COMFORT: {
+  comfort: {
     id: `comfort`,
     title: `Switch to comfort class`
   },
-  MEAL: {
+  meal: {
     id: `meal`,
     title: `Add meal`,
   },
-  SEATS: {
+  seats: {
     id: `seats`,
     title: `Choose seats`,
   },
-  TRAIN: {
+  train: {
     id: `train`,
     title: `Travel by train`,
   },
-  UBER: {
+  uber: {
     id: `uber`,
     title: `Order Uber`,
   },
-  LUNCH: {
+  lunch: {
     id: `lunch`,
     title: `Lunch in city`,
   },
-  CAR: {
+  car: {
     id: `car`,
     title: `Rent a car`,
   },
-  TICKETS: {
+  tickets: {
     id: `tickets`,
     title: `Book tickets`,
   },
-  BREAKFAST: {
+  breakfast: {
     id: `breakfast`,
     title: `Add breakfast`,
   }
 };
 
 const pointTypeToOffers = {
-  [Type.TAXI]: [Offer.UBER],
-  [Type.BUS]: [Offer.SEATS, Offer.TICKETS],
-  [Type.TRAIN]: [Offer.SEATS, Offer.TICKETS, Offer.COMFORT],
-  [Type.FLIGHT]: [Offer.SEATS, Offer.TICKETS, Offer.COMFORT, Offer.LUGGAGE, Offer.MEAL],
-  [Type.SHIP]: [Offer.TICKETS, Offer.COMFORT],
-  [Type.TRANSPORT]: [Offer.SEATS, Offer.TICKETS, Offer.COMFORT, Offer.LUGGAGE, Offer.MEAL, Offer.TRAIN],
-  [Type.DRIVE]: [Offer.CAR],
-  [Type.SIGHTSEEING]: [Offer.TICKETS, Offer.LUNCH],
-  [Type.CHECK_IN]: [Offer.BREAKFAST],
-  [Type.RESTAURANT]: [Offer.LUNCH],
+  [Type.TAXI]: [offer.uber],
+  [Type.BUS]: [offer.seats, offer.tickets],
+  [Type.TRAIN]: [offer.seats, offer.tickets, offer.comfort],
+  [Type.FLIGHT]: [offer.seats, offer.tickets, offer.comfort, offer.luggage, offer.meal],
+  [Type.SHIP]: [offer.tickets, offer.comfort],
+  [Type.TRANSPORT]: [offer.seats, offer.tickets, offer.comfort, offer.luggage, offer.meal, offer.train],
+  [Type.DRIVE]: [offer.car],
+  [Type.SIGHTSEEING]: [offer.tickets, offer.lunch],
+  [Type.CHECK_IN]: [offer.breakfast],
+  [Type.RESTAURANT]: [offer.lunch],
 };
 
 const TypeGroup = {
@@ -130,10 +130,10 @@ const getRandomPrice = () => {
 
 const generateOffers = (type) => {
   const availableOffers = pointTypeToOffers[type];
-  return availableOffers.map((offer) => {
+  return availableOffers.map((availableOffer) => {
     return {
-      id: offer.id,
-      title: offer.title,
+      id: availableOffer.id,
+      title: availableOffer.title,
       price: getRandomPrice(),
       isChecked: getRandomBoolean(),
     };

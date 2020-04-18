@@ -1,4 +1,4 @@
-import {getFormattedDate, getDuration, capitalizeFirstLetter} from '../utils';
+import {getFormattedDate, getDuration, capitalizeFirstLetter, createElement} from '../utils';
 import {pointGroupToType, TypeGroup} from '../mock/point';
 
 
@@ -8,9 +8,10 @@ const createPointTemplate = (point) => {
   const start = getFormattedDate(startDate);
   const end = getFormattedDate(endDate);
   const duration = getDuration(endDate - startDate);
-  const availableOffers = offers
+  const hasOffers = offers.length > 0;
+  const availableOffers = hasOffers ? offers
     .filter((offer) => offer.isChecked)
-    .slice(0, 3);
+    .slice(0, 3) : ``;
 
   const transferGroup = pointGroupToType[TypeGroup.TRANSFER].includes(type);
 
@@ -36,8 +37,8 @@ const createPointTemplate = (point) => {
 				</p>
 
 				<h4 class="visually-hidden">Offers:</h4>
-        <ul class="event__selected-offers">
-        ${availableOffers ? availableOffers.map((offer) =>
+        <ul class="event__selected-offers${!hasOffers ? ` visually-hidden` : ``}">
+        ${hasOffers ? availableOffers.map((offer) =>
       `<li class="event__offer">
 						<span class="event__offer-title">${offer.title}</span>
 						&plus;
@@ -53,4 +54,22 @@ const createPointTemplate = (point) => {
   );
 };
 
-export {createPointTemplate};
+export default class PointComponent {
+  constructor(point) {
+    this._point = point;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPointTemplate(this._point);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}

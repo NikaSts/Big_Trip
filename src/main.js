@@ -1,20 +1,20 @@
-import {createMenuTemplate} from './components/menu';
-import {createFiltersTemplate} from './components/filters';
-import {createTripInfoTemplate} from './components/trip-info';
-import {createTripDaysTemplate} from './components/trip-days';
-import {createSortTemplate} from './components/sort';
-import {createEditPointTemplate} from './components/edit-point';
+import MenuComponent from './components/menu';
+import FiltersComponent from './components/filters';
+import TripInfoComponent from './components/trip-info';
+import SortComponent from './components/sort';
+import TripDaysComponent from './components/trip-days';
+import DayComponent from './components/day';
+import PointComponent from './components/point';
+import NoPoints from './components/no-points';
+import EditPointComponent from './components/edit-point';
 import {generatePoints} from './mock/point';
+import {renderComponent, Position} from './utils';
 
 
 const POINT_COUNT = 20;
 
 const points = generatePoints(POINT_COUNT);
-const editPoint = points.shift();
 
-const renderComponent = (container, template, position = `beforeend`) => {
-  return container.insertAdjacentHTML(position, template);
-};
 
 //  DEFAULT SORTING BY DAY ///
 const getDayPoints = (acc, point) => {
@@ -35,26 +35,73 @@ const tripDays = Object.keys(groups)
       date,
       points: groups[date],
     };
-  })
-  .sort((a, b) => a.points[0].startDate - b.points[0].startDate);
+  });
 
-
-// HEADER TEMPLATE///
-const tripDetails = document.querySelector(`.trip-main`);
-renderComponent(tripDetails, createTripInfoTemplate(tripDays), `afterbegin`);
-const tripControls = document.querySelector(`.trip-controls`);
-const tripViewTitle = tripControls.querySelector(`h2`);
-renderComponent(tripViewTitle, createMenuTemplate(), `afterend`);
-renderComponent(tripControls, createFiltersTemplate());
-
-
-// SORTING TEMPLATE ///
+// HEADER ///
 const pageMain = document.querySelector(`.page-main`);
-const tripPoints = pageMain.querySelector(`.trip-events`);
-renderComponent(tripPoints, createSortTemplate());
+const tripContainer = pageMain.querySelector(`.trip-events`);
 
-// EDIT-POINT TEMPLATE ///
-renderComponent(tripPoints, createEditPointTemplate(editPoint));
+const tripDetails = document.querySelector(`.trip-main`);
+const tripControls = tripDetails.querySelector(`.trip-controls`);
+const tripViewTitle = tripControls.querySelector(`h2`);
 
-// POINTS LIST TEMPLATE ///
-renderComponent(tripPoints, createTripDaysTemplate(tripDays));
+const renderPoint = (container, point) => {
+  const openEditForm = () => {
+    pointComponent.getElement().replaceWith(editPointComponent.getElement());
+  };
+
+  const closeEditForm = () => {
+    editPointComponent.getElement().replaceWith(pointComponent.getElement());
+  };
+
+  const onEscKeyDown = (evt) => {
+    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+
+    if (isEscKey) {
+      closeEditForm();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
+  const pointComponent = new PointComponent(point);
+  const editButton = pointComponent.getElement().querySelector(`.event__rollup-btn`);
+  editButton.addEventListener(`click`, () => {
+    openEditForm();
+    document.addEventListener(`keydown`, onEscKeyDown);
+  });
+
+  const editPointComponent = new EditPointComponent(point);
+  editPointComponent.getElement().addEventListener(`submit`, (evt) => {
+    evt.preventDefault();
+    closeEditForm();
+    document.removeEventListener(`keydown`, onEscKeyDown);
+  });
+  renderComponent(container, pointComponent.getElement());
+};
+
+const renderDay = (container, day) => {
+  const tripDay = new DayComponent(day);
+  const pointsList = tripDay.getElement().querySelector(`.trip-events__list`);
+  day.points.sort((a, b) => a.startDate - b.startDate)
+    .forEach((point) => renderPoint(pointsList, point));
+  renderComponent(container, tripDay.getElement());
+};
+
+const renderTripContainer = (container, days) => {
+  if (tripDays.length === 0) {
+    renderComponent(container, new NoPoints().getElement());
+    return;
+  }
+
+  renderComponent(tripDetails, new TripInfoComponent(tripDays).getElement(), Position.AFTERBEGIN);
+  renderComponent(tripViewTitle, new MenuComponent().getElement(), Position.AFTEREND);
+  renderComponent(tripControls, new FiltersComponent().getElement());
+  renderComponent(container, new SortComponent().getElement());
+  const tripDaysList = new TripDaysComponent();
+
+  days.sort((a, b) => a.date - b.date)
+    .forEach((day) => renderDay(tripDaysList.getElement(), day));
+  renderComponent(container, tripDaysList.getElement());
+};
+
+renderTripContainer(tripContainer, tripDays);
