@@ -88,10 +88,14 @@ const renderDay = (container, day) => {
 };
 
 const renderTripContainer = (container, days) => {
-  if (tripDays === []) {
+  if (tripDays.length === 0) {
     renderComponent(container, new NoPoints().getElement());
     return;
   }
+
+  renderComponent(tripDetails, new TripInfoComponent(tripDays).getElement(), Position.AFTERBEGIN);
+  renderComponent(tripViewTitle, new MenuComponent().getElement(), Position.AFTEREND);
+  renderComponent(tripControls, new FiltersComponent().getElement());
   renderComponent(container, new SortComponent().getElement());
   const tripDaysList = new TripDaysComponent();
 
@@ -99,9 +103,5 @@ const renderTripContainer = (container, days) => {
     .forEach((day) => renderDay(tripDaysList.getElement(), day));
   renderComponent(container, tripDaysList.getElement());
 };
-
-renderComponent(tripDetails, new TripInfoComponent(tripDays).getElement(), Position.AFTERBEGIN);
-renderComponent(tripViewTitle, new MenuComponent().getElement(), Position.AFTEREND);
-renderComponent(tripControls, new FiltersComponent().getElement());
 
 renderTripContainer(tripContainer, tripDays);
