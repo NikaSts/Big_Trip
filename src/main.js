@@ -5,7 +5,7 @@ import SortComponent from './components/sort';
 import TripDaysComponent from './components/trip-days';
 import DayComponent from './components/day';
 import PointComponent from './components/point';
-import NoPoints from './components/no-points';
+import NoPointsComponent from './components/no-points';
 import EditPointComponent from './components/edit-point';
 import {generatePoints} from './mock/point';
 import {renderComponent, Position} from './utils';
@@ -37,7 +37,7 @@ const tripDays = Object.keys(groups)
     };
   });
 
-// HEADER ///
+
 const pageMain = document.querySelector(`.page-main`);
 const tripContainer = pageMain.querySelector(`.trip-events`);
 
@@ -79,8 +79,8 @@ const renderPoint = (container, point) => {
   renderComponent(container, pointComponent.getElement());
 };
 
-const renderDay = (container, day) => {
-  const tripDay = new DayComponent(day);
+const renderDay = (container, day, index) => {
+  const tripDay = new DayComponent(day, index);
   const pointsList = tripDay.getElement().querySelector(`.trip-events__list`);
   day.points.sort((a, b) => a.startDate - b.startDate)
     .forEach((point) => renderPoint(pointsList, point));
@@ -88,19 +88,19 @@ const renderDay = (container, day) => {
 };
 
 const renderTripContainer = (container, days) => {
-  if (tripDays.length === 0) {
-    renderComponent(container, new NoPoints().getElement());
+  if (days.length === 0) {
+    renderComponent(container, new NoPointsComponent().getElement());
     return;
   }
 
-  renderComponent(tripDetails, new TripInfoComponent(tripDays).getElement(), Position.AFTERBEGIN);
+  renderComponent(tripDetails, new TripInfoComponent(days).getElement(), Position.AFTERBEGIN);
   renderComponent(tripViewTitle, new MenuComponent().getElement(), Position.AFTEREND);
   renderComponent(tripControls, new FiltersComponent().getElement());
   renderComponent(container, new SortComponent().getElement());
   const tripDaysList = new TripDaysComponent();
 
   days.sort((a, b) => a.date - b.date)
-    .forEach((day) => renderDay(tripDaysList.getElement(), day));
+    .forEach((day, index) => renderDay(tripDaysList.getElement(), day, index));
   renderComponent(container, tripDaysList.getElement());
 };
 

@@ -6,7 +6,7 @@ const createNoPointsTemplate = () => {
   );
 };
 
-export default class NoPoints {
+export default class NoPointsComponent {
   constructor() {
     this._element = null;
   }
