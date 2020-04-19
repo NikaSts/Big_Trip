@@ -37,7 +37,7 @@ const tripDays = Object.keys(groups)
     };
   });
 
-// HEADER ///
+
 const pageMain = document.querySelector(`.page-main`);
 const tripContainer = pageMain.querySelector(`.trip-events`);
 
@@ -79,8 +79,8 @@ const renderPoint = (container, point) => {
   renderComponent(container, pointComponent.getElement());
 };
 
-const renderDay = (container, day) => {
-  const tripDay = new DayComponent(day);
+const renderDay = (container, day, index) => {
+  const tripDay = new DayComponent(day, index);
   const pointsList = tripDay.getElement().querySelector(`.trip-events__list`);
   day.points.sort((a, b) => a.startDate - b.startDate)
     .forEach((point) => renderPoint(pointsList, point));
@@ -100,7 +100,7 @@ const renderTripContainer = (container, days) => {
   const tripDaysList = new TripDaysComponent();
 
   days.sort((a, b) => a.date - b.date)
-    .forEach((day) => renderDay(tripDaysList.getElement(), day));
+    .forEach((day, index) => renderDay(tripDaysList.getElement(), day, index));
   renderComponent(container, tripDaysList.getElement());
 };
 

@@ -1,6 +1,6 @@
 import {getFormattedDate, createElement} from '../utils';
 
-const createDayTemplate = (tripDay) => {
+const createDayTemplate = (tripDay, index) => {
   const {date} = tripDay;
   const tripDate = getFormattedDate(date);
   const day = tripDate.day;
@@ -11,7 +11,7 @@ const createDayTemplate = (tripDay) => {
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
-        <span class="day__counter"></span>
+        <span class="day__counter">${index + 1}</span>
         <time class="day__date" datetime="${year}-${month}-${day}">${monthName} ${day}</time>
       </div>
 
@@ -21,13 +21,14 @@ const createDayTemplate = (tripDay) => {
 };
 
 export default class DayComponent {
-  constructor(day) {
+  constructor(day, index) {
     this._day = day;
+    this._index = index;
     this._element = null;
   }
 
   getTemplate() {
-    return createDayTemplate(this._day);
+    return createDayTemplate(this._day, this._index);
   }
   getElement() {
     if (!this._element) {

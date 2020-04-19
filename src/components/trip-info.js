@@ -4,10 +4,15 @@ const createTripInfoTemplate = (tripDays) => {
   const totalPrice = tripDays.reduce((acc, item) => {
     for (const point of item.points) {
       acc += Number(point.basePrice);
+      for (const offer of point.offers) {
+        if (offer.isChecked) {
+          acc += Number(offer.price);
+        }
+      }
     }
-    // acc += item.points.forEach((point) => Number(point.basePrice)); // с foreEach не работает
     return acc;
   }, 0);
+
   const firstTripDate = getFormattedDate(tripDays[0].date);
   const [lastTripDay] = tripDays.slice(-1);
   const lastTripDate = getFormattedDate(lastTripDay.date);
