@@ -88,12 +88,12 @@ const renderDay = (container, day, index) => {
 };
 
 const renderTripContainer = (container, days) => {
-  if (tripDays.length === 0) {
+  if (days.length === 0) {
     renderComponent(container, new NoPoints().getElement());
     return;
   }
 
-  renderComponent(tripDetails, new TripInfoComponent(tripDays).getElement(), Position.AFTERBEGIN);
+  renderComponent(tripDetails, new TripInfoComponent(days).getElement(), Position.AFTERBEGIN);
   renderComponent(tripViewTitle, new MenuComponent().getElement(), Position.AFTEREND);
   renderComponent(tripControls, new FiltersComponent().getElement());
   renderComponent(container, new SortComponent().getElement());
