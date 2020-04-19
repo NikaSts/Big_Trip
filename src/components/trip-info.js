@@ -1,16 +1,15 @@
 import {getFormattedDate, createElement} from '../utils';
 
 const createTripInfoTemplate = (tripDays) => {
-  const totalPrice = tripDays.reduce((acc, item) => {
-    for (const point of item.points) {
-      acc += Number(point.basePrice);
-      for (const offer of point.offers) {
+  const totalPrice = tripDays.reduce((total, day) => {
+    return total + day.points.reduce((basePriceSum, point) => {
+      return basePriceSum + point.basePrice + point.offers.reduce((offerPriceSum, offer) => {
         if (offer.isChecked) {
-          acc += Number(offer.price);
+          offerPriceSum += offer.price;
         }
-      }
-    }
-    return acc;
+        return offerPriceSum;
+      }, 0);
+    }, 0);
   }, 0);
 
   const firstTripDate = getFormattedDate(tripDays[0].date);
