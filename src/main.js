@@ -5,7 +5,7 @@ import SortComponent from './components/sort';
 import TripDaysComponent from './components/trip-days';
 import DayComponent from './components/day';
 import PointComponent from './components/point';
-import NoPoints from './components/no-points';
+import NoPointsComponent from './components/no-points';
 import EditPointComponent from './components/edit-point';
 import {generatePoints} from './mock/point';
 import {renderComponent, Position} from './utils';
@@ -89,7 +89,7 @@ const renderDay = (container, day, index) => {
 
 const renderTripContainer = (container, days) => {
   if (days.length === 0) {
-    renderComponent(container, new NoPoints().getElement());
+    renderComponent(container, new NoPointsComponent().getElement());
     return;
   }
 
