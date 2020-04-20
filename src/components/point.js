@@ -1,5 +1,6 @@
-import {getFormattedDate, getDuration, capitalizeFirstLetter, createElement} from '../utils';
+import {getFormattedDate, getDuration, capitalizeFirstLetter} from '../utils/common';
 import {pointGroupToType, TypeGroup} from '../mock/point';
+import AbstractComponent from './abstract-component';
 
 
 const createPointTemplate = (point) => {
@@ -54,22 +55,17 @@ const createPointTemplate = (point) => {
   );
 };
 
-export default class PointComponent {
+export default class PointComponent extends AbstractComponent {
   constructor(point) {
+    super();
     this._point = point;
-    this._element = null;
   }
 
   getTemplate() {
     return createPointTemplate(this._point);
   }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
+  setEditButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__rollup-btn`)
+      .addEventListener(`click`, handler);
   }
 }

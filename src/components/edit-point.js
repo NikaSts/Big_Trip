@@ -1,7 +1,8 @@
 import {createPointTypeTemplate} from './helpers/point-type';
 import {createAvailableOfferTemplate} from './helpers/offer';
-import {getFormattedDate, capitalizeFirstLetter, createElement} from '../utils';
+import {getFormattedDate, capitalizeFirstLetter} from '../utils/common';
 import {TypeGroup, pointGroupToType, CITY_NAMES} from '../mock/point';
+import AbstractComponent from './abstract-component';
 
 
 const transferTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.TRANSFER]);
@@ -101,22 +102,15 @@ const createEditPointTemplate = (point) => {
   );
 };
 
-export default class EditPointComponent {
+export default class EditPointComponent extends AbstractComponent {
   constructor(point) {
+    super();
     this._point = point;
-    this._element = null;
   }
-
   getTemplate() {
     return createEditPointTemplate(this._point);
   }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
+  setSubmitHandler(handler) {
+    this.getElement().addEventListener(`submit`, handler);
   }
 }
