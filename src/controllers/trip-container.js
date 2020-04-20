@@ -1,21 +1,10 @@
-import MenuComponent from '../components/menu';
-import FiltersComponent from '../components/filters';
-import TripInfoComponent from '../components/trip-info';
 import SortComponent from '../components/sort';
 import TripDaysComponent from '../components/trip-days';
 import DayComponent from '../components/day';
 import PointComponent from '../components/point';
 import NoPointsComponent from '../components/no-points';
 import EditPointComponent from '../components/edit-point';
-import {renderComponent, Position, replaceComponent} from '../utils/render';
-
-
-const pageMain = document.querySelector(`.page-main`);
-const tripContainer = pageMain.querySelector(`.trip-events`);
-
-const tripDetails = document.querySelector(`.trip-main`);
-const tripControls = tripDetails.querySelector(`.trip-controls`);
-const tripViewTitle = tripControls.querySelector(`h2`);
+import {renderComponent, replaceComponent} from '../utils/render';
 
 
 const renderPoint = (container, point) => {
@@ -60,30 +49,26 @@ const renderDay = (container, day, index) => {
   renderComponent(container, tripDay);
 };
 
-const renderTripContainer = (container, days) => {
-  if (days.length === 0) {
-    renderComponent(container, new NoPointsComponent());
-    return;
-  }
-
-  renderComponent(tripDetails, new TripInfoComponent(days), Position.AFTERBEGIN);
-  renderComponent(tripViewTitle, new MenuComponent(), Position.AFTEREND);
-  renderComponent(tripControls, new FiltersComponent());
-  renderComponent(container, new SortComponent());
-  const tripDaysList = new TripDaysComponent();
-
-  days.sort((a, b) => a.date - b.date)
-    .forEach((day, index) => renderDay(tripDaysList.getElement(), day, index));
-  renderComponent(container, tripDaysList);
-};
-
 
 export default class TripContainerController {
   constructor(container) {
     this._container = container;
+
+    this._noPointsComponent = new NoPointsComponent();
+    this._sortComponent = new SortComponent();
+    this._tripDaysComponent = new TripDaysComponent();
   }
 
   render(days) {
-    renderTripContainer(tripContainer, days);
+    if (days.length === 0) {
+      renderComponent(this._container, this._noPointsComponent);
+      return;
+    }
+
+    renderComponent(this._container, this._sortComponent);
+
+    days.sort((a, b) => a.date - b.date)
+    .forEach((day, index) => renderDay(this._tripDaysComponent.getElement(), day, index));
+    renderComponent(this._container, this._tripDaysComponent);
   }
 }
