@@ -49,4 +49,25 @@ const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-export {getRandomNumber, getRandomItem, getRandomBoolean, getFormattedDate, getDuration, capitalizeFirstLetter};
+const getDayPoints = (acc, point) => {
+  const date = new Date(point.startDate).setHours(0, 0, 0, 0);
+
+  if (!acc[date]) {
+    acc[date] = [];
+  }
+  acc[date].push(point);
+  return acc;
+};
+const getTripDays = (points) => {
+  const groups = points.reduce(getDayPoints, {});
+
+  return Object.keys(groups).map((date) => {
+    return {
+      date,
+      points: groups[date],
+    };
+  });
+};
+
+
+export {getRandomNumber, getRandomItem, getRandomBoolean, getFormattedDate, getDuration, capitalizeFirstLetter, getTripDays};

@@ -1,19 +1,19 @@
 import {getFormattedDate} from '../utils/common';
 import AbstractComponent from './abstract-component';
+import {getTripDays} from '../utils/common';
 
 
-const createTripInfoTemplate = (tripDays) => {
-  const totalPrice = tripDays.reduce((total, day) => {
-    return total + day.points.reduce((basePriceSum, point) => {
-      return basePriceSum + point.basePrice + point.offers.reduce((offerPriceSum, offer) => {
-        if (offer.isChecked) {
-          offerPriceSum += offer.price;
-        }
-        return offerPriceSum;
-      }, 0);
+const createTripInfoTemplate = (points) => {
+  const totalPrice = points.reduce((basePriceSum, point) => {
+    return basePriceSum + point.basePrice + point.offers.reduce((offerPriceSum, offer) => {
+      if (offer.isChecked) {
+        offerPriceSum += offer.price;
+      }
+      return offerPriceSum;
     }, 0);
   }, 0);
 
+  const tripDays = getTripDays(points).sort((a, b) => a.date - b.date);
   const firstTripDate = getFormattedDate(tripDays[0].date);
   const [lastTripDay] = tripDays.slice(-1);
   const lastTripDate = getFormattedDate(lastTripDay.date);
