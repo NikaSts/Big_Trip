@@ -1,16 +1,9 @@
-import {getFormattedDate, createElement} from '../utils';
+import {getFormattedDate} from '../utils/common';
+import AbstractComponent from './abstract-component';
+import {getTripDays} from '../utils/common';
 
-const createTripInfoTemplate = (tripDays) => {
-  const totalPrice = tripDays.reduce((total, day) => {
-    return total + day.points.reduce((basePriceSum, point) => {
-      return basePriceSum + point.basePrice + point.offers.reduce((offerPriceSum, offer) => {
-        if (offer.isChecked) {
-          offerPriceSum += offer.price;
-        }
-        return offerPriceSum;
-      }, 0);
-    }, 0);
-  }, 0);
+const createInfoMainMarkup = (points) => {
+  const tripDays = getTripDays(points).sort((a, b) => a.date - b.date);
 
   const firstTripDate = getFormattedDate(tripDays[0].date);
   const [lastTripDay] = tripDays.slice(-1);
@@ -21,35 +14,44 @@ const createTripInfoTemplate = (tripDays) => {
   const lastVisitedCity = lastTripDayPoint.destination.name;
 
   return (
-    `<section class="trip-main__trip-info  trip-info">
-      <div class="trip-info__main">
-        <h1 class="trip-info__title">${firstVisitedCity} &mdash; Chamonix &mdash; ${lastVisitedCity}</h1>
+    `<div class="trip-info__main">
+      <h1 class="trip-info__title">${firstVisitedCity} &mdash; Chamonix &mdash; ${lastVisitedCity}</h1>
 
-        <p class="trip-info__dates">${firstTripDate.monthName} ${firstTripDate.day}&nbsp;&mdash;&nbsp;${lastTripDate.monthName} ${lastTripDate.day}</p>
-      </div>
-      <p class="trip-info__cost">
+      <p class="trip-info__dates">${firstTripDate.monthName} ${firstTripDate.day}&nbsp;&mdash;&nbsp;${lastTripDate.monthName} ${lastTripDate.day}</p>
+    </div>`
+  );
+};
+
+const createTripInfoTemplate = (points) => {
+  const isNoPoints = points.length === 0;
+
+  const totalPrice = points.reduce((basePriceSum, point) => {
+    return basePriceSum + point.basePrice + point.offers.reduce((offerPriceSum, offer) => {
+      if (offer.isChecked) {
+        offerPriceSum += offer.price;
+      }
+      return offerPriceSum;
+    }, 0);
+  }, 0);
+
+
+  return (
+    `<section class="trip-main__trip-info  trip-info">
+      ${!isNoPoints ? createInfoMainMarkup(points) : ``}
+    <p class="trip-info__cost">
         Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalPrice}</span>
       </p>
     </section>`
   );
 };
 
-export default class TripInfoComponent {
+export default class TripInfoComponent extends AbstractComponent {
   constructor(days) {
+    super();
     this._days = days;
-    this._element = null;
   }
 
   getTemplate() {
     return createTripInfoTemplate(this._days);
-  }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }

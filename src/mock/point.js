@@ -1,4 +1,4 @@
-import {getRandomNumber, getRandomItem, getRandomBoolean} from '../utils';
+import {getRandomNumber, getRandomItem, getRandomBoolean} from '../utils/common';
 
 const CITY_NAMES = [`Rome`, `Amsterdam`, `Paris`, `Geneva`, `Moscow`, `Chamonix`];
 const FULL_DAY = 24 * 60 * 60 * 1000; // 24 hours
