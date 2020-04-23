@@ -153,6 +153,7 @@ const generatePoint = () => {
     basePrice: Number(getRandomNumber(MIN_PRICE, MAX_PRICE) + `0`),
     offers: getRandomBoolean() ? generateOffers(type) : [],
     destination: destinations[getRandomNumber(0, CITY_NAMES.length)],
+    isFavorite: getRandomBoolean(),
   });
 };
 
