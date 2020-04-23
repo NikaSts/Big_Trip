@@ -62,6 +62,7 @@ const getDayPoints = (acc, point) => {
   acc[date].push(point);
   return acc;
 };
+
 const getTripDays = (points) => {
   const groups = points.reduce(getDayPoints, {});
 

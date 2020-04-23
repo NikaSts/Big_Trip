@@ -1,6 +1,6 @@
 import {getFormattedDate} from '../utils/common';
 import AbstractComponent from './abstract-component';
-import {getTripDays} from '../utils/common';
+import {getTripDays, getPointPrice} from '../utils/common';
 
 const createInfoMainMarkup = (points) => {
   const tripDays = getTripDays(points).sort((a, b) => a.date - b.date);
@@ -26,14 +26,8 @@ const createTripInfoTemplate = (points) => {
   const isNoPoints = points.length === 0;
 
   const totalPrice = points.reduce((basePriceSum, point) => {
-    return basePriceSum + point.basePrice + point.offers.reduce((offerPriceSum, offer) => {
-      if (offer.isChecked) {
-        offerPriceSum += offer.price;
-      }
-      return offerPriceSum;
-    }, 0);
+    return basePriceSum + getPointPrice(point);
   }, 0);
-
 
   return (
     `<section class="trip-main__trip-info  trip-info">

@@ -48,7 +48,7 @@ const renderDay = (container, day, index) => {
   pointsList.innerHTML = ``;
   const points = day.points;
 
-  if (index >= 0) {
+  if (index !== null) {
     points.sort((a, b) => a.startDate - b.startDate);
   }
   points.forEach((point) => renderPoint(pointsList, point));
@@ -60,18 +60,17 @@ const getSortedPoints = (points, sortType) => {
 
   switch (sortType) {
     case SortType.DEFAULT:
-      sortedPoints = points.slice();
+      sortedPoints = points;
       break;
 
     case SortType.TIME:
-      const pointsWithDuration = points.slice();
+      const pointsWithDuration = JSON.parse(JSON.stringify(points));
       pointsWithDuration.map((point) => Object.assign(point, {duration: getDuration(point.startDate, point.endDate)}));
       sortedPoints = pointsWithDuration.sort((a, b) => b.duration - a.duration);
-
       break;
 
     case SortType.PRICE:
-      const pointWithTotalPrice = points.slice();
+      const pointWithTotalPrice = JSON.parse(JSON.stringify(points));
       pointWithTotalPrice.map((point) => Object.assign(point, {total: getPointPrice(point)}));
       sortedPoints = pointWithTotalPrice.sort((a, b) => b.total - a.total);
       break;
@@ -79,17 +78,21 @@ const getSortedPoints = (points, sortType) => {
     default:
       throw new Error(`Case ${sortType} not found`);
   }
-  // console.log(points);
   return sortedPoints;
 };
 
-const renderDefaultSort = (container, days) => {
-  days.forEach((day, index) => renderDay(container.getElement(), day, index));
+const renderDefaultSort = (container, list, points) => {
+  const days = getTripDays(points).sort((a, b) => a.date - b.date);
+  removeComponent(list);
+  renderComponent(container, list);
+  days.forEach((day, index) => renderDay(list.getElement(), day, index));
 };
 
-const renderTypeSort = (container, points) => {
+const renderTypeSort = (container, list, points) => {
   const day = {'points': points};
-  renderDay(container.getElement(), day, -1);
+  removeComponent(list);
+  renderComponent(container, list);
+  renderDay(list.getElement(), day, null);
 };
 
 
@@ -109,21 +112,15 @@ export default class TripController {
 
     renderComponent(this._container, this._sortComponent);
     renderComponent(this._container, this._tripDaysComponent);
-
-    const tripDays = getTripDays(points).sort((a, b) => a.date - b.date);
-    renderDefaultSort(this._tripDaysComponent, tripDays);
+    renderDefaultSort(this._container, this._tripDaysComponent, points);
 
     this._sortComponent.setSortTypeChangeHandler((sortType) => {
       const sortedPoints = getSortedPoints(points, sortType);
-      if (sortType === SortType.TIME || sortType === SortType.PRICE) {
-        removeComponent(this._tripDaysComponent);
-        renderComponent(this._container, this._tripDaysComponent);
-        renderTypeSort(this._tripDaysComponent, sortedPoints);
+      if (sortType === SortType.DEFAULT) {
+        renderDefaultSort(this._container, this._tripDaysComponent, sortedPoints);
         return;
       }
-      removeComponent(this._tripDaysComponent);
-      renderComponent(this._container, this._tripDaysComponent);
-      renderDefaultSort(this._tripDaysComponent, tripDays);
+      renderTypeSort(this._container, this._tripDaysComponent, sortedPoints);
     });
   }
 }

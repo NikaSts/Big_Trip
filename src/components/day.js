@@ -1,7 +1,9 @@
 import {getFormattedDate} from '../utils/common';
 import AbstractComponent from './abstract-component';
 
-const createDayInfoMarkup = (tripDay, index) => {
+
+const createDayTemplate = (tripDay, index) => {
+  const isIndexValid = (index !== null);
   const {date} = tripDay;
   const tripDate = getFormattedDate(date);
   const day = tripDate.day;
@@ -10,17 +12,13 @@ const createDayInfoMarkup = (tripDay, index) => {
   const year = tripDate.fullYear;
 
   return (
-    `<span class="day__counter">${index + 1}</span>
-    <time class="day__date" datetime="${year}-${month}-${day}">${monthName} ${day}</time>`
-  );
-};
-
-const createDayTemplate = (tripDay, index) => {
-  const isIndexValid = (index >= 0);
-  return (
     `<li class="trip-days__item day">
       <div class="day__info">
-        ${isIndexValid ? createDayInfoMarkup(tripDay, index) : ``}
+
+        ${isIndexValid ?
+      `<span class="day__counter">${index + 1}</span>
+        <time class="day__date" datetime="${year}-${month}-${day}">${monthName} ${day}</time>` : ``}
+
       </div>
       <ul class="trip-events__list">
       </ul>
