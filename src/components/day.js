@@ -10,18 +10,18 @@ const createDayInfoMarkup = (tripDay, index) => {
   const year = tripDate.fullYear;
 
   return (
-    `<div class="day__info">
-      <span class="day__counter">${index + 1}</span>
-      <time class="day__date" datetime="${year}-${month}-${day}">${monthName} ${day}</time>
-    </div>`
+    `<span class="day__counter">${index + 1}</span>
+    <time class="day__date" datetime="${year}-${month}-${day}">${monthName} ${day}</time>`
   );
 };
 
 const createDayTemplate = (tripDay, index) => {
-  const isIndexNull = index === null;
+  const isIndexValid = (index >= 0);
   return (
     `<li class="trip-days__item day">
-      ${!isIndexNull ? createDayInfoMarkup(tripDay, index) : ``}
+      <div class="day__info">
+        ${isIndexValid ? createDayInfoMarkup(tripDay, index) : ``}
+      </div>
       <ul class="trip-events__list">
       </ul>
     </li>`
