@@ -11,19 +11,19 @@ const createSortTemplate = () => {
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
       <span class="trip-sort__item  trip-sort__item--day">Day</span>
 
-      <div class="trip-sort__item  trip-sort__item--event" data-sort>
-        <input id="sort-event" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-event" checked>
-        <label class="trip-sort__btn" for="sort-event">Event</label>
+      <div class="trip-sort__item  trip-sort__item--event">
+        <input id="${SortType.DEFAULT}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="${SortType.DEFAULT}" checked>
+        <label class="trip-sort__btn" for="${SortType.DEFAULT}">Event</label>
       </div>
 
       <div class="trip-sort__item  trip-sort__item--time">
-        <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time">
-        <label class="trip-sort__btn" for="sort-time">Time</label>
+        <input id="${SortType.TIME}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="${SortType.TIME}">
+        <label class="trip-sort__btn" for="${SortType.TIME}">Time</label>
       </div>
 
       <div class="trip-sort__item  trip-sort__item--price">
-        <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price">
-        <label class="trip-sort__btn" for="sort-price">Price</label>
+        <input id="${SortType.PRICE}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="${SortType.PRICE}">
+        <label class="trip-sort__btn" for="${SortType.PRICE}">Price</label>
       </div>
 
       <span class="trip-sort__item  trip-sort__item--offers">Offers</span>
@@ -44,11 +44,8 @@ export default class SortComponent extends AbstractComponent {
   }
   setSortTypeChangeHandler(handler) {
     this.getElement().addEventListener(`click`, (evt) => {
-      let target = evt.target.closest(`input[type="radio"]`);
-      if (!target) {
-        return;
-      }
-      if (target.id === this._sortType) {
+      const target = evt.target.closest(`input[type="radio"]`);
+      if (!target || target.id === this._sortType) {
         return;
       }
       this._sortType = target.id;

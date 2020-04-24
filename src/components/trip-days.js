@@ -1,4 +1,5 @@
 import AbstractComponent from './abstract-component';
+import {renderComponent} from '../utils/render';
 
 
 const createTripDaysTemplate = () => {
@@ -11,5 +12,8 @@ const createTripDaysTemplate = () => {
 export default class TripDaysComponent extends AbstractComponent {
   getTemplate() {
     return createTripDaysTemplate();
+  }
+  addDay(day) {
+    renderComponent(this.getElement(), day);
   }
 }

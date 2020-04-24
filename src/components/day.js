@@ -1,5 +1,6 @@
 import {getFormattedDate} from '../utils/common';
 import AbstractComponent from './abstract-component';
+import {renderComponent} from '../utils/render';
 
 
 const createDayTemplate = (tripDay, index) => {
@@ -35,5 +36,9 @@ export default class DayComponent extends AbstractComponent {
 
   getTemplate() {
     return createDayTemplate(this._day, this._index);
+  }
+  addPoint(point) {
+    const pointsList = this.getElement().querySelector(`.trip-events__list`);
+    renderComponent(pointsList, point);
   }
 }

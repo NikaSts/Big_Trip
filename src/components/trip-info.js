@@ -3,7 +3,7 @@ import AbstractComponent from './abstract-component';
 import {getTripDays, getPointPrice} from '../utils/common';
 
 const createInfoMainMarkup = (points) => {
-  const tripDays = getTripDays(points).sort((a, b) => a.date - b.date);
+  const tripDays = getTripDays(points);
 
   const firstTripDate = getFormattedDate(tripDays[0].date);
   const [lastTripDay] = tripDays.slice(-1);
