@@ -1,8 +1,10 @@
 import {getFormattedDate} from '../utils/common';
 import AbstractComponent from './abstract-component';
+import {renderComponent} from '../utils/render';
 
 
 const createDayTemplate = (tripDay, index) => {
+  const isIndexValid = (index !== null);
   const {date} = tripDay;
   const tripDate = getFormattedDate(date);
   const day = tripDate.day;
@@ -11,15 +13,18 @@ const createDayTemplate = (tripDay, index) => {
   const year = tripDate.fullYear;
 
   return (
-    `<li class="trip-days__item  day">
+    `<li class="trip-days__item day">
       <div class="day__info">
-        <span class="day__counter">${index + 1}</span>
-        <time class="day__date" datetime="${year}-${month}-${day}">${monthName} ${day}</time>
-      </div>
 
+        ${isIndexValid ?
+      `<span class="day__counter">${index + 1}</span>
+        <time class="day__date" datetime="${year}-${month}-${day}">${monthName} ${day}</time>` : ``}
+
+      </div>
       <ul class="trip-events__list">
       </ul>
-    </li>`);
+    </li>`
+  );
 };
 
 export default class DayComponent extends AbstractComponent {
@@ -31,5 +36,9 @@ export default class DayComponent extends AbstractComponent {
 
   getTemplate() {
     return createDayTemplate(this._day, this._index);
+  }
+  addPoint(point) {
+    const pointsList = this.getElement().querySelector(`.trip-events__list`);
+    renderComponent(pointsList, point);
   }
 }

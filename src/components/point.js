@@ -1,4 +1,4 @@
-import {getFormattedDate, getDuration, capitalizeFirstLetter} from '../utils/common';
+import {getFormattedDate, getDuration, getFormattedDuration, capitalizeFirstLetter} from '../utils/common';
 import {pointGroupToType, TypeGroup} from '../mock/point';
 import AbstractComponent from './abstract-component';
 
@@ -8,7 +8,7 @@ const createPointTemplate = (point) => {
   const capitalizedType = capitalizeFirstLetter(type);
   const start = getFormattedDate(startDate);
   const end = getFormattedDate(endDate);
-  const duration = getDuration(endDate - startDate);
+  const duration = getFormattedDuration(getDuration(startDate, endDate));
   const hasOffers = offers.length > 0;
   const availableOffers = hasOffers ? offers
     .filter((offer) => offer.isChecked)

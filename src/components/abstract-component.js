@@ -20,4 +20,7 @@ export default class AbstractComponent {
   removeElement() {
     this._element = null;
   }
+  removeChildrenElements() {
+    this._element.innerHTML = ``;
+  }
 }

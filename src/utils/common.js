@@ -19,6 +19,10 @@ const getPadded = (dateTime) => {
 
 const getMonthName = (date) => MONTH_NAMES[date.getMonth()];
 
+const getDuration = (start, end) => {
+  return end - start;
+};
+
 const getFormattedDate = (date) => {
   const newDate = new Date(Number(date));
   return ({
@@ -32,8 +36,8 @@ const getFormattedDate = (date) => {
   });
 };
 
-const getDuration = (diff) => {
-  const minutes = diff / 1000 / 60;
+const getFormattedDuration = (duration) => {
+  const minutes = duration / 1000 / 60;
   if (minutes >= 60) {
     const hours = parseInt(minutes / 60, 10);
     const minutesLeft = minutes - (hours * 60);
@@ -58,6 +62,7 @@ const getDayPoints = (acc, point) => {
   acc[date].push(point);
   return acc;
 };
+
 const getTripDays = (points) => {
   const groups = points.reduce(getDayPoints, {});
 
@@ -69,5 +74,16 @@ const getTripDays = (points) => {
   });
 };
 
+const getPointPrice = (point) => {
+  const cb = (offerPriceSum, offer) => {
+    if (offer.isChecked) {
+      offerPriceSum += offer.price;
+    }
+    return offerPriceSum;
+  };
 
-export {getRandomNumber, getRandomItem, getRandomBoolean, getFormattedDate, getDuration, capitalizeFirstLetter, getTripDays};
+  return point.basePrice + point.offers.reduce(cb, 0);
+};
+
+
+export {getRandomNumber, getRandomItem, getRandomBoolean, getFormattedDate, getDuration, getFormattedDuration, capitalizeFirstLetter, getTripDays, getPointPrice};
