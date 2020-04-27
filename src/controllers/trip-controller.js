@@ -1,50 +1,19 @@
 import SortComponent, {SortType} from '../components/sort';
 import TripDaysComponent from '../components/trip-days';
 import DayComponent from '../components/day';
-import PointComponent from '../components/point';
 import NoPointsComponent from '../components/no-points';
-import EditPointComponent from '../components/edit-point';
-import {renderComponent, replaceComponent} from '../utils/render';
+import {renderComponent} from '../utils/render';
 import {getTripDays, getDuration, getPointPrice} from '../utils/common';
+import PointController from './point-controller';
 
-
-const renderPoint = (point) => {
-  const openEditForm = () => {
-    replaceComponent(pointComponent, editPointComponent);
-  };
-
-  const closeEditForm = () => {
-    replaceComponent(editPointComponent, pointComponent);
-  };
-
-  const onEscKeyDown = (evt) => {
-    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-
-    if (isEscKey) {
-      closeEditForm();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    }
-  };
-
-  const pointComponent = new PointComponent(point);
-  pointComponent.setEditButtonClickHandler(() => {
-    openEditForm();
-    document.addEventListener(`keydown`, onEscKeyDown);
-  });
-
-  const editPointComponent = new EditPointComponent(point);
-  editPointComponent.setSubmitHandler((evt) => {
-    evt.preventDefault();
-    closeEditForm();
-    document.removeEventListener(`keydown`, onEscKeyDown);
-  });
-  return pointComponent;
-};
 
 const renderDay = (day, index = null) => {
   const tripDay = new DayComponent(day, index);
   const points = day.points;
-  points.forEach((point) => tripDay.addPoint(renderPoint(point)));
+  points.forEach((point) => {
+    const pointController = new PointController(point);
+    tripDay.addPoint(pointController.render(point));
+  });
   return tripDay;
 };
 
