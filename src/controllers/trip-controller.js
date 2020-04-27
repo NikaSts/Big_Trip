@@ -55,31 +55,39 @@ const renderTypeSort = (list, points) => {
 export default class TripController {
   constructor(container) {
     this._container = container;
+    this._points = [];
     this._noPointsComponent = new NoPointsComponent();
     this._sortComponent = new SortComponent();
     this._tripDaysComponent = new TripDaysComponent();
+
+    this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
   render(points) {
-    if (points.length === 0) {
+    this._points = points;
+
+    if (this._points.length === 0) {
       renderComponent(this._container, this._noPointsComponent);
       return;
     }
 
     renderComponent(this._container, this._sortComponent);
     renderComponent(this._container, this._tripDaysComponent);
-    let sortedPoints = getSortedPoints(points);
+    const sortedPoints = getSortedPoints(this._points);
     renderDefaultSort(this._tripDaysComponent, sortedPoints);
-
-    this._sortComponent.setSortTypeChangeHandler((sortType) => {
-      sortedPoints = getSortedPoints(points, sortType);
-
-      this._tripDaysComponent.removeChildrenElements();
-      if (sortType === SortType.DEFAULT) {
-        renderDefaultSort(this._tripDaysComponent, sortedPoints);
-        return;
-      }
-      renderTypeSort(this._tripDaysComponent, sortedPoints);
-    });
   }
+
+  _onSortTypeChange(sortType) {
+    const sortedPoints = getSortedPoints(this._points, sortType);
+
+    this._tripDaysComponent.removeChildrenElements();
+    if (sortType === SortType.DEFAULT) {
+      renderDefaultSort(this._tripDaysComponent, sortedPoints);
+      return;
+    }
+    renderTypeSort(this._tripDaysComponent, sortedPoints);
+
+  }
+
 }
