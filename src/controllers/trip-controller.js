@@ -7,12 +7,12 @@ import {getTripDays, getDuration, getPointPrice} from '../utils/common';
 import PointController from './point-controller';
 
 
-const renderDay = (day, index = null) => {
+const renderDay = (onDataChange, day, index = null) => {
   const tripDay = new DayComponent(day, index);
   const points = day.points;
   points.forEach((point) => {
-    const pointController = new PointController(point);
-    tripDay.addPoint(pointController.render(point));
+    const pointController = new PointController(point, onDataChange);
+    tripDay.addPoint(pointController.render(point, onDataChange));
   });
   return tripDay;
 };
@@ -41,15 +41,20 @@ const getSortedPoints = (points, sortType = SortType.DEFAULT) => {
   return sortedPoints;
 };
 
-const renderDefaultSort = (list, points) => {
+const renderDefaultSort = (list, points, onDataChange) => {
   const days = getTripDays(points);
-  days.forEach((day, index) => list.addDay(renderDay(day, index)));
+  days.forEach((day, index) => list.addDay(renderDay(onDataChange, day, index)));
 };
 
-const renderTypeSort = (list, points) => {
+const renderTypeSort = (list, points, onDataChange) => {
   const day = {'points': points};
-  list.addDay(renderDay(day));
+  list.addDay(renderDay(onDataChange, day));
 };
+
+
+/*     В компоненте формы редактирования добавьте метод для установки обработчика клика для звёздочки.
+
+    */
 
 
 export default class TripController {
@@ -60,6 +65,7 @@ export default class TripController {
     this._sortComponent = new SortComponent();
     this._tripDaysComponent = new TripDaysComponent();
 
+    this._onDataChange = this._onDataChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
@@ -75,7 +81,17 @@ export default class TripController {
     renderComponent(this._container, this._sortComponent);
     renderComponent(this._container, this._tripDaysComponent);
     const sortedPoints = getSortedPoints(this._points);
-    renderDefaultSort(this._tripDaysComponent, sortedPoints);
+    renderDefaultSort(this._tripDaysComponent, sortedPoints, this._onDataChange);
+  }
+
+  _onDataChange(oldData, newData, pointController) {
+    const index = this._points.findIndex((it) => it === oldData);
+    if (index === -1) {
+      return;
+    }
+    this._points = [].concat(this._points.slice(0, index), newData, this._points.slice(index + 1));
+
+    pointController.render(this._points[index]);
   }
 
   _onSortTypeChange(sortType) {
@@ -83,11 +99,10 @@ export default class TripController {
 
     this._tripDaysComponent.removeChildrenElements();
     if (sortType === SortType.DEFAULT) {
-      renderDefaultSort(this._tripDaysComponent, sortedPoints);
+      renderDefaultSort(this._tripDaysComponent, sortedPoints, this._onDataChange);
       return;
     }
-    renderTypeSort(this._tripDaysComponent, sortedPoints);
-
+    renderTypeSort(this._tripDaysComponent, sortedPoints, this._onDataChange);
   }
 
 }

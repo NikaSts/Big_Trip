@@ -115,6 +115,7 @@ export default class EditPointComponent extends AbstractComponent {
   constructor(point) {
     super();
     this._point = point;
+  // this._isFavorite = point.isFavorite;
   }
   getTemplate() {
     return createEditPointTemplate(this._point);
@@ -122,4 +123,20 @@ export default class EditPointComponent extends AbstractComponent {
   setSubmitHandler(handler) {
     this.getElement().addEventListener(`submit`, handler);
   }
+  setFavoritesButtonClickHandler(handler) {
+    this.getElement().querySelector(`.event__favorite-btn`)
+      .addEventListener(`click`, handler);
+  }
+
+
+  /*   _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`.event__favorite-btn`)
+      .addEventListener(`click`, () => {
+        //   this._isFavorite = !this._isFavorite;
+      });
+  }
+ */
+
 }

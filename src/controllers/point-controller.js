@@ -3,51 +3,52 @@ import PointComponent from '../components/point';
 import EditPointComponent from '../components/edit-point';
 
 
-/* Для этого создадим PointController:
-
-    В нем нужно описать конструктор и метод render
-
-    Конструктор должен принимать container — элемент, в который контроллер будет всё отрисовывать.
-
-    Метод render должен принимать данные одной точки маршрута. Также в него должен переехать код, который отвечает за отрисовку точки маршрута, ее замену на форму редактирования и наоборот, а также установка связанных с этим обработчиков событий. */
-
 export default class PointController {
-  constructor(container) {
+  constructor(container, onDataChange) {
     this._container = container;
-
+    this._onDataChange = onDataChange;
+    this._pointComponent = null;
+    this._editPointComponent = null;
+    this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
   render(point) {
+    this._pointComponent = new PointComponent(point);
+    this._editPointComponent = new EditPointComponent(point);
 
-    const openEditForm = () => {
-      replaceComponent(pointComponent, editPointComponent);
-    };
+    this._editPointComponent.setFavoritesButtonClickHandler(() => {
+      this._onDataChange(point, Object.assign({}, point, {
+        isFavorite: !point.isFavorite,
+      }), this);
 
-    const closeEditForm = () => {
-      replaceComponent(editPointComponent, pointComponent);
-    };
-
-    const onEscKeyDown = (evt) => {
-      const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
-
-      if (isEscKey) {
-        closeEditForm();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    const pointComponent = new PointComponent(point);
-    pointComponent.setEditButtonClickHandler(() => {
-      openEditForm();
-      document.addEventListener(`keydown`, onEscKeyDown);
     });
 
-    const editPointComponent = new EditPointComponent(point);
-    editPointComponent.setSubmitHandler((evt) => {
+    this._pointComponent.setEditButtonClickHandler(() => {
+      this._openEditForm();
+    });
+
+    this._editPointComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
-      closeEditForm();
-      document.removeEventListener(`keydown`, onEscKeyDown);
+      this._closeEditForm();
     });
-    return pointComponent;
 
+    return this._pointComponent;
   }
+
+  _openEditForm() {
+    replaceComponent(this._pointComponent, this._editPointComponent);
+    document.addEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  _closeEditForm() {
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+    replaceComponent(this._editPointComponent, this._pointComponent);
+  }
+
+  _onEscKeyDown(evt) {
+    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+    if (isEscKey) {
+      this._closeEditForm();
+    }
+  }
+
 }
