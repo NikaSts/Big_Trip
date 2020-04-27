@@ -2,7 +2,7 @@ import {createPointTypeTemplate} from './helpers/point-type';
 import {createAvailableOfferTemplate} from './helpers/offer';
 import {getFormattedDate, capitalizeFirstLetter} from '../utils/common';
 import {TypeGroup, pointGroupToType, CITY_NAMES} from '../mock/point';
-import AbstractComponent from './abstract-component';
+import AbstractSmartComponent from './abstract-smart-component';
 
 
 const transferTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.TRANSFER]);
@@ -111,32 +111,53 @@ const createEditPointTemplate = (point) => {
   );
 };
 
-export default class EditPointComponent extends AbstractComponent {
+export default class EditPointComponent extends AbstractSmartComponent {
   constructor(point) {
     super();
     this._point = point;
-  // this._isFavorite = point.isFavorite;
+
+    this._isFavorite = point.isFavorite;
+    this._submitHandler = null;
+    this._subscribeOnEvents();
+
   }
   getTemplate() {
     return createEditPointTemplate(this._point);
   }
+  recoveryListeners() {
+    this.setSubmitHandler(this._submitHandler);
+    this._subscribeOnEvents();
+  }
+  rerender() {
+    super.rerender();
+  }
+  reset() {
+
+  }
+
   setSubmitHandler(handler) {
     this.getElement().addEventListener(`submit`, handler);
-  }
-  setFavoritesButtonClickHandler(handler) {
-    this.getElement().querySelector(`.event__favorite-btn`)
-      .addEventListener(`click`, handler);
+    this._submitHandler = handler;
   }
 
-
-  /*   _subscribeOnEvents() {
+  _subscribeOnEvents() {
     const element = this.getElement();
+
+    element.querySelector(`.event__type-list`)
+    .addEventListener(`click`, (evt) => {
+      const target = evt.target.closest(`LABEL`);
+      if (!target) {
+        return;
+      }
+      this._point.type = target.textContent.toLowerCase();
+      this._point.destination.name = ``;
+
+      this.rerender();
+    });
 
     element.querySelector(`.event__favorite-btn`)
       .addEventListener(`click`, () => {
-        //   this._isFavorite = !this._isFavorite;
+        this._isFavorite = !this._isFavorite;
       });
   }
- */
-
 }

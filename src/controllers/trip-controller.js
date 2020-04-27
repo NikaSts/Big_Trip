@@ -8,13 +8,13 @@ import PointController from './point-controller';
 
 
 const renderDay = (onDataChange, day, index = null) => {
-  const tripDay = new DayComponent(day, index);
+  const dayComponent = new DayComponent(day, index);
   const points = day.points;
   points.forEach((point) => {
     const pointController = new PointController(point, onDataChange);
-    tripDay.addPoint(pointController.render(point, onDataChange));
+    dayComponent.addPoint(pointController.render(point, onDataChange));
   });
-  return tripDay;
+  return dayComponent;
 };
 
 const getSortedPoints = (points, sortType = SortType.DEFAULT) => {
@@ -52,11 +52,6 @@ const renderTypeSort = (list, points, onDataChange) => {
 };
 
 
-/*     В компоненте формы редактирования добавьте метод для установки обработчика клика для звёздочки.
-
-    */
-
-
 export default class TripController {
   constructor(container) {
     this._container = container;
@@ -91,7 +86,7 @@ export default class TripController {
     }
     this._points = [].concat(this._points.slice(0, index), newData, this._points.slice(index + 1));
 
-    pointController.render(this._points[index]);
+    pointController.render(newData); // ----------------------------------------------почему не используем newData?
   }
 
   _onSortTypeChange(sortType) {
@@ -104,5 +99,4 @@ export default class TripController {
     }
     renderTypeSort(this._tripDaysComponent, sortedPoints, this._onDataChange);
   }
-
 }
