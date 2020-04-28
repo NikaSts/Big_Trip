@@ -4,9 +4,8 @@ import EditPointComponent from '../components/edit-point';
 
 
 export default class PointController {
-  constructor(container, onDataChange) {
+  constructor(container) {
     this._container = container;
-    this._onDataChange = onDataChange;
 
     this._pointComponent = null;
     this._editPointComponent = null;
