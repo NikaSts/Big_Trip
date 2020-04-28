@@ -3,8 +3,17 @@ import PointComponent from '../components/point';
 import EditPointComponent from '../components/edit-point';
 
 
+const Mode = {
+  DEFAULT: `default`,
+  EDIT: `edit`,
+};
+
+
 export default class PointController {
-  constructor() {
+  constructor(onViewChange) {
+    this._onViewChange = onViewChange;
+    this._mode = Mode.DEFAULT;
+
     this._pointComponent = null;
     this._editPointComponent = null;
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
@@ -31,14 +40,24 @@ export default class PointController {
     return this._pointComponent;
   }
 
+  setDefaultView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._editPointComponent.reset();
+      this._closeEditForm();
+    }
+  }
+
   _openEditForm() {
+    this._onViewChange();
     replaceComponent(this._pointComponent, this._editPointComponent);
     document.addEventListener(`keydown`, this._onEscKeyDown);
+    this._mode = Mode.EDIT;
   }
 
   _closeEditForm() {
     document.removeEventListener(`keydown`, this._onEscKeyDown);
     replaceComponent(this._editPointComponent, this._pointComponent);
+    this._mode = Mode.DEFAULT;
   }
 
   _onEscKeyDown(evt) {
