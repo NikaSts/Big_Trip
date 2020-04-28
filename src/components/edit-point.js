@@ -150,7 +150,6 @@ export default class EditPointComponent extends AbstractSmartComponent {
         return;
       }
       this._point.type = target.textContent.toLowerCase();
-      this._point.destination.name = ``;
 
       this.rerender();
     });

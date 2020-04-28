@@ -6,16 +6,14 @@ import {renderComponent} from '../utils/render';
 import {getTripDays, getDuration, getPointPrice} from '../utils/common';
 import PointController from './point-controller';
 
-const getPointController = (point, onDataChange) => {
-  const pointController = new PointController(point, onDataChange);
-  return pointController.render(point);
-};
 
 const getDay = (onDataChange, day, index = null) => {
   const dayComponent = new DayComponent(day, index);
   const points = day.points;
   points.forEach((point) => {
-    dayComponent.addPoint(getPointController(point, onDataChange));
+    const pointController = new PointController(point, onDataChange);
+
+    dayComponent.addPoint(pointController.render(point, onDataChange));
   });
   return dayComponent;
 };
