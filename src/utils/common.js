@@ -1,4 +1,3 @@
-const LUCKY_NUMBER = 0.5;
 const MONTH_NAMES = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`];
 
 const getRandomNumber = (min, max) => {
@@ -9,8 +8,8 @@ const getRandomItem = (items) => {
   return items[getRandomNumber(0, items.length)];
 };
 
-const getRandomBoolean = () => {
-  return Math.random() > LUCKY_NUMBER;
+const getRandomBoolean = (number) => {
+  return Math.random() > number;
 };
 
 const getPadded = (dateTime) => {

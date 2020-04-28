@@ -5,11 +5,11 @@ import EditPointComponent from '../components/edit-point';
 
 export default class PointController {
   constructor() {
-
     this._pointComponent = null;
     this._editPointComponent = null;
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
+
   render(point) {
     this._pointComponent = new PointComponent(point);
     this._editPointComponent = new EditPointComponent(point);
@@ -20,6 +20,11 @@ export default class PointController {
 
     this._editPointComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
+      this._closeEditForm();
+    });
+
+    this._editPointComponent.setResetHandler(() => {
+      this._editPointComponent.reset();
       this._closeEditForm();
     });
 
@@ -42,5 +47,4 @@ export default class PointController {
       this._closeEditForm();
     }
   }
-
 }

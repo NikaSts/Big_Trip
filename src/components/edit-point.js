@@ -1,15 +1,17 @@
 import {createPointTypeTemplate} from './helpers/point-type';
 import {createAvailableOfferTemplate} from './helpers/offer';
 import {getFormattedDate, capitalizeFirstLetter} from '../utils/common';
-import {TypeGroup, pointGroupToType, CITY_NAMES} from '../mock/point';
+import {TypeGroup, pointGroupToType, CITY_NAMES, generateOffers, destinations} from '../mock/point';
 import AbstractSmartComponent from './abstract-smart-component';
 
 
 const transferTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.TRANSFER]);
 const activityTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.ACTIVITY]);
 
-const createEditPointTemplate = (point) => {
-  const {type, startDate, endDate, basePrice, destination, offers, isFavorite} = point;
+const createEditPointTemplate = (point, options = {}) => {
+  const {basePrice} = point;
+  const {type, startDate, endDate, offers, destination, isFavorite} = options;
+
   const capitalizedType = capitalizeFirstLetter(type);
   const start = getFormattedDate(startDate);
   const end = getFormattedDate(endDate);
@@ -17,7 +19,7 @@ const createEditPointTemplate = (point) => {
   const availableOffers = hasOffers ? createAvailableOfferTemplate(offers) : ``;
 
   const transferGroup = pointGroupToType[TypeGroup.TRANSFER].includes(type);
-
+  // console.log(type, destination);
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
 			<header class="event__header">
@@ -116,13 +118,27 @@ export default class EditPointComponent extends AbstractSmartComponent {
     super();
     this._point = point;
 
+    this._type = point.type;
+    this._startDate = point.startDate;
+    this._endDate = point.endDate;
+    this._offers = point.offers;
+    this._destination = point.destination;
     this._isFavorite = point.isFavorite;
+
+    this._resetHandler = null;
     this._submitHandler = null;
     this._subscribeOnEvents();
-
   }
+
   getTemplate() {
-    return createEditPointTemplate(this._point);
+    return createEditPointTemplate(this._point, {
+      type: this._type,
+      startDate: this._startDate,
+      endDate: this._endDate,
+      offers: this._offers,
+      destination: this._destination,
+      isFavorite: this._isFavorite,
+    });
   }
   recoveryListeners() {
     this.setSubmitHandler(this._submitHandler);
@@ -132,12 +148,27 @@ export default class EditPointComponent extends AbstractSmartComponent {
     super.rerender();
   }
   reset() {
+    const point = this._point;
 
+    this._type = point.type;
+    this._startDate = point.startDate;
+    this.endDate = point.endDate;
+    this._offers = point.offers;
+    this._destination = point.destination;
+    this._isFavorite = point.isFavorite;
+
+    this.rerender();
   }
 
-  setSubmitHandler(handler) {
-    this.getElement().addEventListener(`submit`, handler);
-    this._submitHandler = handler;
+  setSubmitHandler(onFormSubmit) {
+    this.getElement().addEventListener(`submit`, onFormSubmit);
+    this._submitHandler = onFormSubmit;
+  }
+
+  setResetHandler(onFormReset) {
+    const resetButton = this.getElement().querySelector(`.event__reset-btn`);
+    resetButton.addEventListener(`click`, onFormReset);
+    this._resetHandler = onFormReset;
   }
 
   _subscribeOnEvents() {
@@ -149,14 +180,28 @@ export default class EditPointComponent extends AbstractSmartComponent {
       if (!target) {
         return;
       }
-      this._point.type = target.textContent.toLowerCase();
+      this._type = target.textContent.toLowerCase();
+      this._offers = generateOffers(this._type);
+      this.rerender();
+    });
 
+    const destinationNameInput = element.querySelector(`#event-destination-1`);
+
+    destinationNameInput.addEventListener(`click`, (evt) => {
+      evt.target.value = ``;
+    });
+
+    destinationNameInput.addEventListener(`select`, (evt) => {
+      const inputValue = evt.target.value;
+      const [newDestination] = destinations.filter((destination) => destination.name === inputValue);
+      this._destination = newDestination;
       this.rerender();
     });
 
     element.querySelector(`.event__favorite-btn`)
       .addEventListener(`click`, () => {
         this._isFavorite = !this._isFavorite;
+        this.rerender();
       });
   }
 }
