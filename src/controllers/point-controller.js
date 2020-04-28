@@ -4,8 +4,7 @@ import EditPointComponent from '../components/edit-point';
 
 
 export default class PointController {
-  constructor(container) {
-    this._container = container;
+  constructor() {
 
     this._pointComponent = null;
     this._editPointComponent = null;
