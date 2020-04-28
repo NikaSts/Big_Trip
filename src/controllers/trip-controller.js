@@ -6,13 +6,16 @@ import {renderComponent} from '../utils/render';
 import {getTripDays, getDuration, getPointPrice} from '../utils/common';
 import PointController from './point-controller';
 
+const getPointController = (point, onDataChange) => {
+  const pointController = new PointController(point, onDataChange);
+  return pointController.render(point);
+};
 
-const renderDay = (onDataChange, day, index = null) => {
+const getDay = (onDataChange, day, index = null) => {
   const dayComponent = new DayComponent(day, index);
   const points = day.points;
   points.forEach((point) => {
-    const pointController = new PointController(point, onDataChange);
-    dayComponent.addPoint(pointController.render(point, onDataChange));
+    dayComponent.addPoint(getPointController(point, onDataChange));
   });
   return dayComponent;
 };
@@ -43,12 +46,12 @@ const getSortedPoints = (points, sortType = SortType.DEFAULT) => {
 
 const renderDefaultSort = (list, points, onDataChange) => {
   const days = getTripDays(points);
-  days.forEach((day, index) => list.addDay(renderDay(onDataChange, day, index)));
+  days.forEach((day, index) => list.addDay(getDay(onDataChange, day, index)));
 };
 
 const renderTypeSort = (list, points, onDataChange) => {
   const day = {'points': points};
-  list.addDay(renderDay(onDataChange, day));
+  list.addDay(getDay(onDataChange, day));
 };
 
 
@@ -56,6 +59,7 @@ export default class TripController {
   constructor(container) {
     this._container = container;
     this._points = [];
+    this._pointControllers = [];
     this._noPointsComponent = new NoPointsComponent();
     this._sortComponent = new SortComponent();
     this._tripDaysComponent = new TripDaysComponent();
