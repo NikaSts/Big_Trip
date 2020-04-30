@@ -9,8 +9,8 @@ const transferTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.TRANSFE
 const activityTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.ACTIVITY]);
 
 const createEditPointTemplate = (point, options = {}) => {
-  const {basePrice} = point;
-  const {type, startDate, endDate, offers, destination, isFavorite} = options;
+  const {basePrice, isFavorite} = point;
+  const {type, startDate, endDate, offers, destination} = options;
 
   const capitalizedType = capitalizeFirstLetter(type);
   const start = getFormattedDate(startDate);
@@ -123,10 +123,10 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._endDate = point.endDate;
     this._offers = point.offers.slice();
     this._destination = point.destination;
-    this._isFavorite = point.isFavorite;
 
     this._resetHandler = null;
     this._submitHandler = null;
+    this._favoriteHandler = null;
     this._subscribeOnEvents();
   }
 
@@ -137,11 +137,12 @@ export default class EditPointComponent extends AbstractSmartComponent {
       endDate: this._endDate,
       offers: this._offers,
       destination: this._destination,
-      isFavorite: this._isFavorite,
     });
   }
   recoveryListeners() {
     this.setSubmitHandler(this._submitHandler);
+    this.setResetHandler(this._resetHandler);
+    this.setFavoriteButtonClickHandler(this._favoriteHandler);
     this._subscribeOnEvents();
   }
   rerender() {
@@ -152,10 +153,9 @@ export default class EditPointComponent extends AbstractSmartComponent {
 
     this._type = point.type;
     this._startDate = point.startDate;
-    this.endDate = point.endDate;
+    this._endDate = point.endDate;
     this._offers = point.offers;
     this._destination = point.destination;
-    this._isFavorite = point.isFavorite;
 
     this.rerender();
   }
@@ -174,6 +174,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
   setFavoriteButtonClickHandler(onFavoriteButtonClick) {
     this.getElement().querySelector(`.event__favorite-btn`)
       .addEventListener(`click`, onFavoriteButtonClick);
+    this._favoriteHandler = onFavoriteButtonClick;
   }
 
   _subscribeOnEvents() {

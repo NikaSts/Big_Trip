@@ -34,7 +34,7 @@ export default class PointController {
     });
 
     this._editPointComponent.setResetHandler(() => {
-      this._editPointComponent.reset();
+      // this._editPointComponent.reset();
       this._closeEditForm();
     });
 
@@ -55,6 +55,7 @@ export default class PointController {
   }
 
   _openEditForm() {
+    console.log(this);
     this._onViewChange();
     replaceComponent(this._pointComponent, this._editPointComponent);
     document.addEventListener(`keydown`, this._onEscKeyDown);
@@ -62,6 +63,7 @@ export default class PointController {
   }
 
   _closeEditForm() {
+    console.log(this);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
     replaceComponent(this._editPointComponent, this._pointComponent);
     this._mode = Mode.DEFAULT;
