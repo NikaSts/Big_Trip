@@ -121,7 +121,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._type = point.type;
     this._startDate = point.startDate;
     this._endDate = point.endDate;
-    this._offers = point.offers;
+    this._offers = point.offers.slice();
     this._destination = point.destination;
     this._isFavorite = point.isFavorite;
 
@@ -171,6 +171,11 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._resetHandler = onFormReset;
   }
 
+  setFavoriteButtonClickHandler(onFavoriteButtonClick) {
+    this.getElement().querySelector(`.event__favorite-btn`)
+      .addEventListener(`click`, onFavoriteButtonClick);
+  }
+
   _subscribeOnEvents() {
     const element = this.getElement();
 
@@ -193,15 +198,9 @@ export default class EditPointComponent extends AbstractSmartComponent {
 
     destinationNameInput.addEventListener(`select`, (evt) => {
       const inputValue = evt.target.value;
-      const [newDestination] = destinations.filter((destination) => destination.name === inputValue);
+      const newDestination = destinations.find((destination) => destination.name === inputValue);
       this._destination = newDestination;
       this.rerender();
     });
-
-    element.querySelector(`.event__favorite-btn`)
-      .addEventListener(`click`, () => {
-        this._isFavorite = !this._isFavorite;
-        this.rerender();
-      });
   }
 }

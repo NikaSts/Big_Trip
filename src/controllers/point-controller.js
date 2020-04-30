@@ -10,7 +10,8 @@ const Mode = {
 
 
 export default class PointController {
-  constructor(onViewChange) {
+  constructor(onDataChange, onViewChange) {
+    this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._mode = Mode.DEFAULT;
 
@@ -35,6 +36,12 @@ export default class PointController {
     this._editPointComponent.setResetHandler(() => {
       this._editPointComponent.reset();
       this._closeEditForm();
+    });
+
+    this._editPointComponent.setFavoriteButtonClickHandler(() => {
+      this._onDataChange(point, Object.assign({}, point, {
+        isFavorite: !point.isFavorite,
+      }));
     });
 
     return this._pointComponent;
