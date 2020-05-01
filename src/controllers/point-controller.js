@@ -39,8 +39,7 @@ export default class PointController {
     });
 
     this._editPointComponent.setResetHandler(() => {
-      // this._editPointComponent.reset();
-      this._closeEditForm();
+      this.setDefaultView();
     });
 
     this._editPointComponent.setFavoriteButtonClickHandler(() => {

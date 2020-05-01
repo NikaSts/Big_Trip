@@ -174,7 +174,6 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this.getElement().querySelector(`.event__favorite-btn`)
       .addEventListener(`click`, onFavoriteButtonClick);
     this._favoriteHandler = onFavoriteButtonClick;
-    this.getTemplate();
   }
 
   _subscribeOnEvents() {
