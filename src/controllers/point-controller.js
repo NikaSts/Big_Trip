@@ -48,9 +48,9 @@ export default class PointController {
     });
 
     if (oldPointComponent && oldEditPointComponent) {
-      replaceComponent(oldPointComponent, this._pointComponent);
+      /*       replaceComponent(oldPointComponent, this._pointComponent);
       replaceComponent(oldEditPointComponent, this._editPointComponent);
-    }
+ */ }
 
     return this._pointComponent;
   }
