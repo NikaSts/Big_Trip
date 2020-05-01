@@ -37,6 +37,7 @@ export default class TripController {
     this._container = container;
     this._points = [];
     this._pointControllers = [];
+    this._sortedPoints = [];
 
     this._noPointsComponent = new NoPointsComponent();
     this._sortComponent = new SortComponent();
@@ -59,8 +60,11 @@ export default class TripController {
 
     renderComponent(this._container, this._sortComponent);
     renderComponent(this._container, this._tripDaysComponent);
-    const sortedPoints = getSortedPoints(this._points);
-    this._renderSortedPoints(sortedPoints);
+    if (this._sortedPoints === []) {
+      this._sortedPoints = this._points;
+    }
+    this._sortedPoints = getSortedPoints(this._points);
+    this._renderSortedPoints(this._sortedPoints);
   }
 
   _getDay(onDataChange, onViewChange, day, index = null) {
@@ -75,12 +79,13 @@ export default class TripController {
   }
 
   _onDataChange(pointController, oldData, newData) {
-    const index = this._points.findIndex((it) => it === oldData);
+    const index = this._sortedPoints.findIndex((it) => it === oldData);
     if (index === -1) {
       return;
     }
-    this._points = [].concat(this._points.slice(0, index), newData, this._points.slice(index + 1));
-    pointController.render(this._points[index]);
+
+    this._sortedPoints = [].concat(this._points.slice(0, index), newData, this._points.slice(index + 1));
+    pointController.render(this._sortedPoints[index]);
   }
 
   _onViewChange() {
@@ -88,10 +93,10 @@ export default class TripController {
   }
 
   _onSortTypeChange(sortType) {
-    const sortedPoints = getSortedPoints(this._points, sortType);
+    this._sortedPoints = getSortedPoints(this._points, sortType);
     this._tripDaysComponent.removeChildrenElements();
     this._pointControllers = [];
-    this._renderSortedPoints(sortedPoints, sortType);
+    this._renderSortedPoints(this._sortedPoints, sortType);
   }
 
   _renderSortedPoints(points, sortType = SortType.DEFAULT) {

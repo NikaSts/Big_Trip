@@ -9,8 +9,8 @@ const transferTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.TRANSFE
 const activityTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.ACTIVITY]);
 
 const createEditPointTemplate = (point, options = {}) => {
-  const {basePrice, isFavorite} = point;
-  const {type, startDate, endDate, offers, destination} = options;
+  const {basePrice} = point;
+  const {type, startDate, endDate, offers, destination, isFavorite} = options;
 
   const capitalizedType = capitalizeFirstLetter(type);
   const start = getFormattedDate(startDate);
@@ -122,6 +122,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._endDate = point.endDate;
     this._offers = point.offers.slice();
     this._destination = Object.assign({}, point.destination);
+    this._isFavorite = point.isFavorite;
 
     this._resetHandler = null;
     this._submitHandler = null;
@@ -136,6 +137,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
       endDate: this._endDate,
       offers: this._offers,
       destination: this._destination,
+      isFavorite: this._isFavorite,
     });
   }
   recoveryListeners() {
@@ -205,5 +207,12 @@ export default class EditPointComponent extends AbstractSmartComponent {
       this._destination = newDestination;
       this.rerender();
     });
+
+    element.querySelector(`.event__favorite-btn`)
+      .addEventListener(`click`, () => {
+        this._isFavorite = !this._isFavorite;
+        this.rerender();
+      });
+
   }
 }

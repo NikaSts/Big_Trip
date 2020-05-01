@@ -24,9 +24,10 @@ export default class PointController {
     const oldPointComponent = this._pointComponent;
     const oldEditPointComponent = this._editPointComponent;
 
-    this._pointComponent = new PointComponent(point);
-    this._editPointComponent = new EditPointComponent(point);
-
+    if (!oldPointComponent && !oldEditPointComponent) {
+      this._pointComponent = new PointComponent(point);
+      this._editPointComponent = new EditPointComponent(point);
+    }
     this._pointComponent.setEditButtonClickHandler(() => {
       this._openEditForm();
     });
@@ -37,7 +38,7 @@ export default class PointController {
     });
 
     this._editPointComponent.setResetHandler(() => {
-      this.setDefaultView();
+      this._closeEditForm();
     });
 
     this._editPointComponent.setFavoriteButtonClickHandler(() => {
@@ -45,11 +46,6 @@ export default class PointController {
         isFavorite: !point.isFavorite,
       }));
     });
-
-    if (oldPointComponent && oldEditPointComponent) {
-      replaceComponent(oldPointComponent, this._pointComponent);
-      replaceComponent(oldEditPointComponent, this._editPointComponent);
-    }
 
     return this._pointComponent;
   }
