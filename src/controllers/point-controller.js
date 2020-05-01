@@ -21,6 +21,9 @@ export default class PointController {
   }
 
   render(point) {
+    const oldPointComponent = this._pointComponent;
+    const oldEditPointComponent = this._editPointComponent;
+
     this._pointComponent = new PointComponent(point);
     this._editPointComponent = new EditPointComponent(point);
 
@@ -39,10 +42,15 @@ export default class PointController {
     });
 
     this._editPointComponent.setFavoriteButtonClickHandler(() => {
-      this._onDataChange(point, Object.assign({}, point, {
+      this._onDataChange(this, point, Object.assign({}, point, {
         isFavorite: !point.isFavorite,
       }));
     });
+
+    if (oldPointComponent && oldEditPointComponent) {
+      replaceComponent(oldPointComponent, this._pointComponent);
+      replaceComponent(oldEditPointComponent, this._editPointComponent);
+    }
 
     return this._pointComponent;
   }

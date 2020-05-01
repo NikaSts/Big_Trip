@@ -31,16 +31,6 @@ const getSortedPoints = (points, sortType = SortType.DEFAULT) => {
   return sortedPoints;
 };
 
-const renderSortedPoints = (list, points, getDay, onDataChange, onViewChange, sortType = SortType.DEFAULT) => {
-  if (sortType === SortType.DEFAULT) {
-    const days = getTripDays(points);
-    days.forEach((day, index) => list.addDay(getDay(onDataChange, onViewChange, day, index)));
-    return;
-  }
-  const day = {'points': points};
-  list.addDay(getDay(onDataChange, onViewChange, day));
-
-};
 
 export default class TripController {
   constructor(container) {
@@ -70,7 +60,7 @@ export default class TripController {
     renderComponent(this._container, this._sortComponent);
     renderComponent(this._container, this._tripDaysComponent);
     const sortedPoints = getSortedPoints(this._points);
-    renderSortedPoints(this._tripDaysComponent, sortedPoints, this._getDay, this._onDataChange, this._onViewChange);
+    this._renderSortedPoints(sortedPoints);
   }
 
   _getDay(onDataChange, onViewChange, day, index = null) {
@@ -84,13 +74,14 @@ export default class TripController {
     return dayComponent;
   }
 
-  _onDataChange(oldData, newData) {
+  _onDataChange(pointController, oldData, newData) {
     const index = this._points.findIndex((it) => it === oldData);
     if (index === -1) {
       return;
     }
     this._points = [].concat(this._points.slice(0, index), newData, this._points.slice(index + 1));
-    this._pointControllers[index].render(this._points[index]);
+    pointController.render(this._points[index]);
+    console.log(pointController, oldData, newData);
   }
 
   _onViewChange() {
@@ -101,6 +92,16 @@ export default class TripController {
     const sortedPoints = getSortedPoints(this._points, sortType);
     this._tripDaysComponent.removeChildrenElements();
     this._pointControllers = [];
-    renderSortedPoints(this._tripDaysComponent, sortedPoints, this._getDay, this._onDataChange, this._onViewChange, sortType);
+    this._renderSortedPoints(sortedPoints, sortType);
+  }
+
+  _renderSortedPoints(points, sortType = SortType.DEFAULT) {
+    if (sortType === SortType.DEFAULT) {
+      const days = getTripDays(points);
+      days.forEach((day, index) => this._tripDaysComponent.addDay(this._getDay(this._onDataChange, this._onViewChange, day, index)));
+      return;
+    }
+    const day = {'points': points};
+    this._tripDaysComponent.addDay(this._getDay(this._onDataChange, this._onViewChange, day));
   }
 }

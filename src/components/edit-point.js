@@ -19,7 +19,6 @@ const createEditPointTemplate = (point, options = {}) => {
   const availableOffers = hasOffers ? createAvailableOfferTemplate(offers) : ``;
 
   const transferGroup = pointGroupToType[TypeGroup.TRANSFER].includes(type);
-  // console.log(type, destination);
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
 			<header class="event__header">
@@ -122,7 +121,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._startDate = point.startDate;
     this._endDate = point.endDate;
     this._offers = point.offers.slice();
-    this._destination = point.destination;
+    this._destination = Object.assign({}, point.destination);
 
     this._resetHandler = null;
     this._submitHandler = null;
@@ -175,6 +174,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this.getElement().querySelector(`.event__favorite-btn`)
       .addEventListener(`click`, onFavoriteButtonClick);
     this._favoriteHandler = onFavoriteButtonClick;
+    this.getTemplate();
   }
 
   _subscribeOnEvents() {
@@ -197,9 +197,12 @@ export default class EditPointComponent extends AbstractSmartComponent {
       evt.target.value = ``;
     });
 
-    destinationNameInput.addEventListener(`select`, (evt) => {
+    destinationNameInput.addEventListener(`input`, (evt) => {
       const inputValue = evt.target.value;
       const newDestination = destinations.find((destination) => destination.name === inputValue);
+      if (inputValue === `` || !newDestination) {
+        return;
+      }
       this._destination = newDestination;
       this.rerender();
     });
