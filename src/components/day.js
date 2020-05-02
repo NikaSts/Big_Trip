@@ -1,4 +1,4 @@
-import {getFormattedDate} from '../utils/common';
+import {getStringOfDate, formatDate} from '../utils/common';
 import AbstractComponent from './abstract-component';
 import {renderComponent} from '../utils/render';
 
@@ -6,11 +6,9 @@ import {renderComponent} from '../utils/render';
 const createDayTemplate = (tripDay, index) => {
   const isIndexValid = (index !== null);
   const {date} = tripDay;
-  const tripDate = getFormattedDate(date);
-  const day = tripDate.day;
-  const month = tripDate.month;
-  const monthName = tripDate.monthName;
-  const year = tripDate.fullYear;
+
+  const dateTime = getStringOfDate(Number(date));
+  const tripDate = formatDate(Number(date));
 
   return (
     `<li class="trip-days__item day">
@@ -18,7 +16,7 @@ const createDayTemplate = (tripDay, index) => {
 
         ${isIndexValid ?
       `<span class="day__counter">${index + 1}</span>
-        <time class="day__date" datetime="${year}-${month}-${day}">${monthName} ${day}</time>` : ``}
+        <time class="day__date" datetime="${dateTime}">${tripDate}</time>` : ``}
 
       </div>
       <ul class="trip-events__list">

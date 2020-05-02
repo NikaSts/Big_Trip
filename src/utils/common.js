@@ -1,5 +1,6 @@
-const MONTH_NAMES = [`JAN`, `FEB`, `MAR`, `APR`, `MAY`, `JUN`, `JUL`, `AUG`, `SEP`, `OCT`, `NOV`, `DEC`];
+import moment from "moment";
 
+// RANDOM
 const getRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
@@ -12,42 +13,53 @@ const getRandomBoolean = (number) => {
   return Math.random() > number;
 };
 
-const getPadded = (dateTime) => {
-  return dateTime.toString().padStart(2, `0`);
+
+// DATE AND TIME
+const getStringOfDate = (timestamp) => {
+  const date = new Date(timestamp);
+  const datatime = date.toJSON().slice(0, -8); // 2020-04-30T21:40
+  return datatime;
 };
 
-const getMonthName = (date) => MONTH_NAMES[date.getMonth()];
+const getDateOfString = (date) => {
+  return new Date(Number(date));
+};
 
+const formatDate = (date) => {
+  return moment(date).format(`MMM DD`);
+};
+
+const formatTime = (time) => {
+  return moment(time).format(`hh:mm`);
+};
+
+const formatDateAndTime = (timestamp) => {
+  const date = moment(timestamp).format(`DD/MM/YY`);
+  const time = formatTime(date);
+  return `${date} ${time}`;
+};
+
+
+// DURATION
 const getDuration = (start, end) => {
   return end - start;
 };
 
-const getFormattedDate = (date) => {
-  const newDate = new Date(Number(date));
-  return ({
-    day: getPadded(newDate.getDate()),
-    month: getPadded(newDate.getMonth() + 1),
-    monthName: getMonthName(newDate),
-    year: newDate.getFullYear().toString().slice(2),
-    fullYear: newDate.getFullYear(),
-    hours: getPadded(newDate.getHours()),
-    minutes: getPadded(newDate.getMinutes()),
-  });
-};
-
 const getFormattedDuration = (duration) => {
-  const minutes = duration / 1000 / 60;
-  if (minutes >= 60) {
-    const hours = parseInt(minutes / 60, 10);
-    const minutesLeft = minutes - (hours * 60);
-    if (minutesLeft === 0) {
-      return `${hours}H`;
-    }
-    return `${hours}H ${getPadded(Math.round(minutesLeft))}M`;
+  const minutes = moment.duration(duration).minutes();
+  const hours = moment.duration(duration).hours();
+  const days = moment.duration(duration).days();
+  if (days) {
+    return `${days}D ${hours}H ${minutes}M`;
   }
-  return `${getPadded(Math.round(minutes))}M`;
+  if (hours) {
+    return `${hours}H ${minutes}M`;
+  }
+  return `${minutes}M`;
 };
 
+
+// OTHER
 const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
@@ -85,4 +97,4 @@ const getPointPrice = (point) => {
 };
 
 
-export {getRandomNumber, getRandomItem, getRandomBoolean, getFormattedDate, getDuration, getFormattedDuration, capitalizeFirstLetter, getTripDays, getPointPrice};
+export {getRandomNumber, getRandomItem, getRandomBoolean, getStringOfDate, getDateOfString, formatDate, formatTime, formatDateAndTime, getDuration, getFormattedDuration, capitalizeFirstLetter, getTripDays, getPointPrice};

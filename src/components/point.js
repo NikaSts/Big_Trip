@@ -1,4 +1,4 @@
-import {getFormattedDate, getDuration, getFormattedDuration, capitalizeFirstLetter} from '../utils/common';
+import {getDuration, getFormattedDuration, capitalizeFirstLetter, getStringOfDate, formatTime} from '../utils/common';
 import {pointGroupToType, TypeGroup} from '../mock/point';
 import AbstractComponent from './abstract-component';
 
@@ -6,8 +6,12 @@ import AbstractComponent from './abstract-component';
 const createPointTemplate = (point) => {
   const {type, startDate, endDate, destination, basePrice, offers} = point;
   const capitalizedType = capitalizeFirstLetter(type);
-  const start = getFormattedDate(startDate);
-  const end = getFormattedDate(endDate);
+  const startDateTime = getStringOfDate(startDate);
+  const endDateTime = getStringOfDate(endDate);
+
+  const startTime = formatTime(startDate);
+  const endTime = formatTime(endDate);
+
   const duration = getFormattedDuration(getDuration(startDate, endDate));
   const hasOffers = offers.length > 0;
   const availableOffers = hasOffers ? offers
@@ -26,9 +30,9 @@ const createPointTemplate = (point) => {
 
 				<div class="event__schedule">
 					<p class="event__time">
-						<time class="event__start-time" datetime="${start.fullYear}-${start.month}-${start.day}T${start.hours}:${start.minutes}">${start.hours}:${start.minutes}</time>
+						<time class="event__start-time" datetime="${startDateTime}">${startTime}</time>
 						&mdash;
-						<time class="event__end-time" datetime="${end.fullYear}-${end.month}-${end.day}T${end.hours}:${end.minutes}">${end.hours}:${end.minutes}</time>
+						<time class="event__end-time" datetime="${endDateTime}">${endTime}</time>
 					</p>
 					<p class="event__duration">${duration}</p>
 				</div>
