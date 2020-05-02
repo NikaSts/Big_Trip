@@ -1,7 +1,7 @@
 import AbstractSmartComponent from './abstract-smart-component';
 import {createPointTypeTemplate} from './helpers/point-type';
 import {createAvailableOfferTemplate} from './helpers/offer';
-import {getFormattedDate, capitalizeFirstLetter} from '../utils/common';
+import {capitalizeFirstLetter, formatDateAndTime} from '../utils/common';
 import {TypeGroup, pointGroupToType, CITY_NAMES, generateOffers, destinations} from '../mock/point';
 import flatpickr from "flatpickr";
 
@@ -16,8 +16,8 @@ const createEditPointTemplate = (point, options = {}) => {
   const {type, startDate, endDate, offers, destination, isFavorite} = options;
 
   const capitalizedType = capitalizeFirstLetter(type);
-  const start = getFormattedDate(startDate);
-  const end = getFormattedDate(endDate);
+  const start = formatDateAndTime(startDate);
+  const end = formatDateAndTime(endDate);
   const hasOffers = offers.length > 0;
   const availableOffers = hasOffers ? createAvailableOfferTemplate(offers) : ``;
 
@@ -59,10 +59,10 @@ const createEditPointTemplate = (point, options = {}) => {
 
 				<div class="event__field-group  event__field-group--time">
 					<label class="visually-hidden" for="event-start-time-1">From</label>
-					<input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${start.day}/${start.month}/${start.year} ${start.hours}:${start.minutes}">
+					<input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${start}">
 					&mdash;
 					<label class="visually-hidden" for="event-end-time-1">To</label>
-					<input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${end.day}/${end.month}/${end.year} ${end.hours}:${end.minutes}">
+					<input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${end}">
 				</div>
 
 				<div class="event__field-group  event__field-group--price">
