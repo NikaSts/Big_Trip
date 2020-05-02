@@ -38,7 +38,7 @@ export default class PointController {
     });
 
     this._editPointComponent.setResetHandler(() => {
-      this._closeEditForm();
+      this.setDefaultView();
     });
 
     this._editPointComponent.setFavoriteButtonClickHandler(() => {
@@ -73,7 +73,7 @@ export default class PointController {
   _onEscKeyDown(evt) {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
     if (isEscKey) {
-      this._closeEditForm();
+      this.setDefaultView();
     }
   }
 }

@@ -180,6 +180,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
 
   _subscribeOnEvents() {
     const element = this.getElement();
+    const destinationNameInput = element.querySelector(`#event-destination-1`);
 
     element.querySelector(`.event__type-list`)
     .addEventListener(`click`, (evt) => {
@@ -191,8 +192,6 @@ export default class EditPointComponent extends AbstractSmartComponent {
       this._offers = generateOffers(this._type);
       this.rerender();
     });
-
-    const destinationNameInput = element.querySelector(`#event-destination-1`);
 
     destinationNameInput.addEventListener(`click`, (evt) => {
       evt.target.value = ``;

@@ -60,9 +60,7 @@ export default class TripController {
 
     renderComponent(this._container, this._sortComponent);
     renderComponent(this._container, this._tripDaysComponent);
-    if (this._sortedPoints === []) {
-      this._sortedPoints = this._points;
-    }
+
     this._sortedPoints = getSortedPoints(this._points);
     this._renderSortedPoints(this._sortedPoints);
   }
@@ -84,7 +82,7 @@ export default class TripController {
       return;
     }
 
-    this._sortedPoints = [].concat(this._points.slice(0, index), newData, this._points.slice(index + 1));
+    this._sortedPoints = [].concat(this._sortedPoints.slice(0, index), newData, this._sortedPoints.slice(index + 1));
     pointController.render(this._sortedPoints[index]);
   }
 
