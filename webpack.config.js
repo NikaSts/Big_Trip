@@ -22,6 +22,8 @@ module.exports = {
     ],
   },
   plugins: [
-    new MomentLocalesPlugin([en - gb])
+    new MomentLocalesPlugin({
+      localesToKeep: [`en-gb`]
+    })
   ]
 };

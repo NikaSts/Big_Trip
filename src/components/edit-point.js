@@ -4,7 +4,6 @@ import {createAvailableOfferTemplate} from './helpers/offer';
 import {capitalizeFirstLetter, formatDateAndTime} from '../utils/common';
 import {TypeGroup, pointGroupToType, CITY_NAMES, generateOffers, destinations} from '../mock/point';
 import flatpickr from "flatpickr";
-
 import "flatpickr/dist/flatpickr.min.css";
 
 
@@ -18,6 +17,7 @@ const createEditPointTemplate = (point, options = {}) => {
   const capitalizedType = capitalizeFirstLetter(type);
   const start = formatDateAndTime(startDate);
   const end = formatDateAndTime(endDate);
+
   const hasOffers = offers.length > 0;
   const availableOffers = hasOffers ? createAvailableOfferTemplate(offers) : ``;
 
@@ -147,16 +147,19 @@ export default class EditPointComponent extends AbstractSmartComponent {
       isFavorite: this._isFavorite,
     });
   }
+
   recoveryListeners() {
     this.setSubmitHandler(this._submitHandler);
     this.setResetHandler(this._resetHandler);
     this.setFavoriteButtonClickHandler(this._favoriteHandler);
     this._subscribeOnEvents();
   }
+
   rerender() {
     super.rerender();
     this._applyFlatpickr();
   }
+
   reset() {
     const point = this._point;
 
@@ -204,8 +207,10 @@ export default class EditPointComponent extends AbstractSmartComponent {
       enableTime: true,
       altFormat: `d/m/y H:i`,
       dateFormat: `d/m/y H:i`,
-      defaultDate: this._point.startDate || `now`,
-      // time_24hr: true,
+      defaultDate: this._point.startDate || `today`,
+      onClose() {
+        startTimeInput.value = this.selectedDates[0];
+      }
     });
     this._endPicker = flatpickr(endTimeInput, {
       altInput: true,
@@ -213,12 +218,12 @@ export default class EditPointComponent extends AbstractSmartComponent {
       enableTime: true,
       altFormat: `d/m/y H:i`,
       dateFormat: `d/m/y H:i`,
-      defaultDate: this._point.endDate || `now`,
-      minDate: this._startPicker.selectedDates[0],
-      // time_24hr: true,
+      defaultDate: this._point.endDate || `today`,
+      onClose() {
+        endTimeInput.value = this.selectedDates[0];
+      }
+      // minDate: this._startPicker.selectedDates[0],
     });
-    this._startDate = this._startPicker.selectedDates[0];
-    this._endDate = this._endPicker.selectedDates[0];
   }
 
   _subscribeOnEvents() {
@@ -254,6 +259,16 @@ export default class EditPointComponent extends AbstractSmartComponent {
       .addEventListener(`click`, () => {
         this._isFavorite = !this._isFavorite;
         this.rerender();
+      });
+
+    element.querySelector(`#event-start-time-1`)
+      .addEventListener(`change`, () => {
+        this._startDate = Number(this._startPicker.selectedDates[0]);
+      });
+
+    element.querySelector(`#event-end-time-1`)
+      .addEventListener(`change`, () => {
+        this._endDate = Number(this._endPicker.selectedDates[0]);
       });
 
   }
