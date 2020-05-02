@@ -37,8 +37,8 @@ export default class DayComponent extends AbstractComponent {
   getTemplate() {
     return createDayTemplate(this._day, this._index);
   }
-  addPoint(point) {
+  addPoint(pointController) {
     const pointsList = this.getElement().querySelector(`.trip-events__list`);
-    renderComponent(pointsList, point);
+    renderComponent(pointsList, pointController);
   }
 }

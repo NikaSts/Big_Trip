@@ -1,5 +1,7 @@
 import {getRandomNumber, getRandomItem, getRandomBoolean} from '../utils/common';
 
+const MEDIUM_PROBABILITY = 0.5;
+const HIGH_PROBABILITY = 0.3;
 const CITY_NAMES = [`Rome`, `Amsterdam`, `Paris`, `Geneva`, `Moscow`, `Chamonix`];
 const FULL_DAY = 24 * 60 * 60 * 1000; // 24 hours
 const MIN_DAY_COUNT = -3;
@@ -135,7 +137,7 @@ const generateOffers = (type) => {
       id: availableOffer.id,
       title: availableOffer.title,
       price: getRandomPrice(),
-      isChecked: getRandomBoolean(),
+      isChecked: false,
     };
   });
 };
@@ -145,15 +147,17 @@ const generatePoint = () => {
   const startDate = getRandomDate(MIN_DAY_COUNT, MAX_DAY_COUNT) + getRandomNumber(MIN_DURATION, MAX_DURATION);
   const duration = getRandomNumber(MIN_DURATION, MAX_DURATION);
   const endDate = startDate + duration;
+  const offers = generateOffers(type);
+  const randomCheckedOffers = offers.map((offerItem) => Object.assign(offerItem, {isChecked: getRandomBoolean(MEDIUM_PROBABILITY)}));
 
   return ({
     type,
     startDate,
     endDate,
     basePrice: Number(getRandomNumber(MIN_PRICE, MAX_PRICE) + `0`),
-    offers: getRandomBoolean() ? generateOffers(type) : [],
+    offers: getRandomBoolean(HIGH_PROBABILITY) ? randomCheckedOffers : [],
     destination: destinations[getRandomNumber(0, CITY_NAMES.length)],
-    isFavorite: getRandomBoolean(),
+    isFavorite: getRandomBoolean(MEDIUM_PROBABILITY),
   });
 };
 
@@ -163,4 +167,4 @@ const generatePoints = (count) => {
     .map(generatePoint);
 };
 
-export {TypeGroup, pointGroupToType, generatePoints, CITY_NAMES};
+export {TypeGroup, pointGroupToType, generatePoints, CITY_NAMES, generateOffers, destinations};

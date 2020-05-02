@@ -1,15 +1,17 @@
 import {createPointTypeTemplate} from './helpers/point-type';
 import {createAvailableOfferTemplate} from './helpers/offer';
 import {getFormattedDate, capitalizeFirstLetter} from '../utils/common';
-import {TypeGroup, pointGroupToType, CITY_NAMES} from '../mock/point';
-import AbstractComponent from './abstract-component';
+import {TypeGroup, pointGroupToType, CITY_NAMES, generateOffers, destinations} from '../mock/point';
+import AbstractSmartComponent from './abstract-smart-component';
 
 
 const transferTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.TRANSFER]);
 const activityTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.ACTIVITY]);
 
-const createEditPointTemplate = (point) => {
-  const {type, startDate, endDate, basePrice, destination, offers, isFavorite} = point;
+const createEditPointTemplate = (point, options = {}) => {
+  const {basePrice} = point;
+  const {type, startDate, endDate, offers, destination, isFavorite} = options;
+
   const capitalizedType = capitalizeFirstLetter(type);
   const start = getFormattedDate(startDate);
   const end = getFormattedDate(endDate);
@@ -17,7 +19,6 @@ const createEditPointTemplate = (point) => {
   const availableOffers = hasOffers ? createAvailableOfferTemplate(offers) : ``;
 
   const transferGroup = pointGroupToType[TypeGroup.TRANSFER].includes(type);
-
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
 			<header class="event__header">
@@ -111,15 +112,106 @@ const createEditPointTemplate = (point) => {
   );
 };
 
-export default class EditPointComponent extends AbstractComponent {
+export default class EditPointComponent extends AbstractSmartComponent {
   constructor(point) {
     super();
     this._point = point;
+
+    this._type = point.type;
+    this._startDate = point.startDate;
+    this._endDate = point.endDate;
+    this._offers = point.offers.slice();
+    this._destination = Object.assign({}, point.destination);
+    this._isFavorite = point.isFavorite;
+
+    this._resetHandler = null;
+    this._submitHandler = null;
+    this._favoriteHandler = null;
+    this._subscribeOnEvents();
   }
+
   getTemplate() {
-    return createEditPointTemplate(this._point);
+    return createEditPointTemplate(this._point, {
+      type: this._type,
+      startDate: this._startDate,
+      endDate: this._endDate,
+      offers: this._offers,
+      destination: this._destination,
+      isFavorite: this._isFavorite,
+    });
   }
-  setSubmitHandler(handler) {
-    this.getElement().addEventListener(`submit`, handler);
+  recoveryListeners() {
+    this.setSubmitHandler(this._submitHandler);
+    this.setResetHandler(this._resetHandler);
+    this.setFavoriteButtonClickHandler(this._favoriteHandler);
+    this._subscribeOnEvents();
+  }
+  rerender() {
+    super.rerender();
+  }
+  reset() {
+    const point = this._point;
+
+    this._type = point.type;
+    this._startDate = point.startDate;
+    this._endDate = point.endDate;
+    this._offers = point.offers;
+    this._destination = point.destination;
+
+    this.rerender();
+  }
+
+  setSubmitHandler(onFormSubmit) {
+    this.getElement().addEventListener(`submit`, onFormSubmit);
+    this._submitHandler = onFormSubmit;
+  }
+
+  setResetHandler(onFormReset) {
+    const resetButton = this.getElement().querySelector(`.event__reset-btn`);
+    resetButton.addEventListener(`click`, onFormReset);
+    this._resetHandler = onFormReset;
+  }
+
+  setFavoriteButtonClickHandler(onFavoriteButtonClick) {
+    this.getElement().querySelector(`.event__favorite-btn`)
+      .addEventListener(`click`, onFavoriteButtonClick);
+    this._favoriteHandler = onFavoriteButtonClick;
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+    const destinationNameInput = element.querySelector(`#event-destination-1`);
+
+    element.querySelector(`.event__type-list`)
+    .addEventListener(`click`, (evt) => {
+      const target = evt.target.closest(`LABEL`);
+      if (!target) {
+        return;
+      }
+      this._type = target.textContent.toLowerCase();
+      this._offers = generateOffers(this._type);
+      this.rerender();
+    });
+
+    destinationNameInput.addEventListener(`click`, (evt) => {
+      evt.target.value = ``;
+    });
+
+    destinationNameInput.addEventListener(`input`, (evt) => {
+      const inputValue = evt.target.value;
+      const newDestination = destinations.find((destination) => destination.name === inputValue);
+      if (inputValue === `` || !newDestination) {
+        return;
+      }
+      this._destination = newDestination;
+      this.rerender();
+    });
+
+    element.querySelector(`.event__favorite-btn`)
+      .addEventListener(`click`, () => {
+        this._isFavorite = !this._isFavorite;
+        this.rerender();
+      });
+
   }
 }
