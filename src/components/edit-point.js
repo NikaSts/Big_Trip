@@ -1,8 +1,11 @@
+import AbstractSmartComponent from './abstract-smart-component';
 import {createPointTypeTemplate} from './helpers/point-type';
 import {createAvailableOfferTemplate} from './helpers/offer';
 import {getFormattedDate, capitalizeFirstLetter} from '../utils/common';
 import {TypeGroup, pointGroupToType, CITY_NAMES, generateOffers, destinations} from '../mock/point';
-import AbstractSmartComponent from './abstract-smart-component';
+import flatpickr from "flatpickr";
+
+import "flatpickr/dist/flatpickr.min.css";
 
 
 const transferTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.TRANSFER]);
@@ -127,6 +130,10 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._resetHandler = null;
     this._submitHandler = null;
     this._favoriteHandler = null;
+    this._startPicker = null;
+    this._endPicker = null;
+
+    this._applyFlatpickr();
     this._subscribeOnEvents();
   }
 
@@ -148,6 +155,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
   }
   rerender() {
     super.rerender();
+    this._applyFlatpickr();
   }
   reset() {
     const point = this._point;
@@ -176,6 +184,41 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this.getElement().querySelector(`.event__favorite-btn`)
       .addEventListener(`click`, onFavoriteButtonClick);
     this._favoriteHandler = onFavoriteButtonClick;
+  }
+
+  _applyFlatpickr() {
+    if (this._startPicker !== null || this._endPicker !== null) {
+      this._startPicker.destroy();
+      this._endPicker.destroy();
+
+      this._startPicker = null;
+      this._endPicker = null;
+    }
+
+    const startTimeInput = this.getElement().querySelector(`#event-start-time-1`);
+    const endTimeInput = this.getElement().querySelector(`#event-end-time-1`);
+
+    this._startPicker = flatpickr(startTimeInput, {
+      altInput: false,
+      allowInput: true,
+      enableTime: true,
+      altFormat: `d/m/y H:i`,
+      dateFormat: `d/m/y H:i`,
+      defaultDate: this._point.startDate || `now`,
+      // time_24hr: true,
+    });
+    this._endPicker = flatpickr(endTimeInput, {
+      altInput: true,
+      allowInput: true,
+      enableTime: true,
+      altFormat: `d/m/y H:i`,
+      dateFormat: `d/m/y H:i`,
+      defaultDate: this._point.endDate || `now`,
+      minDate: this._startPicker.selectedDates[0],
+      // time_24hr: true,
+    });
+    this._startDate = this._startPicker.selectedDates[0];
+    this._endDate = this._endPicker.selectedDates[0];
   }
 
   _subscribeOnEvents() {
