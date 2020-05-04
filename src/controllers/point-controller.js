@@ -1,4 +1,4 @@
-import {replaceComponent} from '../utils/render';
+import {replaceComponent, removeComponent} from '../utils/render';
 import PointComponent from '../components/point';
 import EditPointComponent from '../components/edit-point';
 
@@ -55,6 +55,12 @@ export default class PointController {
       this._editPointComponent.reset();
       this._closeEditForm();
     }
+  }
+
+  destroy() {
+    removeComponent(this._eventEditComponent);
+    removeComponent(this._eventComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
   _openEditForm() {

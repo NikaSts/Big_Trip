@@ -142,6 +142,8 @@ const generateOffers = (type) => {
   });
 };
 
+let index = 0;
+
 const generatePoint = () => {
   const type = getRandomItem(POINT_TYPES);
   const startDate = getRandomDate(MIN_DAY_COUNT, MAX_DAY_COUNT) + getRandomNumber(MIN_DURATION, MAX_DURATION);
@@ -151,6 +153,7 @@ const generatePoint = () => {
   const randomCheckedOffers = offers.map((offerItem) => Object.assign(offerItem, {isChecked: getRandomBoolean(MEDIUM_PROBABILITY)}));
 
   return ({
+    id: index++,
     type,
     startDate,
     endDate,

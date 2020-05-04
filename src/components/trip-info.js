@@ -40,12 +40,13 @@ const createTripInfoTemplate = (points) => {
 };
 
 export default class TripInfoComponent extends AbstractComponent {
-  constructor(days) {
+  constructor(pointsModel) {
     super();
-    this._days = days;
+    this._pointsModel = pointsModel;
   }
 
   getTemplate() {
-    return createTripInfoTemplate(this._days);
+    const points = this._pointsModel.getPoints();
+    return createTripInfoTemplate(points);
   }
 }

@@ -29,4 +29,5 @@ export default class FiltersComponent extends AbstractComponent {
   getTemplate() {
     return createFiltersTemplate();
   }
+
 }

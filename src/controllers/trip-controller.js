@@ -33,9 +33,11 @@ const getSortedPoints = (points, sortType = SortType.DEFAULT) => {
 
 
 export default class TripController {
-  constructor(container) {
+  constructor(container, pointsModel) {
     this._container = container;
-    this._points = [];
+    this._pointsModel = pointsModel;
+
+    this._points = this._pointsModel.getPoints();
     this._pointControllers = [];
     this._sortedPoints = [];
 
@@ -50,9 +52,7 @@ export default class TripController {
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
-  render(points) {
-    this._points = points;
-
+  render() {
     if (this._points.length === 0) {
       renderComponent(this._container, this._noPointsComponent);
       return;
@@ -77,13 +77,11 @@ export default class TripController {
   }
 
   _onDataChange(pointController, oldData, newData) {
-    const index = this._sortedPoints.findIndex((it) => it === oldData);
-    if (index === -1) {
+    const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
+    if (!isSuccess) {
       return;
     }
-
-    this._sortedPoints = [].concat(this._sortedPoints.slice(0, index), newData, this._sortedPoints.slice(index + 1));
-    pointController.render(this._sortedPoints[index]);
+    pointController.render(newData);
   }
 
   _onViewChange() {
@@ -91,9 +89,8 @@ export default class TripController {
   }
 
   _onSortTypeChange(sortType) {
-    this._sortedPoints = getSortedPoints(this._points, sortType);
-    this._tripDaysComponent.removeChildrenElements();
-    this._pointControllers = [];
+    this._sortedPoints = getSortedPoints(sortType);
+    this._removePoints();
     this._renderSortedPoints(this._sortedPoints, sortType);
   }
 
@@ -105,5 +102,11 @@ export default class TripController {
     }
     const day = {'points': points};
     this._tripDaysComponent.addDay(this._getDay(this._onDataChange, this._onViewChange, day));
+  }
+
+  _removePoints() {
+    this._pointControllers.forEach((pointController) => pointController.destroy());
+    this._pointControllers = [];
+    this._tripDaysComponent.textContent = ``;
   }
 }
