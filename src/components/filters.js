@@ -1,33 +1,51 @@
 import AbstractComponent from './abstract-component';
+import {capitalizeFirstLetter} from '../utils/common';
 
 
-const createFiltersTemplate = () => {
+const FILTER_ID_PREFIX = `filter-`;
+
+const getFilterNameById = (id) => {
+  return id.substring(FILTER_ID_PREFIX.length);
+};
+
+const createFilterMarkup = (filter, isChecked) => {
+
+  return (
+    `<div class="trip-filters__filter">
+      <input id="filter-${filter}" class="trip-filters__filter-input  visually-hidden" type="radio"
+        name="trip-filter" value="everything"${isChecked ? ` checked` : ``}>
+      <label class="trip-filters__filter-label" for="filter-everything">${capitalizeFirstLetter(filter)}</label>
+    </div>`
+  );
+};
+
+const getfiltersMarkup = (filters) => {
+  return filters.map((filter, index) => createFilterMarkup(filter, index === 0)).join(`\n`);
+};
+
+const createFiltersTemplate = (filters) => {
   return (
     `<form class="trip-filters" action="#" method="get">
-      <div class="trip-filters__filter">
-        <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio"
-          name="trip-filter" value="everything" checked>
-        <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
-      </div>
-
-      <div class="trip-filters__filter">
-        <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future">
-        <label class="trip-filters__filter-label" for="filter-future">Future</label>
-      </div>
-
-      <div class="trip-filters__filter">
-        <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past">
-        <label class="trip-filters__filter-label" for="filter-past">Past</label>
-      </div>
-
+      ${getfiltersMarkup(filters)}
       <button class="visually-hidden" type="submit">Accept filter</button>
     </form>`
   );
 };
 
 export default class FiltersComponent extends AbstractComponent {
-  getTemplate() {
-    return createFiltersTemplate();
+  constructor(filters) {
+    super();
+    this._filters = filters;
   }
 
+  getTemplate() {
+    return createFiltersTemplate(this._filters);
+  }
+
+  setFilterChangeHandler(handler) {
+    this.getElement().addEventListener(`change`, (evt) => {
+      const filterName = getFilterNameById(evt.target.id);
+      handler(filterName);
+    });
+  }
 }

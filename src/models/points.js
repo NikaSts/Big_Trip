@@ -28,6 +28,10 @@ export default class PointsModel {
     this._dataChangeHandlers.push(handler);
   }
 
+  setFilter() {
+
+  }
+
   _callHandlers(handlers) {
     handlers.forEach((handler) => handler());
   }

@@ -96,5 +96,9 @@ const getPointPrice = (point) => {
   return point.basePrice + point.offers.reduce(cb, 0);
 };
 
+/* const getPointsByFilter = () => {
+
+};
+ */
 
 export {getRandomNumber, getRandomItem, getRandomBoolean, getStringOfDate, getDateOfString, formatDate, formatTime, formatDateAndTime, getDuration, getFormattedDuration, capitalizeFirstLetter, getTripDays, getPointPrice};
