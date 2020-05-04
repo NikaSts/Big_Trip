@@ -201,29 +201,29 @@ export default class EditPointComponent extends AbstractSmartComponent {
     const startTimeInput = this.getElement().querySelector(`#event-start-time-1`);
     const endTimeInput = this.getElement().querySelector(`#event-end-time-1`);
 
-    this._startPicker = flatpickr(startTimeInput, {
-      altInput: false,
-      allowInput: true,
-      enableTime: true,
-      altFormat: `d/m/y H:i`,
-      dateFormat: `d/m/y H:i`,
-      defaultDate: this._point.startDate || `today`,
-      onClose() {
-        startTimeInput.value = this.selectedDates[0];
-      }
-    });
-    this._endPicker = flatpickr(endTimeInput, {
+    const picker = {
       altInput: true,
       allowInput: true,
       enableTime: true,
       altFormat: `d/m/y H:i`,
       dateFormat: `d/m/y H:i`,
+    };
+
+    this._startPicker = flatpickr(startTimeInput, Object.assign({}, picker, {
+      defaultDate: this._point.startDate || `today`,
+      onClose() {
+        startTimeInput.value = this.selectedDates[0];
+      }
+    }));
+
+    this._endPicker = flatpickr(endTimeInput, Object.assign({}, picker, {
       defaultDate: this._point.endDate || `today`,
       onClose() {
         endTimeInput.value = this.selectedDates[0];
       }
-    });
+    }));
   }
+
 
   _subscribeOnEvents() {
     const element = this.getElement();
