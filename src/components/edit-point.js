@@ -190,7 +190,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
   }
 
   _applyFlatpickr() {
-    if (this._startPicker !== null || this._endPicker !== null) {
+    if (this._startPicker || this._endPicker) {
       this._startPicker.destroy();
       this._endPicker.destroy();
 
@@ -222,7 +222,6 @@ export default class EditPointComponent extends AbstractSmartComponent {
       onClose() {
         endTimeInput.value = this.selectedDates[0];
       }
-      // minDate: this._startPicker.selectedDates[0],
     });
   }
 
@@ -270,6 +269,5 @@ export default class EditPointComponent extends AbstractSmartComponent {
       .addEventListener(`change`, () => {
         this._endDate = Number(this._endPicker.selectedDates[0]);
       });
-
   }
 }

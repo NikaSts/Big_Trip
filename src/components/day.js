@@ -7,8 +7,8 @@ const createDayTemplate = (tripDay, index) => {
   const isIndexValid = (index !== null);
   const {date} = tripDay;
 
-  const dateTime = getStringOfDate(Number(date));
-  const tripDate = formatDate(Number(date));
+  const dateTime = isIndexValid ? getStringOfDate(Number(date)) : ``;
+  const tripDate = isIndexValid ? formatDate(Number(date)) : ``;
 
   return (
     `<li class="trip-days__item day">

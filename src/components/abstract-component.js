@@ -21,6 +21,6 @@ export default class AbstractComponent {
     this._element = null;
   }
   removeChildrenElements() {
-    this._element.innerHTML = ``;
+    this._element.textContent = ``;
   }
 }
