@@ -2,7 +2,7 @@ import AbstractSmartComponent from './abstract-smart-component';
 import {createPointTypeTemplate} from './helpers/point-type';
 import {createAvailableOfferTemplate} from './helpers/offer';
 import {capitalizeFirstLetter, formatDateAndTime} from '../utils/common';
-import {TypeGroup, pointGroupToType, CITY_NAMES, generateOffers, destinations} from '../mock/point';
+import {TypeGroup, pointGroupToType, CITY_NAMES, generateOffers, destinations} from '../mock/points-mock';
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 

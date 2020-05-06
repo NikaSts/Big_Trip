@@ -1,5 +1,5 @@
-import {generatePoints} from './mock/point';
-import PointsModel from './models/points';
+import {generatePoints} from './mock/points-mock';
+import PointsModel from './models/points-model';
 import MenuComponent from './components/menu';
 import FilterController from './controllers/filter-controller';
 import TripInfoComponent from './components/trip-info';
@@ -7,7 +7,7 @@ import TripController from './controllers/trip-controller';
 import {renderComponent, Position} from './utils/render';
 
 
-const POINT_COUNT = 20;
+const POINT_COUNT = 8;
 const points = generatePoints(POINT_COUNT);
 
 const tripContainer = document.querySelector(`.trip-events`);

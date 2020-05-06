@@ -6,10 +6,6 @@ const Filter = {
 
 const FILTERS = [Filter.EVERYTHING, Filter.FUTURE, Filter.PAST];
 
-const filtredPoints = {
-  [Filter.PAST]: [],
-  [Filter.FUTURE]: [],
-};
 
 const isPast = (date) => {
   return !!date && (date < Date.now());
@@ -19,8 +15,14 @@ const isFuture = (date) => {
 };
 
 
-const getFiltredPoints = (points) => {
-  return points.reduce((acc, point) => {
+const filterPoints = (points) => {
+  const filtredPoints = {
+    [Filter.EVERYTHING]: [...points],
+    [Filter.FUTURE]: [],
+    [Filter.PAST]: [],
+  };
+
+  points.reduce((acc, point) => {
     if (isPast(point.endDate)) {
       acc[Filter.PAST].push(point);
     }
@@ -29,6 +31,14 @@ const getFiltredPoints = (points) => {
     }
     return acc;
   }, Object.assign({}, filtredPoints));
+
+  return filtredPoints;
 };
+
+const getFiltredPoints = (points, filterType) => {
+  const filtredPoints = filterPoints(points);
+  return filtredPoints[filterType];
+};
+
 
 export {Filter, FILTERS, getFiltredPoints};

@@ -16,4 +16,7 @@ export default class TripDaysComponent extends AbstractComponent {
   addDay(day) {
     renderComponent(this.getElement(), day);
   }
+  removeChildrenElements() {
+    this.getElement().innerHTML = ``;
+  }
 }
