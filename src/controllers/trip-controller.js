@@ -124,6 +124,7 @@ export default class TripController {
 
   _renderFiltredPoints() {
     const points = this._pointsModel.getPoints().sort((a, b) => a.startDate - b.startDate);
+    this._sortComponent.setDefaultSortType();
     const sortedPoints = getSortedPoints(points);
     const days = getTripDays(sortedPoints);
     days.forEach((day, index) => this._tripDaysComponent.addDay(this._getDay(this._onDataChange, this._onViewChange, day, index)));

@@ -1,15 +1,10 @@
 import AbstractComponent from './abstract-component';
-import {capitalizeFirstLetter} from '../utils/common';
+import {capitalizeFirstLetter, getNameById} from '../utils/common';
 
 
 const FILTER_ID_PREFIX = `filter-`;
 
-const getFilterNameById = (id) => {
-  return id.substring(FILTER_ID_PREFIX.length);
-};
-
 const createFilterMarkup = (filter, isChecked) => {
-
   return (
     `<div class="trip-filters__filter">
       <input id="filter-${filter}" class="trip-filters__filter-input  visually-hidden" type="radio"
@@ -44,7 +39,7 @@ export default class FiltersComponent extends AbstractComponent {
 
   setFilterChangeHandler(handler) {
     this.getElement().addEventListener(`change`, (evt) => {
-      const filterName = getFilterNameById(evt.target.id);
+      const filterName = getNameById(evt.target.id, FILTER_ID_PREFIX);
       handler(filterName);
     });
   }

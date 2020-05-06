@@ -10,10 +10,7 @@ export default class PointsModel {
   }
 
   getPoints() {
-    console.log(this._activeFilter);
     const newPoints = getFiltredPoints(this._points, this._activeFilter);
-    console.log(newPoints);
-
     return newPoints;
   }
 

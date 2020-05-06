@@ -60,10 +60,6 @@ const getFormattedDuration = (duration) => {
 
 
 // OTHER
-const capitalizeFirstLetter = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-};
-
 const getDayPoints = (acc, point) => {
   const date = new Date(point.startDate).setHours(0, 0, 0, 0);
 
@@ -96,9 +92,13 @@ const getPointPrice = (point) => {
   return point.basePrice + point.offers.reduce(cb, 0);
 };
 
-/* const getPointsByFilter = () => {
-
+const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 };
- */
 
-export {getRandomNumber, getRandomItem, getRandomBoolean, getStringOfDate, getDateOfString, formatDate, formatTime, formatDateAndTime, getDuration, getFormattedDuration, capitalizeFirstLetter, getTripDays, getPointPrice};
+const getNameById = (id, idPrefix) => {
+  return id.substring(idPrefix.length);
+};
+
+
+export {getRandomNumber, getRandomItem, getRandomBoolean, getStringOfDate, getDateOfString, formatDate, formatTime, formatDateAndTime, getDuration, getFormattedDuration, getTripDays, getPointPrice, capitalizeFirstLetter, getNameById};
