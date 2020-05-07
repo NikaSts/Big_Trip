@@ -37,10 +37,10 @@ export default class FiltersComponent extends AbstractComponent {
     return createFiltersTemplate(this._filters);
   }
 
-  setFilterChangeHandler(handler) {
+  setFilterTypeChangeHandler(handler) {
     this.getElement().addEventListener(`change`, (evt) => {
-      const filterName = getNameById(evt.target.id, FILTER_ID_PREFIX);
-      handler(filterName);
+      const filterType = getNameById(evt.target.id, FILTER_ID_PREFIX);
+      handler(filterType);
     });
   }
 }

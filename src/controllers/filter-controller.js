@@ -11,19 +11,19 @@ export default class FilterController {
     this._activeFilterType = Filter.EVERYTHING;
     this._filterComponent = null;
 
-    this._onFilterChange = this._onFilterChange.bind(this);
+    this._onFilterTypeChange = this._onFilterTypeChange.bind(this);
   }
 
   render() {
     const container = this._container;
 
     this._filterComponent = new FilterComponent(FILTERS);
-    this._filterComponent.setFilterChangeHandler(this._onFilterChange);
+    this._filterComponent.setFilterTypeChangeHandler(this._onFilterTypeChange);
     renderComponent(container, this._filterComponent);
   }
 
-  _onFilterChange(filterType) {
+  _onFilterTypeChange(filterType) {
     this._activeFilterType = filterType;
-    this._pointsModel.setFilter(filterType);
+    this._pointsModel.setFilterType(filterType);
   }
 }
