@@ -1,11 +1,10 @@
+const FILTERS = [Filter.EVERYTHING, Filter.FUTURE, Filter.PAST];
+
 const Filter = {
   EVERYTHING: `everything`,
   FUTURE: `future`,
   PAST: `past`,
 };
-
-const FILTERS = [Filter.EVERYTHING, Filter.FUTURE, Filter.PAST];
-
 
 const isPast = (date) => {
   return !!date && (date < Date.now());
@@ -13,7 +12,6 @@ const isPast = (date) => {
 const isFuture = (date) => {
   return !!date && (date > Date.now());
 };
-
 
 const filterPoints = (points) => {
   const filtredPoints = {
@@ -40,5 +38,4 @@ const getFiltredPoints = (points, filterType) => {
   return filtredPoints[filterType];
 };
 
-
-export {Filter, FILTERS, getFiltredPoints};
+export {FILTERS, Filter, getFiltredPoints};

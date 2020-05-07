@@ -7,7 +7,7 @@ import TripController from './controllers/trip-controller';
 import {renderComponent, Position} from './utils/render';
 
 
-const POINT_COUNT = 8;
+const POINT_COUNT = 6;
 const points = generatePoints(POINT_COUNT);
 
 const tripContainer = document.querySelector(`.trip-events`);

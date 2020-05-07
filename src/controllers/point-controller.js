@@ -8,7 +8,6 @@ const Mode = {
   EDIT: `edit`,
 };
 
-
 export default class PointController {
   constructor(onDataChange, onViewChange) {
     this._onDataChange = onDataChange;
