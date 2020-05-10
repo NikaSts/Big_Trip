@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component';
-import {capitalizeFirstLetter, getNameById} from '../utils/common';
+import {capitalizeFirstLetter, getNameByAttribute} from '../utils/common';
 
 
 const FILTER_ID_PREFIX = `filter-`;
@@ -39,7 +39,7 @@ export default class FiltersComponent extends AbstractComponent {
 
   setFilterTypeChangeHandler(handler) {
     this.getElement().addEventListener(`change`, (evt) => {
-      const filterType = getNameById(evt.target.id, FILTER_ID_PREFIX);
+      const filterType = getNameByAttribute(evt.target.id, FILTER_ID_PREFIX);
       handler(filterType);
     });
   }

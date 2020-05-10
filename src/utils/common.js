@@ -34,9 +34,11 @@ const formatTime = (time) => {
 };
 
 const formatDateAndTime = (timestamp) => {
-  const date = moment(timestamp).format(`DD/MM/YY`);
-  const time = formatTime(date);
-  return `${date} ${time}`;
+  return moment(timestamp).format(`DD/MM/YY HH:mm`);
+};
+
+const convertDateStringToTimestamp = (dateString) => {
+  return moment(dateString, `DD/MM/YY HH:mm`).valueOf();
 };
 
 
@@ -96,9 +98,9 @@ const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-const getNameById = (id, idPrefix) => {
-  return id.substring(idPrefix.length);
+const getNameByAttribute = (attributeValue, prefix) => {
+  return attributeValue.substring(prefix.length);
 };
 
 
-export {getRandomNumber, getRandomItem, getRandomBoolean, getStringOfDate, getDateOfString, formatDate, formatTime, formatDateAndTime, getDuration, getFormattedDuration, getTripDays, getPointPrice, capitalizeFirstLetter, getNameById};
+export {getRandomNumber, getRandomItem, getRandomBoolean, getStringOfDate, getDateOfString, formatDate, formatTime, formatDateAndTime, convertDateStringToTimestamp, getDuration, getFormattedDuration, getTripDays, getPointPrice, capitalizeFirstLetter, getNameByAttribute};

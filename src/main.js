@@ -7,7 +7,7 @@ import TripController from './controllers/trip-controller';
 import {renderComponent, Position} from './utils/render';
 
 
-const POINT_COUNT = 6;
+const POINT_COUNT = 4;
 const points = generatePoints(POINT_COUNT);
 
 const tripContainer = document.querySelector(`.trip-events`);
@@ -20,10 +20,19 @@ const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
 
 renderComponent(tripDetails, new TripInfoComponent(pointsModel), Position.AFTERBEGIN);
-renderComponent(tripViewTitle, new MenuComponent(), Position.AFTEREND);
+const menuComponent = new MenuComponent();
+renderComponent(tripViewTitle, menuComponent, Position.AFTEREND);
 
 const filterController = new FilterController(tripControls, pointsModel);
 filterController.render();
 
-const tripContainerController = new TripController(tripContainer, pointsModel);
-tripContainerController.render();
+const tripController = new TripController(tripContainer, pointsModel);
+tripController.render();
+
+
+document.querySelector(`.trip-main__event-add-btn`)
+      .addEventListener(`click`, () => {
+        tripController.createPoint();
+      });
+
+menuComponent.setActiveMenuControl();

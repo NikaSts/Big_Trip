@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component';
-import {capitalizeFirstLetter, getNameById} from '../utils/common';
+import {capitalizeFirstLetter, getNameByAttribute} from '../utils/common';
 
 
 const SORT_ID_PREFIX = `sort-`;
@@ -43,7 +43,7 @@ export default class SortComponent extends AbstractComponent {
       if (!target || target.id === this._sortType) {
         return;
       }
-      const sortType = getNameById(target.id, SORT_ID_PREFIX);
+      const sortType = getNameByAttribute(target.id, SORT_ID_PREFIX);
       handler(sortType);
     });
   }
