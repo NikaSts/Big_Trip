@@ -62,8 +62,8 @@ const createEditPointTemplate = (point, options = {}, state) => {
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
           <datalist id="destination-list-1">
           ${CITY_NAMES.map((city) =>
-    `<option value=${city}></option>`
-  ).join(` `)}
+      `<option value=${city}></option>`
+    ).join(` `)}
           </datalist>
         </div>
 
@@ -94,7 +94,7 @@ const createEditPointTemplate = (point, options = {}, state) => {
           </svg>
         </label>
           ${isNew ? `` :
-    `<button class="event__rollup-btn" type="button">
+      `<button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Close event</span>
         </button>`}
 
