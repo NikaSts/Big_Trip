@@ -1,9 +1,10 @@
 import {generatePoints} from './mock/points-mock';
 import PointsModel from './models/points-model';
-import MenuComponent from './components/menu';
+import MenuComponent, {MenuControl} from './components/menu';
 import FilterController from './controllers/filter-controller';
 import TripInfoComponent from './components/trip-info';
 import TripController from './controllers/trip-controller';
+import StatisticsComponent from './components/statistics';
 import {renderComponent, Position} from './utils/render';
 
 
@@ -22,6 +23,10 @@ pointsModel.setPoints(points);
 renderComponent(tripDetails, new TripInfoComponent(pointsModel), Position.AFTERBEGIN);
 const menuComponent = new MenuComponent();
 renderComponent(tripViewTitle, menuComponent, Position.AFTEREND);
+const statisticsComponent = new StatisticsComponent();
+renderComponent(tripContainer, statisticsComponent);
+statisticsComponent.hide();
+
 
 const filterController = new FilterController(tripControls, pointsModel);
 filterController.render();
@@ -35,4 +40,17 @@ document.querySelector(`.trip-main__event-add-btn`)
         tripController.createPoint();
       });
 
-menuComponent.setActiveMenuControl();
+
+menuComponent.onMenuControlsClick((menuControl) => {
+  switch (menuControl) {
+    case MenuControl.TABLE:
+      tripController.show();
+      statisticsComponent.hide();
+      break;
+    case MenuControl.STATS:
+      statisticsComponent.show();
+      tripController.hide();
+      pointsModel.setFilterType();
+      break;
+  }
+});

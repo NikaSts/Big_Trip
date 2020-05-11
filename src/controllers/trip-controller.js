@@ -5,9 +5,10 @@ import NoPointsComponent from '../components/no-points';
 import PointController, {State as PointControllerState, EmptyPoint} from './point-controller';
 import {getTripDays} from '../utils/common';
 import {SORT_TYPES, SortType} from '../utils/sort';
-import {Filter} from '../utils/filters';
 import {renderComponent, Position} from '../utils/render';
 
+
+const HIDDEN_CLASS = `visually-hidden`;
 
 export default class TripController {
   constructor(container, pointsModel) {
@@ -48,13 +49,21 @@ export default class TripController {
     this._renderPoints(points);
   }
 
+  hide() {
+    this._container.classList.add(HIDDEN_CLASS);
+  }
+
+  show() {
+    this._container.classList.remove(HIDDEN_CLASS);
+  }
+
   createPoint() {
     if (this._creatingPoint) {
       return;
     }
     this._creatingPoint = new PointController(this._onDataChange, this._onViewChange);
     const newPoint = this._creatingPoint.render(EmptyPoint, PointControllerState.ADD);
-    this._pointsModel.setFilterType(Filter.DEFAULT);
+    this._pointsModel.setFilterType();
 
     renderComponent(this._container, newPoint, Position.AFTERBEGIN);
     this._pointControllers.push(this._creatingPoint);
@@ -80,7 +89,7 @@ export default class TripController {
       } else {
         this._pointsModel.createPoint(newData);
         pointController.render(newData, PointControllerState.DEFAULT);
-        this._pointsModel.setFilterType(Filter.DEFAULT);
+        this._pointsModel.setFilterType();
       }
     } else if (newData === null) {
       this._pointsModel.removePoint(oldData.id);

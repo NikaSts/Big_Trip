@@ -24,7 +24,7 @@ export default class PointsModel {
     this._callHandlers(this._dataChangeHandlers);
   }
 
-  setFilterType(filterType) {
+  setFilterType(filterType = Filter.DEFAULT) {
     this._activeFilter = filterType;
     this._activeSortType = SortType.DEFAULT;
     this._callHandlers(this._filterChangeHandlers);
