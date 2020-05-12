@@ -13,29 +13,19 @@ const isFuture = (date) => {
   return !!date && (date > Date.now());
 };
 
-const filterPoints = (points) => {
-  const filtredPoints = {
-    [Filter.DEFAULT]: [...points],
-    [Filter.FUTURE]: [],
-    [Filter.PAST]: [],
-  };
-
-  points.reduce((acc, point) => {
-    if (isPast(point.endDate)) {
-      acc[Filter.PAST].push(point);
-    }
-    if (isFuture(point.startDate)) {
-      acc[Filter.FUTURE].push(point);
-    }
-    return acc;
-  }, Object.assign({}, filtredPoints));
-
-  return filtredPoints;
-};
-
 const getFiltredPoints = (points, filterType) => {
-  const filtredPoints = filterPoints(points);
-  return filtredPoints[filterType];
+  let filtredPoints = [];
+  switch (filterType) {
+    case Filter.PAST:
+      filtredPoints = points.filter((point) => isPast(point.endDate));
+      break;
+    case Filter.FUTURE:
+      filtredPoints = points.filter((point) => isFuture(point.startDate));
+      break;
+    default:
+      filtredPoints = [...points];
+  }
+  return filtredPoints;
 };
 
 export {FILTERS, Filter, getFiltredPoints};

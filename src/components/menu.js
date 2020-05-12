@@ -8,27 +8,32 @@ const MenuControl = {
 
 const MENU_CONTROLS = [MenuControl.TABLE, MenuControl.STATS];
 
-const createMenuMarkup = (control, isActive) => {
+const createMenuMarkup = (control, activeControl) => {
+  const isActive = control === activeControl;
   return (
     `<a class="trip-tabs__btn${isActive ? ` trip-tabs__btn--active` : ``}" href="#" data-menu-control="${control}">${control}</a>`
   );
 };
 
-const menuMarkup = (menuControls) => {
-  return menuControls.map((control, index) => createMenuMarkup(control, index === 0)).join(`\n`);
+const getMenuMarkup = (menuControls, activeControl) => {
+  return menuControls.map((control) => createMenuMarkup(control, activeControl)).join(`\n`);
 };
 
-const createMenuTemplate = (menuControls) => {
+const createMenuTemplate = (menuControls, activeControl) => {
   return (
     `<nav class="trip-controls__trip-tabs  trip-tabs">
-      ${menuMarkup(menuControls)}
+      ${getMenuMarkup(menuControls, activeControl)}
     </nav>`
   );
 };
 
 export default class MenuComponent extends AbstractComponent {
+  constructor() {
+    super();
+    this._activeControl = MenuControl.TABLE;
+  }
   getTemplate() {
-    return createMenuTemplate(MENU_CONTROLS);
+    return createMenuTemplate(MENU_CONTROLS, this._activeControl);
   }
 
   onMenuControlsClick(handler) {
@@ -38,8 +43,8 @@ export default class MenuComponent extends AbstractComponent {
         return;
       }
       this._setActiveMenuControl(target);
-      const activeControl = target.textContent;
-      handler(activeControl);
+      this._activeControl = target.textContent;
+      handler(this._activeControl);
     });
   }
 

@@ -49,6 +49,13 @@ export default class TripController {
     this._renderPoints(points);
   }
 
+  rerender() {
+    this._cleanTripBoard();
+    this._pointsModel.setFilterType();
+    this._activeSortType = SortType.DEFAULT;
+    this.render();
+  }
+
   hide() {
     this._container.classList.add(HIDDEN_CLASS);
   }
@@ -69,36 +76,36 @@ export default class TripController {
     this._pointControllers.push(this._creatingPoint);
   }
 
-  _getDay(onDataChange, onViewChange, day, index = null) {
-    const dayComponent = new DayComponent(day, index);
-
-    const points = day.points;
-    points.forEach((point) => {
-      const pointController = new PointController(onDataChange, onViewChange);
-      dayComponent.addPoint(pointController.render(point, PointControllerState.DEFAULT));
-      this._pointControllers.push(pointController);
-    });
-    return dayComponent;
-  }
-
-  _onDataChange(pointController, oldData, newData) {
-    if (oldData === EmptyPoint) {
-      this._creatingPoint = null;
-      if (newData === null) {
-        pointController.destroy();
-      } else {
-        this._pointsModel.createPoint(newData);
-        pointController.render(newData, PointControllerState.DEFAULT);
-        this._pointsModel.setFilterType();
-      }
-    } else if (newData === null) {
-      this._pointsModel.removePoint(oldData.id);
-    } else {
-      const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
-      if (!isSuccess) {
-        return;
-      }
-      pointController.render(newData, PointControllerState.DEFAULT);
+  _onDataChange(pointController, oldData, newData, state, isEditing = false) {
+    switch (state) {
+      case PointControllerState.ADD:
+        if (newData === null) {
+          pointController.destroy();
+        } else {
+          this._pointsModel.createPoint(newData);
+          pointController.render(newData, PointControllerState.DEFAULT);
+        }
+        this._creatingPoint = null;
+        this.rerender();
+        break;
+      case PointControllerState.EDIT:
+        if (newData === null) {
+          this._pointsModel.removePoint(oldData.id);
+        } else {
+          const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
+          if (!isSuccess) {
+            return;
+          }
+          if (isEditing) {
+            pointController.render(newData, PointControllerState.EDIT);
+            return;
+          }
+          pointController.render(newData, PointControllerState.DEFAULT);
+        }
+        this.rerender();
+        break;
+      default:
+        throw new Error(`Case ${state} not found`);
     }
   }
 
@@ -116,16 +123,17 @@ export default class TripController {
     this._pointsModel.setSortType(sortType);
     this._activeSortType = sortType;
     const points = this._pointsModel.getPoints();
+    this._cleanTripBoard();
     this._renderPoints(points, sortType);
   }
 
   _onFilterTypeChange() {
     const points = this._pointsModel.getPoints();
+    this._cleanTripBoard();
     this._renderPoints(points);
   }
 
   _renderPoints(points, sortType = SortType.DEFAULT) {
-    this._cleanTripBoard();
     if (sortType === SortType.DEFAULT) {
       const days = getTripDays(points);
       days.forEach((day, index) => this._tripDaysComponent.addDay(this._getDay(this._onDataChange, this._onViewChange, day, index)));
@@ -135,4 +143,15 @@ export default class TripController {
     this._tripDaysComponent.addDay(this._getDay(this._onDataChange, this._onViewChange, day));
   }
 
+  _getDay(onDataChange, onViewChange, day, index = null) {
+    const dayComponent = new DayComponent(day, index);
+
+    const points = day.points;
+    points.forEach((point) => {
+      const pointController = new PointController(onDataChange, onViewChange);
+      dayComponent.addPoint(pointController.render(point, PointControllerState.DEFAULT));
+      this._pointControllers.push(pointController);
+    });
+    return dayComponent;
+  }
 }

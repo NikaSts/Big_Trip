@@ -1,6 +1,7 @@
 import {replaceComponent, removeComponent} from '../utils/render';
 import PointComponent from '../components/point';
-import EditPointComponent from '../components/edit-point';
+import EditPointComponent from '../components/edit-point/edit-point';
+import {availableOffers} from '../mock/points-mock';
 
 
 const State = {
@@ -10,8 +11,9 @@ const State = {
 };
 
 const EmptyPoint = {
+  id: String(Date.now() + Math.random()),
   type: `taxi`,
-  offers: [],
+  offers: availableOffers[`taxi`],
   basePrice: 0,
   destination: {
     name: ``,
@@ -21,7 +23,6 @@ const EmptyPoint = {
   startDate: Date.now(),
   endDate: Date.now(),
   isFavorite: false,
-  // isNew: true,
 };
 
 export default class PointController {
@@ -38,12 +39,13 @@ export default class PointController {
   render(point, state) {
     const oldPointComponent = this._pointComponent;
     const oldEditPointComponent = this._editPointComponent;
+    this._point = point;
     this._state = state;
 
     if (!oldPointComponent &&
       !oldEditPointComponent) {
-      this._pointComponent = new PointComponent(point);
-      this._editPointComponent = new EditPointComponent(point, this._state);
+      this._pointComponent = new PointComponent(this._point, this._state);
+      this._editPointComponent = new EditPointComponent(this._point);
     }
 
     this._pointComponent.setEditButtonClickHandler(() => {
@@ -53,25 +55,28 @@ export default class PointController {
     this._editPointComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
       const data = this._editPointComponent.getData();
-      this._onDataChange(this, point, data);
+      this._onDataChange(this, this._point, data, this._state);
+      this.setDefaultView();
     });
 
     this._editPointComponent.setCloseHandler(() => {
       this.setDefaultView();
     });
 
-    this._editPointComponent.setDeleteHandler(() => {
-      this._onDataChange(this, point, null);
+    this._editPointComponent.setDeleteHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, this._point, null, this._state);
+      this._state = State.DEFAULT;
     });
 
     this._editPointComponent.setFavoriteButtonClickHandler(() => {
-      this._onDataChange(this, point, Object.assign({}, point, {
+      this._onDataChange(this, this._point, Object.assign({}, this._point, {
         isFavorite: !point.isFavorite,
-      }));
+      }), this._state, true);
     });
-    document.addEventListener(`keydown`, this._onEscKeyDown);
 
     if (state === State.ADD) {
+      document.addEventListener(`keydown`, this._onEscKeyDown);
       return this._editPointComponent;
     }
     return this._pointComponent;
@@ -79,6 +84,10 @@ export default class PointController {
 
   setDefaultView() {
     if (this._state !== State.DEFAULT) {
+      if (this._state === State.ADD) {
+        this._onDataChange(this, this._point, null, this._state);
+      }
+      this._editPointComponent.reset();
       this._closeEditForm();
     }
   }
@@ -90,6 +99,7 @@ export default class PointController {
   }
 
   openEditForm() {
+    document.addEventListener(`keydown`, this._onEscKeyDown);
     this._onViewChange();
     replaceComponent(this._pointComponent, this._editPointComponent);
     this._state = State.EDIT;
@@ -98,9 +108,7 @@ export default class PointController {
   _closeEditForm() {
     document.removeEventListener(`keydown`, this._onEscKeyDown);
     this._editPointComponent.reset();
-    if (document.contains(this._editPointComponent.getElement())) {
-      replaceComponent(this._editPointComponent, this._pointComponent);
-    }
+    replaceComponent(this._editPointComponent, this._pointComponent);
     this._state = State.DEFAULT;
   }
 
@@ -108,7 +116,7 @@ export default class PointController {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
     if (isEscKey) {
       if (this._state === State.ADD) {
-        this._onDataChange(this, EmptyPoint, null);
+        this._onDataChange(this, EmptyPoint, null, this._state);
       }
       this.setDefaultView();
       document.removeEventListener(`keydown`, this._onEscKeyDown);

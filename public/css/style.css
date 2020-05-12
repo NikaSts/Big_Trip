@@ -761,7 +761,8 @@ main {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-  border: none; }
+  border: none;
+}
   .event__input--destination {
     width: 150px; }
     .event__input--destination::-webkit-calendar-picker-indicator {
@@ -930,3 +931,12 @@ main {
 
 .statistics__item:not(:last-child) {
   margin-bottom: 78px; }
+
+input[type='number'] {
+  -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}

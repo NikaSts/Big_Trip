@@ -14,7 +14,7 @@ export default class PointsModel {
   }
 
   getPoints() {
-    const filterdPoints = getFiltredPoints(this._points.slice(), this._activeFilter);
+    const filterdPoints = getFiltredPoints(this._points, this._activeFilter);
     const sortedPoints = getSortedPoints(filterdPoints, this._activeSortType);
     return sortedPoints;
   }

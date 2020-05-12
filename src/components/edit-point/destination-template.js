@@ -1,5 +1,5 @@
 
-const createPointDetailsTemplate = (destination) => {
+const createDestinationTemplate = (destination) => {
 
   return (
     `<section class="event__section  event__section--destination">
@@ -18,4 +18,4 @@ const createPointDetailsTemplate = (destination) => {
   );
 };
 
-export {createPointDetailsTemplate};
+export {createDestinationTemplate};

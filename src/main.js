@@ -8,7 +8,7 @@ import StatisticsComponent from './components/statistics';
 import {renderComponent, Position} from './utils/render';
 
 
-const POINT_COUNT = 4;
+const POINT_COUNT = 20;
 const points = generatePoints(POINT_COUNT);
 
 const tripContainer = document.querySelector(`.trip-events`);
@@ -52,5 +52,7 @@ menuComponent.onMenuControlsClick((menuControl) => {
       tripController.hide();
       pointsModel.setFilterType();
       break;
+    default:
+      throw new Error(`Case ${menuControl} not found`);
   }
 });

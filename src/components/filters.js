@@ -1,10 +1,12 @@
 import AbstractComponent from './abstract-component';
+import {Filter} from "../utils/filters";
 import {capitalizeFirstLetter, getNameByAttribute} from '../utils/common';
 
 
 const FILTER_ID_PREFIX = `filter-`;
 
-const createFilterMarkup = (filter, isChecked) => {
+const createFilterMarkup = (filter, activeFilter) => {
+  const isChecked = filter === activeFilter;
   return (
     `<div class="trip-filters__filter">
       <input id="filter-${filter}" class="trip-filters__filter-input  visually-hidden" type="radio"
@@ -14,14 +16,14 @@ const createFilterMarkup = (filter, isChecked) => {
   );
 };
 
-const getfiltersMarkup = (filters) => {
-  return filters.map((filter, index) => createFilterMarkup(filter, index === 0)).join(`\n`);
+const getfiltersMarkup = (filters, activeFilter) => {
+  return filters.map((filter) => createFilterMarkup(filter, activeFilter)).join(`\n`);
 };
 
-const createFiltersTemplate = (filters) => {
+const createFiltersTemplate = (filters, activeFilter) => {
   return (
     `<form class="trip-filters" action="#" method="get">
-      ${getfiltersMarkup(filters)}
+      ${getfiltersMarkup(filters, activeFilter)}
       <button class="visually-hidden" type="submit">Accept filter</button>
     </form>`
   );
@@ -31,10 +33,11 @@ export default class FiltersComponent extends AbstractComponent {
   constructor(filters) {
     super();
     this._filters = filters;
+    this._activeFilter = Filter.DEFAULT;
   }
 
   getTemplate() {
-    return createFiltersTemplate(this._filters);
+    return createFiltersTemplate(this._filters, this._activeFilter);
   }
 
   setFilterTypeChangeHandler(handler) {

@@ -1,7 +1,7 @@
 import {getRandomNumber, getRandomItem, getRandomBoolean} from '../utils/common';
 
 const MEDIUM_PROBABILITY = 0.5;
-const HIGH_PROBABILITY = 0.3;
+// const HIGH_PROBABILITY = 0.3;
 const CITY_NAMES = [`Rome`, `Amsterdam`, `Paris`, `Geneva`, `Moscow`, `Chamonix`];
 const FULL_DAY = 24 * 60 * 60 * 1000; // 24 hours
 const MIN_DAY_COUNT = -3;
@@ -27,60 +27,60 @@ const Type = {
 
 const POINT_TYPES = [Type.TAXI, Type.BUS, Type.TRAIN, Type.FLIGHT, Type.SHIP, Type.TRANSPORT, Type.DRIVE, Type.SIGHTSEEING, Type.CHECK_IN, Type.RESTAURANT];
 
-const offer = {
+const offerType = {
   luggage: {
-    id: `luggage`,
+    type: `luggage`,
     title: `Add luggage`
   },
   comfort: {
-    id: `comfort`,
+    type: `comfort`,
     title: `Switch to comfort class`
   },
   meal: {
-    id: `meal`,
+    type: `meal`,
     title: `Add meal`,
   },
   seats: {
-    id: `seats`,
+    type: `seats`,
     title: `Choose seats`,
   },
   train: {
-    id: `train`,
+    type: `train`,
     title: `Travel by train`,
   },
   uber: {
-    id: `uber`,
+    type: `uber`,
     title: `Order Uber`,
   },
   lunch: {
-    id: `lunch`,
+    type: `lunch`,
     title: `Lunch in city`,
   },
   car: {
-    id: `car`,
+    type: `car`,
     title: `Rent a car`,
   },
   tickets: {
-    id: `tickets`,
+    type: `tickets`,
     title: `Book tickets`,
   },
   breakfast: {
-    id: `breakfast`,
+    type: `breakfast`,
     title: `Add breakfast`,
   }
 };
 
 const pointTypeToOffers = {
-  [Type.TAXI]: [offer.uber],
-  [Type.BUS]: [offer.seats, offer.tickets],
-  [Type.TRAIN]: [offer.seats, offer.tickets, offer.comfort],
-  [Type.FLIGHT]: [offer.seats, offer.tickets, offer.comfort, offer.luggage, offer.meal],
-  [Type.SHIP]: [offer.tickets, offer.comfort],
-  [Type.TRANSPORT]: [offer.seats, offer.tickets, offer.comfort, offer.luggage, offer.meal, offer.train],
-  [Type.DRIVE]: [offer.car],
-  [Type.SIGHTSEEING]: [offer.tickets, offer.lunch],
-  [Type.CHECK_IN]: [offer.breakfast],
-  [Type.RESTAURANT]: [offer.lunch],
+  [Type.TAXI]: [offerType.uber],
+  [Type.BUS]: [offerType.seats, offerType.tickets],
+  [Type.TRAIN]: [offerType.seats, offerType.tickets, offerType.comfort],
+  [Type.FLIGHT]: [offerType.seats, offerType.tickets, offerType.comfort, offerType.luggage, offerType.meal],
+  [Type.SHIP]: [offerType.tickets, offerType.comfort],
+  [Type.TRANSPORT]: [offerType.seats, offerType.tickets, offerType.comfort, offerType.luggage, offerType.meal, offerType.train],
+  [Type.DRIVE]: [offerType.car],
+  [Type.SIGHTSEEING]: [offerType.tickets, offerType.lunch],
+  [Type.CHECK_IN]: [offerType.breakfast],
+  [Type.RESTAURANT]: [offerType.lunch],
 };
 
 const TypeGroup = {
@@ -131,34 +131,35 @@ const getRandomPrice = () => {
 };
 
 const generateOffers = (type) => {
-  const availableOffers = pointTypeToOffers[type];
-  return availableOffers.map((availableOffer) => {
+  const offers = pointTypeToOffers[type];
+  return offers.map((offer) => {
     return {
-      id: availableOffer.id,
-      title: availableOffer.title,
+      type: offer.type,
+      title: offer.title,
       price: getRandomPrice(),
-      isChecked: false,
+      isChecked: getRandomBoolean(MEDIUM_PROBABILITY),
     };
   });
 };
 
-let index = 0;
+const availableOffers = POINT_TYPES.reduce((acc, type) => {
+  acc[type] = generateOffers(type);
+  return acc;
+}, {});
 
 const generatePoint = () => {
   const type = getRandomItem(POINT_TYPES);
   const startDate = getRandomDate(MIN_DAY_COUNT, MAX_DAY_COUNT) + getRandomNumber(MIN_DURATION, MAX_DURATION);
   const duration = getRandomNumber(MIN_DURATION, MAX_DURATION);
   const endDate = startDate + duration;
-  const offers = generateOffers(type);
-  const randomCheckedOffers = offers.map((offerItem) => Object.assign(offerItem, {isChecked: getRandomBoolean(MEDIUM_PROBABILITY)}));
 
   return ({
-    id: index++,
+    id: String(Date.now() + Math.random()),
     type,
     startDate,
     endDate,
     basePrice: Number(getRandomNumber(MIN_PRICE, MAX_PRICE) + `0`),
-    offers: getRandomBoolean(HIGH_PROBABILITY) ? randomCheckedOffers : [],
+    offers: availableOffers[type],
     destination: destinations[getRandomNumber(0, CITY_NAMES.length)],
     isFavorite: getRandomBoolean(MEDIUM_PROBABILITY),
   });
@@ -170,4 +171,4 @@ const generatePoints = (count) => {
     .map(generatePoint);
 };
 
-export {TypeGroup, pointGroupToType, generatePoints, CITY_NAMES, generateOffers, destinations};
+export {TypeGroup, pointGroupToType, generatePoints, CITY_NAMES, availableOffers, destinations};
