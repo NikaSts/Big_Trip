@@ -44,8 +44,8 @@ export default class PointController {
 
     if (!oldPointComponent &&
       !oldEditPointComponent) {
-      this._pointComponent = new PointComponent(this._point, this._state);
-      this._editPointComponent = new EditPointComponent(this._point);
+      this._pointComponent = new PointComponent(this._point);
+      this._editPointComponent = new EditPointComponent(this._point, this._state);
     }
 
     this._pointComponent.setEditButtonClickHandler(() => {
