@@ -51,6 +51,8 @@ menuComponent.onMenuControlsClick((menuControl) => {
       statisticsComponent.show();
       tripController.hide();
       pointsModel.setFilterType();
+      filterController.destroy();
+      filterController.render();
       break;
     default:
       throw new Error(`Case ${menuControl} not found`);

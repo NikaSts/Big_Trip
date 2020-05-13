@@ -1,6 +1,6 @@
 import FilterComponent from "../components/filters";
 import {FILTERS} from "../utils/filters";
-import {renderComponent} from "../utils/render";
+import {renderComponent, removeComponent} from "../utils/render";
 
 
 export default class FilterController {
@@ -19,6 +19,10 @@ export default class FilterController {
     this._filterComponent = new FilterComponent(FILTERS);
     this._filterComponent.setFilterTypeChangeHandler(this._onFilterTypeChange);
     renderComponent(container, this._filterComponent);
+  }
+
+  destroy() {
+    removeComponent(this._filterComponent);
   }
 
   _onFilterTypeChange(filterType) {

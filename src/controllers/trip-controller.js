@@ -84,9 +84,9 @@ export default class TripController {
         } else {
           this._pointsModel.createPoint(newData);
           pointController.render(newData, PointControllerState.DEFAULT);
+          this.rerender();
         }
         this._creatingPoint = null;
-        this.rerender();
         break;
       case PointControllerState.EDIT:
         if (newData === null) {

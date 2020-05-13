@@ -84,7 +84,7 @@ export default class PointController {
   setDefaultView() {
     if (this._state !== State.DEFAULT) {
       if (this._state === State.ADD) {
-        this._onDataChange(this, this._point, null, this._state);
+        this.destroy();
       }
       this._editPointComponent.reset();
       this._closeEditForm();
