@@ -201,26 +201,8 @@ export default class EditPointComponent extends AbstractSmartComponent {
       this.rerender();
     });
 
-    element.querySelector(`.event__favorite-btn`)
-      .addEventListener(`click`, () => {
-        this._isFavorite = !this._isFavorite;
-        this.rerender();
-      });
-
-    /*     element.querySelector(`#event-start-time-1`)
-      .addEventListener(`change`, (evt) => {
-        const target = evt.target;
-        this._startDate = Number(new Date(target.value));
-      });
-
-    element.querySelector(`#event-end-time-1`)
-      .addEventListener(`change`, () => {
-        this._endDate = Number(this._endPicker.selectedDates[0]);
-      });
- */
     element.querySelector(`.event__input--price`).addEventListener(`change`, (evt) => {
       this._basePrice = Number(evt.target.value);
-      this.rerender();
     });
 
     element.querySelector(`.event__available-offers`)
