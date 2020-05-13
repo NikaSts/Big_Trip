@@ -216,5 +216,11 @@ export default class EditPointComponent extends AbstractSmartComponent {
         targetOffer.isChecked = !targetOffer.isChecked;
         this.rerender();
       });
+
+    element.querySelector(`.event__favorite-btn`)
+      .addEventListener(`click`, () => {
+        this._isFavorite = !this._isFavorite;
+        this.rerender();
+      });
   }
 }

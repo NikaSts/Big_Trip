@@ -66,7 +66,6 @@ export default class PointController {
     this._editPointComponent.setDeleteHandler((evt) => {
       evt.preventDefault();
       this._onDataChange(this, this._point, null, this._state);
-      this._state = State.DEFAULT;
     });
 
     this._editPointComponent.setFavoriteButtonClickHandler(() => {

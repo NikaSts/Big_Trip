@@ -97,7 +97,6 @@ export default class TripController {
             return;
           }
           if (isEditing) {
-            pointController.render(newData, PointControllerState.EDIT);
             return;
           }
           pointController.render(newData, PointControllerState.DEFAULT);
