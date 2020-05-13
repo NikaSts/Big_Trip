@@ -137,7 +137,7 @@ const generateOffers = (type) => {
       type: offer.type,
       title: offer.title,
       price: getRandomPrice(),
-      isChecked: getRandomBoolean(MEDIUM_PROBABILITY),
+      isChecked: false,
     };
   });
 };
@@ -146,6 +146,23 @@ const availableOffers = POINT_TYPES.reduce((acc, type) => {
   acc[type] = generateOffers(type);
   return acc;
 }, {});
+
+const getPointOffers = (type) => {
+  const randomChosenOffers = [];
+  const allOffers = availableOffers[type];
+  for (let i = 0; i < allOffers.length; i++) {
+    if (getRandomBoolean(MEDIUM_PROBABILITY)) {
+      randomChosenOffers.push(allOffers[i]);
+    }
+  }
+
+  let randomChosenCheckedOffers = [];
+  if (randomChosenOffers.length > 0) {
+    randomChosenCheckedOffers = randomChosenOffers.map((offer) => Object.assign({}, offer, {isChecked: true}));
+  }
+  return randomChosenCheckedOffers;
+
+};
 
 const generatePoint = () => {
   const type = getRandomItem(POINT_TYPES);
@@ -159,7 +176,7 @@ const generatePoint = () => {
     startDate,
     endDate,
     basePrice: Number(getRandomNumber(MIN_PRICE, MAX_PRICE) + `0`),
-    offers: availableOffers[type],
+    offers: getPointOffers(type),
     destination: destinations[getRandomNumber(0, CITY_NAMES.length)],
     isFavorite: getRandomBoolean(MEDIUM_PROBABILITY),
   });

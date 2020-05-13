@@ -8,7 +8,6 @@ import {State} from '../../controllers/point-controller';
 
 const createEditPointTemplate = (options = {}, state) => {
   const {type, startDate, endDate, offers, destination, isFavorite, basePrice} = options;
-
   const capitalizedType = capitalizeFirstLetter(type);
   const start = formatDateAndTime(startDate);
   const end = formatDateAndTime(endDate);
@@ -17,7 +16,7 @@ const createEditPointTemplate = (options = {}, state) => {
 
   const isNew = state === State.ADD;
   const hasOffers = offers.length > 0;
-  const availableOffers = hasOffers ? createAvailableOfferTemplate(offers) : ``;
+  const offersToShow = hasOffers ? createAvailableOfferTemplate(offers) : ``;
 
   const transferGroup = pointGroupToType[TypeGroup.TRANSFER].includes(type);
   const transferTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.TRANSFER], options);
@@ -96,7 +95,7 @@ const createEditPointTemplate = (options = {}, state) => {
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
           <div class="event__available-offers">
-          ${availableOffers}
+          ${offersToShow}
 
           </div>
         </section>

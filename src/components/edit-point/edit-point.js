@@ -38,7 +38,9 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._type = point.type;
     this._startDate = point.startDate;
     this._endDate = point.endDate;
-    this._offers = point.offers.slice();
+    this._offers = [...availableOffers[point.type], ...point.offers];
+
+
     this._destination = Object.assign({}, point.destination);
     this._isFavorite = point.isFavorite;
     this._basePrice = point.basePrice;
@@ -92,7 +94,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._type = point.type;
     this._startDate = point.startDate;
     this._endDate = point.endDate;
-    this._offers = point.offers;
+    this._offers = [...availableOffers[point.type], ...point.offers];
     this._destination = point.destination;
     this._basePrice = point.basePrice;
 
