@@ -31,7 +31,7 @@ export default class TripController {
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onFilterTypeChange = this._onFilterTypeChange.bind(this);
 
-    this._pointsModel.setFilterTypeChangeHandler(this._onFilterTypeChange);
+    // this._pointsModel.setFilterTypeChangeHandler(this._onFilterTypeChange);
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
