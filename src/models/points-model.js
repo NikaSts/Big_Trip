@@ -9,9 +9,8 @@ export default class PointsModel {
     this._activeFilter = Filter.DEFAULT;
     this._activeSortType = SortType.DEFAULT;
 
-    /*     this._dataChangeHandlers = [];
+    //    this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
- */
   }
 
   getPoints() {
@@ -28,7 +27,7 @@ export default class PointsModel {
   setFilterType(filterType = Filter.DEFAULT) {
     this._activeFilter = filterType;
     this._activeSortType = SortType.DEFAULT;
-    // this._callHandlers(this._filterChangeHandlers);
+    this._callHandlers(this._filterChangeHandlers);
   }
 
   setSortType(sortType) {
@@ -63,16 +62,15 @@ export default class PointsModel {
     return true;
   }
 
-/*   setDataChangeHandler(handler) {
-    this._dataChangeHandlers.push(handler);
-  }
-
   setFilterTypeChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
   }
-
+  /*
+setDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
+  }
+ */
   _callHandlers(handlers) {
     handlers.forEach((handler) => handler());
   }
- */
 }
