@@ -36,8 +36,6 @@ export default class SortComponent extends AbstractComponent {
     this._activeSortType = activeSortType;
   }
   getTemplate() {
-    console.log(this._activeSortType);
-
     return createSortTemplate(this._sortTypes, this._activeSortType);
   }
 
