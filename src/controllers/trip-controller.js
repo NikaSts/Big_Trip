@@ -36,7 +36,7 @@ export default class TripController {
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     renderComponent(this._container, this._sortComponent, Position.AFTERBEGIN);
 
-    const points = this._pointsModel.getPoints().sort((a, b) => a.startDate - b.startDate);
+    const points = this._pointsModel.getPoints();
     if (points.length === 0) {
       this._sortComponent.hide();
       renderComponent(this._container, this._noPointsComponent);
@@ -76,6 +76,7 @@ export default class TripController {
 
   _renderPoints(points, sortType = SortType.DEFAULT) {
     if (sortType === SortType.DEFAULT) {
+      points.sort((a, b) => a.startDate - b.startDate);
       const days = getTripDays(points);
       days.forEach((day, index) => this._tripDaysComponent.addDay(this._getDay(this._onDataChange, this._onViewChange, day, index)));
       return;
@@ -132,6 +133,7 @@ export default class TripController {
     const points = this._pointsModel.getPoints();
     this._removePoints();
     this._renderPoints(points, sortType);
+    this._creatingPoint = null;
   }
 
   _onFilterTypeChange() {
@@ -141,6 +143,7 @@ export default class TripController {
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     this._removePoints();
     this._renderPoints(points);
+    this._creatingPoint = null;
   }
 
   _getDay(onDataChange, onViewChange, day, index = null) {
