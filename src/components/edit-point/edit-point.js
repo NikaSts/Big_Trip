@@ -38,8 +38,10 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._type = point.type;
     this._startDate = point.startDate;
     this._endDate = point.endDate;
-    this._offers = [...availableOffers[point.type], ...point.offers];
 
+    this._filteredAvailableOffers = availableOffers[point.type].filter((offer) => point.offers.every((pointOffer) => pointOffer.title !== offer.title));
+
+    this._offers = [...point.offers, ...this._filteredAvailableOffers];
 
     this._destination = Object.assign({}, point.destination);
     this._isFavorite = point.isFavorite;
@@ -57,6 +59,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
   }
 
   getTemplate() {
+
     return createEditPointTemplate({
       type: this._type,
       startDate: this._startDate,
@@ -94,7 +97,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._type = point.type;
     this._startDate = point.startDate;
     this._endDate = point.endDate;
-    this._offers = [...availableOffers[point.type], ...point.offers];
+    this._offers = [...point.offers, ...this._filteredAvailableOffers];
     this._destination = point.destination;
     this._basePrice = point.basePrice;
 

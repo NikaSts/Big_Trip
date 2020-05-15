@@ -49,7 +49,7 @@ export default class PointController {
     }
 
     this._pointComponent.setEditButtonClickHandler(() => {
-      this.openEditForm();
+      this._openEditForm();
     });
 
     this._editPointComponent.setSubmitHandler((evt) => {
@@ -81,23 +81,23 @@ export default class PointController {
     return this._pointComponent;
   }
 
-  setDefaultView() {
-    if (this._state !== State.DEFAULT) {
-      if (this._state === State.ADD) {
-        this.destroy();
-      }
-      this._editPointComponent.reset();
-      this._closeEditForm();
-    }
-  }
-
   destroy() {
     removeComponent(this._editPointComponent);
     removeComponent(this._pointComponent);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
-  openEditForm() {
+  setDefaultView() {
+    if (this._state !== State.DEFAULT) {
+      if (this._state === State.ADD) {
+        this._onDataChange(this, EmptyPoint, null, this._state);
+      }
+      this._editPointComponent.reset();
+      this._closeEditForm();
+    }
+  }
+
+  _openEditForm() {
     document.addEventListener(`keydown`, this._onEscKeyDown);
     this._onViewChange();
     replaceComponent(this._pointComponent, this._editPointComponent);

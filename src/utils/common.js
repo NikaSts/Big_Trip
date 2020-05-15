@@ -98,9 +98,9 @@ const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-const getNameByAttribute = (attributeValue, prefix) => {
+const getTypeById = (attributeValue, prefix) => {
   return attributeValue.substring(prefix.length);
 };
 
 
-export {getRandomNumber, getRandomItem, getRandomBoolean, getStringOfDate, getDateOfString, formatDate, formatTime, formatDateAndTime, convertDateStringToTimestamp, getDuration, getFormattedDuration, getTripDays, getPointPrice, capitalizeFirstLetter, getNameByAttribute};
+export {getRandomNumber, getRandomItem, getRandomBoolean, getStringOfDate, getDateOfString, formatDate, formatTime, formatDateAndTime, convertDateStringToTimestamp, getDuration, getFormattedDuration, getTripDays, getPointPrice, capitalizeFirstLetter, getTypeById};

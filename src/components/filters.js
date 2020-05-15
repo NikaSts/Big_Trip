@@ -1,6 +1,5 @@
 import AbstractComponent from './abstract-component';
-import {Filter} from "../utils/filters";
-import {capitalizeFirstLetter, getNameByAttribute} from '../utils/common';
+import {capitalizeFirstLetter, getTypeById} from '../utils/common';
 
 
 const FILTER_ID_PREFIX = `filter-`;
@@ -30,10 +29,10 @@ const createFiltersTemplate = (filters, activeFilter) => {
 };
 
 export default class FiltersComponent extends AbstractComponent {
-  constructor(filters) {
+  constructor(filters, activeFilter) {
     super();
     this._filters = filters;
-    this._activeFilter = Filter.DEFAULT;
+    this._activeFilter = activeFilter;
   }
 
   getTemplate() {
@@ -42,7 +41,7 @@ export default class FiltersComponent extends AbstractComponent {
 
   setFilterTypeChangeHandler(handler) {
     this.getElement().addEventListener(`change`, (evt) => {
-      const filterType = getNameByAttribute(evt.target.id, FILTER_ID_PREFIX);
+      const filterType = getTypeById(evt.target.id, FILTER_ID_PREFIX);
       handler(filterType);
     });
   }

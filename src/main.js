@@ -36,9 +36,10 @@ tripController.render();
 
 
 document.querySelector(`.trip-main__event-add-btn`)
-      .addEventListener(`click`, () => {
-        tripController.createPoint();
-      });
+  .addEventListener(`click`, () => {
+    filterController.rerender();
+    tripController.createPoint();
+  });
 
 
 menuComponent.onMenuControlsClick((menuControl) => {
@@ -50,9 +51,7 @@ menuComponent.onMenuControlsClick((menuControl) => {
     case MenuControl.STATS:
       statisticsComponent.show();
       tripController.hide();
-      pointsModel.setFilterType();
-      filterController.destroy();
-      filterController.render();
+      tripController.rerender();
       break;
     default:
       throw new Error(`Case ${menuControl} not found`);

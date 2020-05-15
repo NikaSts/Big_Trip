@@ -1,5 +1,5 @@
 import FilterComponent from "../components/filters";
-import {FILTERS} from "../utils/filters";
+import {FILTERS, Filter} from "../utils/filters";
 import {renderComponent, removeComponent} from "../utils/render";
 
 
@@ -8,6 +8,7 @@ export default class FilterController {
     this._container = container;
     this._pointsModel = pointsModel;
 
+    this._activeFilterType = Filter.DEFAULT;
     this._filterComponent = null;
 
     this._onFilterTypeChange = this._onFilterTypeChange.bind(this);
@@ -16,16 +17,19 @@ export default class FilterController {
   render() {
     const container = this._container;
 
-    this._filterComponent = new FilterComponent(FILTERS);
+    this._filterComponent = new FilterComponent(FILTERS, this._activeFilterType);
     this._filterComponent.setFilterTypeChangeHandler(this._onFilterTypeChange);
     renderComponent(container, this._filterComponent);
   }
 
-  destroy() {
+  rerender() {
     removeComponent(this._filterComponent);
+    this._activeFilterType = Filter.DEFAULT;
+    this.render();
   }
 
   _onFilterTypeChange(filterType) {
+    this._activeFilterType = filterType;
     this._pointsModel.setFilterType(filterType);
   }
 }
