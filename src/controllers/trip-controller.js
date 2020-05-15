@@ -20,38 +20,37 @@ export default class TripController {
     this._creatingPoint = null;
 
     this._noPointsComponent = new NoPointsComponent();
-    this._sortComponent = new SortComponent(SORT_TYPES, this._activeSortType);
     this._tripDaysComponent = new TripDaysComponent();
 
     this._getDay = this._getDay.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
-
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._onFilterTypeChange = this._onFilterTypeChange.bind(this);
 
     this._pointsModel.setFilterTypeChangeHandler(this._onFilterTypeChange);
-    this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
   }
 
-  render(sortType = SortType.DEFAULT) {
-    const points = this._pointsModel.getPoints().sort((a, b) => a.startDate - b.startDate);
-
+  render() {
+    this._sortComponent = new SortComponent(SORT_TYPES, this._activeSortType);
+    this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     renderComponent(this._container, this._sortComponent, Position.AFTERBEGIN);
+
+    const points = this._pointsModel.getPoints().sort((a, b) => a.startDate - b.startDate);
     if (points.length === 0) {
       this._sortComponent.hide();
       renderComponent(this._container, this._noPointsComponent);
     }
     renderComponent(this._container, this._tripDaysComponent);
-    this._renderPoints(points, sortType);
+    this._renderPoints(points, this._activeSortType);
   }
 
   rerender(sortType = SortType.DEFAULT) {
     this._removePoints();
     removeComponent(this._sortComponent);
     removeComponent(this._tripDaysComponent);
-    this.render(sortType);
-    this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+    this._activeSortType = sortType;
+    this.render();
   }
 
   hide() {
