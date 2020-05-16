@@ -129,26 +129,26 @@ export default class TripController {
   }
 
   _onSortTypeChange(sortType) {
-    if (this._creatingPoint) {
-      return;
-    }
     this._pointsModel.setSortType(sortType);
     this._activeSortType = sortType;
     const points = this._pointsModel.getPoints();
     this._removePoints();
     this._renderPoints(points, sortType);
+    if (this._creatingPoint) {
+      this._creatingPoint = null;
+    }
   }
 
   _onFilterTypeChange() {
-    if (this._creatingPoint) {
-      return;
-    }
     const points = this._pointsModel.getPoints();
     removeComponent(this._sortComponent);
     renderComponent(this._container, this._sortComponent, Position.AFTERBEGIN);
     this._sortComponent.setSortTypeChangeHandler(this._onSortTypeChange);
     this._removePoints();
     this._renderPoints(points);
+    if (this._creatingPoint) {
+      this._creatingPoint = null;
+    }
   }
 
   _getDay(onDataChange, onViewChange, day, index = null) {
