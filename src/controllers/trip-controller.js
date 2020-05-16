@@ -72,6 +72,7 @@ export default class TripController {
 
     removeComponent(this._noPointsComponent);
     renderComponent(this._sortComponent.getElement(), newPointComponent, Position.AFTEREND);
+    this._pointControllers.push(this._creatingPoint);
   }
 
   _renderPoints(points, sortType = SortType.DEFAULT) {
@@ -125,13 +126,12 @@ export default class TripController {
 
   _onViewChange() {
     this._pointControllers.forEach((it) => it.setDefaultView());
-    if (this._creatingPoint) {
-      this._creatingPoint.destroy();
-      this._creatingPoint = null;
-    }
   }
 
   _onSortTypeChange(sortType) {
+    if (this._creatingPoint) {
+      return;
+    }
     this._pointsModel.setSortType(sortType);
     this._activeSortType = sortType;
     const points = this._pointsModel.getPoints();
@@ -140,6 +140,9 @@ export default class TripController {
   }
 
   _onFilterTypeChange() {
+    if (this._creatingPoint) {
+      return;
+    }
     const points = this._pointsModel.getPoints();
     removeComponent(this._sortComponent);
     renderComponent(this._container, this._sortComponent, Position.AFTERBEGIN);
