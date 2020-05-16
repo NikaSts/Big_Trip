@@ -68,7 +68,7 @@ export default class TripController {
     this._onViewChange();
     this._creatingPoint = new PointController(this._onDataChange, this._onViewChange);
     const newPointComponent = this._creatingPoint.render(EmptyPoint, PointControllerState.ADD);
-    this._pointsModel.setFilterType();
+    this.rerender();
 
     removeComponent(this._noPointsComponent);
     renderComponent(this._sortComponent.getElement(), newPointComponent, Position.AFTEREND);

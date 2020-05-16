@@ -24,8 +24,12 @@ export default class FilterController {
 
   rerender() {
     removeComponent(this._filterComponent);
-    this._activeFilterType = Filter.DEFAULT;
     this.render();
+  }
+
+  setDefaults() {
+    this._activeFilterType = Filter.DEFAULT;
+    this._pointsModel.setFilterType(this._activeFilterType);
   }
 
   _onFilterTypeChange(filterType) {
