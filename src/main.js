@@ -8,7 +8,7 @@ import StatisticsComponent from './components/statistics';
 import {renderComponent, Position} from './utils/render';
 
 
-const POINT_COUNT = 20;
+const POINT_COUNT = 4;
 const points = generatePoints(POINT_COUNT);
 
 const tripContainer = document.querySelector(`.trip-events`);
@@ -34,12 +34,13 @@ filterController.render();
 const tripController = new TripController(tripContainer, pointsModel);
 tripController.render();
 
+const addButton = document.querySelector(`.trip-main__event-add-btn`);
 
-document.querySelector(`.trip-main__event-add-btn`)
-  .addEventListener(`click`, () => {
-    filterController.rerender();
-    tripController.createPoint();
-  });
+addButton.addEventListener(`click`, () => {
+  filterController.setDefaults();
+  filterController.rerender();
+  tripController.createPoint();
+});
 
 
 menuComponent.onMenuControlsClick((menuControl) => {
@@ -47,11 +48,13 @@ menuComponent.onMenuControlsClick((menuControl) => {
     case MenuControl.TABLE:
       tripController.show();
       statisticsComponent.hide();
+      addButton.removeAttribute(`disabled`, `disabled`);
       break;
     case MenuControl.STATS:
       statisticsComponent.show();
       tripController.hide();
       tripController.rerender();
+      addButton.setAttribute(`disabled`, `disabled`);
       break;
     default:
       throw new Error(`Case ${menuControl} not found`);
