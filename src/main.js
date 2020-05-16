@@ -48,7 +48,7 @@ menuComponent.onMenuControlsClick((menuControl) => {
     case MenuControl.TABLE:
       tripController.show();
       statisticsComponent.hide();
-      addButton.removeAttribute(`disabled`, `disabled`);
+      addButton.removeAttribute(`disabled`);
       break;
     case MenuControl.STATS:
       statisticsComponent.show();
