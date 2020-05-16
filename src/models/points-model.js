@@ -13,6 +13,10 @@ export default class PointsModel {
     this._filterChangeHandlers = [];
   }
 
+  getPointsAll() {
+    return this._points;
+  }
+
   getPoints() {
     const filterdPoints = getFiltredPoints(this._points, this._activeFilter);
     const sortedPoints = getSortedPoints(filterdPoints, this._activeSortType);
