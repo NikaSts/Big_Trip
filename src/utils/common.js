@@ -34,9 +34,11 @@ const formatTime = (time) => {
 };
 
 const formatDateAndTime = (timestamp) => {
-  const date = moment(timestamp).format(`DD/MM/YY`);
-  const time = formatTime(date);
-  return `${date} ${time}`;
+  return moment(timestamp).format(`DD/MM/YY HH:mm`);
+};
+
+const convertDateStringToTimestamp = (dateString) => {
+  return moment(dateString, `DD/MM/YY HH:mm`).valueOf();
 };
 
 
@@ -60,10 +62,6 @@ const getFormattedDuration = (duration) => {
 
 
 // OTHER
-const capitalizeFirstLetter = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-};
-
 const getDayPoints = (acc, point) => {
   const date = new Date(point.startDate).setHours(0, 0, 0, 0);
 
@@ -96,5 +94,13 @@ const getPointPrice = (point) => {
   return point.basePrice + point.offers.reduce(cb, 0);
 };
 
+const capitalizeFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
 
-export {getRandomNumber, getRandomItem, getRandomBoolean, getStringOfDate, getDateOfString, formatDate, formatTime, formatDateAndTime, getDuration, getFormattedDuration, capitalizeFirstLetter, getTripDays, getPointPrice};
+const getTypeById = (attributeValue, prefix) => {
+  return attributeValue.substring(prefix.length);
+};
+
+
+export {getRandomNumber, getRandomItem, getRandomBoolean, getStringOfDate, getDateOfString, formatDate, formatTime, formatDateAndTime, convertDateStringToTimestamp, getDuration, getFormattedDuration, getTripDays, getPointPrice, capitalizeFirstLetter, getTypeById};

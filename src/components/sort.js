@@ -1,57 +1,48 @@
 import AbstractComponent from './abstract-component';
+import {capitalizeFirstLetter, getTypeById} from '../utils/common';
 
-const SortType = {
-  DEFAULT: `sort-event`,
-  TIME: `sort-time`,
-  PRICE: `sort-price`,
+
+const SORT_ID_PREFIX = `sort-`;
+
+const createSortMarkup = (sortType, activeSortType) => {
+  const isChecked = sortType === activeSortType;
+  return (
+    ` <div class="trip-sort__item  trip-sort__item--event">
+      <input id="sort-${sortType}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="${sortType}"${isChecked ? ` checked` : ``}>
+      <label class="trip-sort__btn" for="sort-${sortType}">${capitalizeFirstLetter(sortType)}</label>
+    </div>`
+  );
 };
 
-const createSortTemplate = () => {
+const getSortMarkup = (sortTypes, activeSortType) => {
+  return sortTypes.map((type) => createSortMarkup(type, activeSortType)).join(`\n`);
+};
+
+const createSortTemplate = (sortTypes, activeSortType) => {
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
       <span class="trip-sort__item  trip-sort__item--day">Day</span>
-
-      <div class="trip-sort__item  trip-sort__item--event">
-        <input id="${SortType.DEFAULT}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="${SortType.DEFAULT}" checked>
-        <label class="trip-sort__btn" for="${SortType.DEFAULT}">Event</label>
-      </div>
-
-      <div class="trip-sort__item  trip-sort__item--time">
-        <input id="${SortType.TIME}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="${SortType.TIME}">
-        <label class="trip-sort__btn" for="${SortType.TIME}">Time</label>
-      </div>
-
-      <div class="trip-sort__item  trip-sort__item--price">
-        <input id="${SortType.PRICE}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="${SortType.PRICE}">
-        <label class="trip-sort__btn" for="${SortType.PRICE}">Price</label>
-      </div>
-
+      ${getSortMarkup(sortTypes, activeSortType)}
       <span class="trip-sort__item  trip-sort__item--offers">Offers</span>
     </form>`
   );
 };
 
+
 export default class SortComponent extends AbstractComponent {
-  constructor() {
+  constructor(sortTypes, activeSortType) {
     super();
-    this._sortType = SortType.DEFAULT;
+    this._sortTypes = sortTypes;
+    this._activeSortType = activeSortType;
   }
   getTemplate() {
-    return createSortTemplate();
+    return createSortTemplate(this._sortTypes, this._activeSortType);
   }
-  getSortType() {
-    return this._sortType;
-  }
+
   setSortTypeChangeHandler(handler) {
-    this.getElement().addEventListener(`click`, (evt) => {
-      const target = evt.target.closest(`input[type="radio"]`);
-      if (!target || target.id === this._sortType) {
-        return;
-      }
-      this._sortType = target.id;
-      handler(this._sortType);
+    this.getElement().addEventListener(`change`, (evt) => {
+      const sortType = getTypeById(evt.target.id, SORT_ID_PREFIX);
+      handler(sortType);
     });
   }
 }
-
-export {SortType};

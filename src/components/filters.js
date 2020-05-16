@@ -1,32 +1,48 @@
 import AbstractComponent from './abstract-component';
+import {capitalizeFirstLetter, getTypeById} from '../utils/common';
 
 
-const createFiltersTemplate = () => {
+const FILTER_ID_PREFIX = `filter-`;
+
+const createFilterMarkup = (filter, activeFilter) => {
+  const isChecked = filter === activeFilter;
+  return (
+    `<div class="trip-filters__filter">
+      <input id="filter-${filter}" class="trip-filters__filter-input  visually-hidden" type="radio"
+        name="trip-filter" value="${filter}"${isChecked ? ` checked` : ``}>
+      <label class="trip-filters__filter-label" for="filter-${filter}">${capitalizeFirstLetter(filter)}</label>
+    </div>`
+  );
+};
+
+const getfiltersMarkup = (filters, activeFilter) => {
+  return filters.map((filter) => createFilterMarkup(filter, activeFilter)).join(`\n`);
+};
+
+const createFiltersTemplate = (filters, activeFilter) => {
   return (
     `<form class="trip-filters" action="#" method="get">
-      <div class="trip-filters__filter">
-        <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio"
-          name="trip-filter" value="everything" checked>
-        <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
-      </div>
-
-      <div class="trip-filters__filter">
-        <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future">
-        <label class="trip-filters__filter-label" for="filter-future">Future</label>
-      </div>
-
-      <div class="trip-filters__filter">
-        <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past">
-        <label class="trip-filters__filter-label" for="filter-past">Past</label>
-      </div>
-
+      ${getfiltersMarkup(filters, activeFilter)}
       <button class="visually-hidden" type="submit">Accept filter</button>
     </form>`
   );
 };
 
 export default class FiltersComponent extends AbstractComponent {
+  constructor(filters, activeFilter) {
+    super();
+    this._filters = filters;
+    this._activeFilter = activeFilter;
+  }
+
   getTemplate() {
-    return createFiltersTemplate();
+    return createFiltersTemplate(this._filters, this._activeFilter);
+  }
+
+  setFilterTypeChangeHandler(handler) {
+    this.getElement().addEventListener(`change`, (evt) => {
+      const filterType = getTypeById(evt.target.id, FILTER_ID_PREFIX);
+      handler(filterType);
+    });
   }
 }

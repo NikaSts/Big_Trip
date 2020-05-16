@@ -1,14 +1,14 @@
+const Position = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+  AFTEREND: `afterend`,
+};
+
 const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
 
   return newElement.firstElementChild;
-};
-
-const Position = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`,
-  AFTEREND: `afterend`,
 };
 
 const renderComponent = (container, component, place = Position.BEFOREEND) => {
@@ -43,4 +43,4 @@ const removeComponent = (component) => {
 };
 
 
-export {createElement, Position, renderComponent, replaceComponent, removeComponent};
+export {Position, createElement, renderComponent, replaceComponent, removeComponent};
