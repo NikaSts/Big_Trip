@@ -127,7 +127,7 @@ export default class TripController {
   }
 
   _onViewChange() {
-    this._pointControllers.forEach((it) => it.setDefaultView());
+    this._pointControllers.forEach((pointController) => pointController.setDefaultView());
   }
 
   _onSortTypeChange(sortType) {

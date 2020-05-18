@@ -54,7 +54,6 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._startPicker = null;
     this._endPicker = null;
 
-    this._applyFlatpickr();
     this._subscribeOnEvents();
   }
 
@@ -88,7 +87,6 @@ export default class EditPointComponent extends AbstractSmartComponent {
 
   rerender() {
     super.rerender();
-    this._applyFlatpickr();
   }
 
   reset() {
@@ -102,16 +100,6 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._basePrice = point.basePrice;
 
     this.rerender();
-  }
-
-  removeElement() {
-    if (this._startPicker || this._endPicker) {
-      this._startPicker.destroy();
-      this._endPicker.destroy();
-      this._startPicker = null;
-      this._endPicker = null;
-    }
-    super.removeElement();
   }
 
   setSubmitHandler(onFormSubmit) {
@@ -139,7 +127,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._favoriteHandler = onFavoriteButtonClick;
   }
 
-  _applyFlatpickr() {
+  applyFlatpickr() {
     if (this._startPicker || this._endPicker) {
       this._startPicker.destroy();
       this._endPicker.destroy();
@@ -175,6 +163,15 @@ export default class EditPointComponent extends AbstractSmartComponent {
         this._endDate = Number(new Date(this.selectedDates[0]));
       }
     }));
+  }
+
+  removeFlatpickr() {
+    if (this._startPicker || this._endPicker) {
+      this._startPicker.destroy();
+      this._endPicker.destroy();
+      this._startPicker = null;
+      this._endPicker = null;
+    }
   }
 
   _subscribeOnEvents() {

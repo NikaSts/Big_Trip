@@ -76,6 +76,7 @@ export default class PointController {
 
     if (state === State.ADD) {
       document.addEventListener(`keydown`, this._onEscKeyDown);
+      this._editPointComponent.applyFlatpickr();
       return this._editPointComponent;
     }
     return this._pointComponent;
@@ -85,6 +86,7 @@ export default class PointController {
     removeComponent(this._editPointComponent);
     removeComponent(this._pointComponent);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
+    this._editPointComponent.removeFlatpickr();
   }
 
   setDefaultView() {
@@ -98,6 +100,7 @@ export default class PointController {
   }
 
   _openEditForm() {
+    this._editPointComponent.applyFlatpickr();
     document.addEventListener(`keydown`, this._onEscKeyDown);
     this._onViewChange();
     replaceComponent(this._pointComponent, this._editPointComponent);
@@ -105,6 +108,7 @@ export default class PointController {
   }
 
   _closeEditForm() {
+    this._editPointComponent.removeFlatpickr();
     document.removeEventListener(`keydown`, this._onEscKeyDown);
     this._editPointComponent.reset();
     replaceComponent(this._editPointComponent, this._pointComponent);

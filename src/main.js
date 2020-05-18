@@ -8,7 +8,7 @@ import StatisticsComponent from './components/statistics';
 import {renderComponent, Position} from './utils/render';
 
 
-const POINT_COUNT = 4;
+const POINT_COUNT = 20;
 const points = generatePoints(POINT_COUNT);
 
 const tripContainer = document.querySelector(`.trip-events`);
@@ -23,8 +23,8 @@ pointsModel.setPoints(points);
 renderComponent(tripDetails, new TripInfoComponent(pointsModel), Position.AFTERBEGIN);
 const menuComponent = new MenuComponent();
 renderComponent(tripViewTitle, menuComponent, Position.AFTEREND);
-const statisticsComponent = new StatisticsComponent();
-renderComponent(tripContainer, statisticsComponent);
+const statisticsComponent = new StatisticsComponent(pointsModel);
+renderComponent(tripContainer, statisticsComponent, Position.AFTEREND);
 statisticsComponent.hide();
 
 
@@ -48,7 +48,7 @@ menuComponent.onMenuControlsClick((menuControl) => {
     case MenuControl.TABLE:
       tripController.show();
       statisticsComponent.hide();
-      addButton.removeAttribute(`disabled`, `disabled`);
+      addButton.removeAttribute(`disabled`);
       break;
     case MenuControl.STATS:
       statisticsComponent.show();
