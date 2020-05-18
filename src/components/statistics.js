@@ -2,6 +2,7 @@ import AbstractSmartComponent from './abstract-smart-component';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {getDuration, getFormattedDuration} from '../utils/common';
+import {pointGroupToType, TypeGroup} from '../mock/points-mock';
 
 
 const BAR_HEIGHT = 55;
@@ -103,10 +104,13 @@ const renderMoneyChart = (ctx, points) => {
 
 const renderTransportChart = (ctx, points) => {
   const transportStats = points.reduce((acc, point) => {
-    if (!acc[point.type]) {
-      acc[point.type] = 0;
+    const isTransport = pointGroupToType[TypeGroup.TRANSFER].includes(point.type);
+    if (isTransport) {
+      if (!acc[point.type]) {
+        acc[point.type] = 0;
+      }
+      acc[point.type] += 1;
     }
-    acc[point.type] += 1;
     return acc;
   }, {});
 
@@ -219,7 +223,7 @@ const renderTimeChart = (ctx, points) => {
       },
       title: {
         display: true,
-        text: `TRANSPORT`,
+        text: `TIME-SPEND`,
         fontColor: `#000000`,
         fontSize: 23,
         position: `left`
@@ -316,7 +320,7 @@ export default class StatisticsComponent extends AbstractSmartComponent {
     const moneyCtx = element.querySelector(`.statistics__chart--money`);
     const transportCtx = element.querySelector(`.statistics__chart--transport`);
     const timeCtx = element.querySelector(`.statistics__chart--time`);
-    const points = this._points.getPoints();
+    const points = this._points.getPointsAll();
 
     this._resetCharts();
 
