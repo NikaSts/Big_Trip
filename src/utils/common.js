@@ -24,8 +24,8 @@ const formatDateAndTime = (timestamp) => {
   return moment(timestamp).format(`DD/MM/YY HH:mm`);
 };
 
-const convertDateStringToTimestamp = (dateString) => {
-  return moment(dateString, `DD/MM/YY HH:mm`).valueOf();
+const convertStrDateToTimestamp = (StrDate) => {
+  return moment(StrDate, `DD/MM/YY HH:mm`).valueOf();
 };
 
 
@@ -90,4 +90,4 @@ const getTypeById = (attributeValue, prefix) => {
 };
 
 
-export {getStringOfDate, getDateOfString, formatDate, formatTime, formatDateAndTime, convertDateStringToTimestamp, getDuration, getFormattedDuration, getTripDays, getPointPrice, capitalizeFirstLetter, getTypeById};
+export {getStringOfDate, getDateOfString, formatDate, formatTime, formatDateAndTime, convertStrDateToTimestamp, getDuration, getFormattedDuration, getTripDays, getPointPrice, capitalizeFirstLetter, getTypeById};

@@ -1,28 +1,10 @@
 import AbstractSmartComponent from '../abstract-smart-component';
 import {createEditPointTemplate} from './edit-point-template';
-import {convertDateStringToTimestamp} from '../../utils/common';
 import {State} from '../../controllers/point-controller';
 
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
-
-const parseFormData = (formData, availableOffers, destinations) => {
-  const pointType = formData.get(`event-type`);
-  const cityName = formData.get(`event-destination`);
-  const destinationData = destinations.find((destination) => destination.name === cityName);
-  const checkedOffers = formData.getAll(`event-offer-1`);
-
-  return {
-    type: pointType,
-    startDate: convertDateStringToTimestamp(formData.get(`event-start-time`)),
-    endDate: convertDateStringToTimestamp(formData.get(`event-end-time`)),
-    basePrice: formData.get(`event-price`),
-    isFavorite: Boolean(formData.get(`event-favorite`)),
-    offers: availableOffers[pointType].filter((offer) => checkedOffers.includes(offer.title)),
-    destination: destinationData,
-  };
-};
 
 export default class EditPointComponent extends AbstractSmartComponent {
   constructor(point, state, pointsModel) {
@@ -31,14 +13,14 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._state = state;
     this._pointsModel = pointsModel;
 
-    this._availableOffers = this._pointsModel.getOffers();
+    this._availableOffers = pointsModel.getOffers();
     this._destinations = pointsModel.getDestinations();
 
     this._type = point.type;
     this._startDate = point.startDate;
     this._endDate = point.endDate;
 
-    this._filteredAvailableOffers = this._pointsModel.getOffersByType(point.type).filter((offer) => point.offers.every((pointOffer) => pointOffer.title !== offer.title));
+    this._filteredAvailableOffers = pointsModel.getOffersByType(point.type).filter((offer) => point.offers.every((pointOffer) => pointOffer.title !== offer.title));
     this._offers = [...point.offers, ...this._filteredAvailableOffers];
 
     this._destination = Object.assign({}, point.destination);
@@ -69,9 +51,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
 
   getData() {
     const form = this.getElement();
-    const formData = new FormData(form);
-    const data = parseFormData(formData, this._availableOffers, this._destinations);
-    return data;
+    return new FormData(form);
   }
 
   recoveryListeners() {

@@ -10,9 +10,10 @@ import {renderComponent, removeComponent, Position} from '../utils/render';
 const HIDDEN_CLASS = `visually-hidden`;
 
 export default class TripController {
-  constructor(container, pointsModel) {
+  constructor(container, pointsModel, api) {
     this._container = container;
     this._pointsModel = pointsModel;
+    this._api = api;
 
     this._activeSortType = SortType.DEFAULT;
 
@@ -110,14 +111,18 @@ export default class TripController {
         if (newData === null) {
           this._pointsModel.removePoint(oldData.id);
         } else {
-          const isSuccess = this._pointsModel.updatePoint(oldData.id, newData);
-          if (!isSuccess) {
-            return;
-          }
           if (isEditing) {
             return;
           }
-          pointController.render(newData, PointControllerState.DEFAULT);
+
+          this._api.updatePoint(oldData.id, newData)
+            .then((pointsModel) => {
+              const isSuccess = this._pointsModel.updatePoint(oldData.id, pointsModel);
+              if (!isSuccess) {
+                return;
+              }
+              pointController.render(pointsModel, PointControllerState.DEFAULT);
+            });
         }
         this.rerender(this._activeSortType);
         break;

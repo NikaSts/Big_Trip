@@ -1,6 +1,8 @@
 import {replaceComponent, removeComponent} from '../utils/render';
+import {convertStrDateToTimestamp} from '../utils/common';
 import PointComponent from '../components/point';
 import EditPointComponent from '../components/edit-point/edit-point';
+import PointAdapter from '../models/points-adapter';
 
 
 const State = {
@@ -24,11 +26,33 @@ const EmptyPoint = {
   isFavorite: false,
 };
 
+const parseFormData = (id, formData, availableOffers, destinations) => {
+  const pointType = formData.get(`event-type`);
+  const cityName = formData.get(`event-destination`);
+  const destinationData = destinations.find((destination) => destination.name === cityName);
+  const checkedOffers = formData.getAll(`event-offer-1`);
+
+  return new PointAdapter({
+    id,
+    "type": pointType,
+    "date_from": convertStrDateToTimestamp(formData.get(`event-start-time`)),
+    "date_to": convertStrDateToTimestamp(formData.get(`event-end-time`)),
+    "basePrice": formData.get(`event-price`),
+    "isFavorite": Boolean(formData.get(`event-favorite`)),
+    "offers": availableOffers[pointType].filter((offer) => checkedOffers.includes(offer.title)),
+    "destination": destinationData,
+  });
+};
+
+
 export default class PointController {
   constructor(onDataChange, onViewChange, pointsModel) {
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._pointsModel = pointsModel;
+
+    this._availableOffers = pointsModel.getOffers();
+    this._destinations = pointsModel.getDestinations();
 
     this._state = State.DEFAULT;
     this._pointComponent = null;
@@ -55,7 +79,8 @@ export default class PointController {
 
     this._editPointComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
-      const data = this._editPointComponent.getData();
+      const formData = this._editPointComponent.getData();
+      const data = parseFormData(this._point.id, formData, this._availableOffers, this._destinations);
       this._onDataChange(this, this._point, data, this._state);
       this.setDefaultView();
     });
@@ -70,9 +95,9 @@ export default class PointController {
     });
 
     this._editPointComponent.setFavoriteButtonClickHandler(() => {
-      this._onDataChange(this, this._point, Object.assign({}, this._point, {
-        isFavorite: !point.isFavorite,
-      }), this._state, true);
+      const newPoint = PointAdapter.clone(point);
+      newPoint.isFavorite = !newPoint.isFavorite;
+      this._onDataChange(this, this._point, newPoint, this._state, true);
     });
 
     if (state === State.ADD) {

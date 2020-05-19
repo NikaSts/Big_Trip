@@ -14,11 +14,28 @@ export default class PointAdapter {
     this.destination = data[`destination`];
   }
 
+  toRAW() {
+    return {
+      "id": this.id,
+      "type": this.type,
+      "date_from": this.startDate,
+      "date_to": this.endDate,
+      "basePrice": this.basePrice,
+      "isFavorite": this.isFavorite,
+      "offers": this.offers,
+      "destination": this.destination,
+    };
+  }
+
   static parsePoint(data) {
     return new PointAdapter(data);
   }
 
   static parsePoints(data) {
     return data.map(PointAdapter.parsePoint);
+  }
+
+  static clone(data) {
+    return new PointAdapter(data.toRaw());
   }
 }

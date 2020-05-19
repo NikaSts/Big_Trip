@@ -20,19 +20,15 @@ const tripViewTitle = tripControls.querySelector(`h2`);
 const addButton = document.querySelector(`.trip-main__event-add-btn`);
 
 const tripInfoComponent = new TripInfoComponent(pointsModel);
-renderComponent(tripDetails, tripInfoComponent, Position.AFTERBEGIN);
-
 const menuComponent = new MenuComponent();
-renderComponent(tripViewTitle, menuComponent, Position.AFTEREND);
-
 const statisticsComponent = new StatisticsComponent(pointsModel);
+const filterController = new FilterController(tripControls, pointsModel);
+const tripController = new TripController(tripContainer, pointsModel, api);
+
+renderComponent(tripViewTitle, menuComponent, Position.AFTEREND);
 renderComponent(tripContainer, statisticsComponent, Position.AFTEREND);
 statisticsComponent.hide();
 
-const filterController = new FilterController(tripControls, pointsModel);
-filterController.render();
-
-const tripController = new TripController(tripContainer, pointsModel);
 
 menuComponent.onMenuControlsClick((menuControl) => {
   switch (menuControl) {
@@ -57,6 +53,9 @@ Promise.all([api.getPoints(), api.getOffers(), api.getDestinations()])
     pointsModel.setPoints(points);
     pointsModel.setOffers(offers);
     pointsModel.setDestinations(destinations);
+
+    renderComponent(tripDetails, tripInfoComponent, Position.AFTERBEGIN);
+    filterController.render();
 
     tripController.render();
   });
