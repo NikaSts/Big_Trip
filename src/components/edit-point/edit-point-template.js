@@ -1,19 +1,19 @@
 import {createPointTypeTemplate} from './point-type-template';
 import {createDestinationTemplate} from './destination-template';
 import {createAvailableOfferTemplate} from './offer-template';
-import {TypeGroup, pointGroupToType, CITY_NAMES} from '../../mock/points-mock';
+import {TypeGroup, pointGroupToType} from '../../utils/consts';
 import {capitalizeFirstLetter, formatDateAndTime} from '../../utils/common';
 import {State} from '../../controllers/point-controller';
 
 
-const createEditPointTemplate = (options = {}, state) => {
+const createEditPointTemplate = (options = {}, state, availableOffers, destinations) => {
   const {type, startDate, endDate, offers, destination, isFavorite, basePrice} = options;
   const capitalizedType = capitalizeFirstLetter(type);
   const start = formatDateAndTime(startDate);
   const end = formatDateAndTime(endDate);
 
   const isValidDestination = !!destination.name;
-
+  const cityName = destinations.map((city) => city.name);
   const isNew = state === State.ADD;
   const hasOffers = offers.length > 0;
   const offersToShow = hasOffers ? createAvailableOfferTemplate(offers) : ``;
@@ -51,7 +51,7 @@ const createEditPointTemplate = (options = {}, state) => {
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
           <datalist id="destination-list-1">
-          ${CITY_NAMES.map((city) =>
+          ${cityName.map((city) =>
       `<option value=${city}></option>`
     ).join(` `)}
           </datalist>

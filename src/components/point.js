@@ -1,5 +1,5 @@
 import {getDuration, getFormattedDuration, capitalizeFirstLetter, getStringOfDate, formatTime} from '../utils/common';
-import {pointGroupToType, TypeGroup} from '../mock/points-mock';
+import {pointGroupToType, TypeGroup} from '../utils/consts';
 import AbstractComponent from './abstract-component';
 
 

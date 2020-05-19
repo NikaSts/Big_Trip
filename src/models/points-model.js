@@ -2,6 +2,16 @@ import {Filter, getFiltredPoints} from '../utils/filters';
 import {SortType, getSortedPoints} from '../utils/sort';
 
 
+const parseOffers = (offers) => {
+  return offers.reduce((acc, originalOffer) => {
+    // eslint-disable-next-line no-return-assign
+    originalOffer.offers.map((offer) => offer.isChecked = false);
+    acc[originalOffer.type] = originalOffer.offers;
+    return acc;
+  }, {});
+};
+
+
 export default class PointsModel {
   constructor() {
     this._points = [];
@@ -9,7 +19,6 @@ export default class PointsModel {
     this._activeFilter = Filter.DEFAULT;
     this._activeSortType = SortType.DEFAULT;
 
-    //    this._dataChangeHandlers = [];
     this._filterChangeHandlers = [];
   }
 
@@ -25,7 +34,26 @@ export default class PointsModel {
 
   setPoints(points) {
     this._points = Array.from(points);
-    // this._callHandlers(this._dataChangeHandlers);
+  }
+
+  getDestinations() {
+    return this._destinations;
+  }
+
+  setDestinations(destinations) {
+    this._destinations = destinations;
+  }
+
+  getOffers() {
+    return this._offers;
+  }
+
+  getOffersByType(type) {
+    return this._offers[type];
+  }
+
+  setOffers(offers) {
+    this._offers = parseOffers(offers);
   }
 
   setFilterType(filterType = Filter.DEFAULT) {
@@ -40,7 +68,6 @@ export default class PointsModel {
 
   createPoint(point) {
     this._points = [].concat(point, this._points);
-    // this._callHandlers(this._dataChangeHandlers);
   }
 
   removePoint(id) {
@@ -48,9 +75,7 @@ export default class PointsModel {
     if (index === -1) {
       return false;
     }
-
     this._points = [].concat(this._points.slice(0, index), this._points.slice(index + 1));
-    // this._callHandlers(this._dataChangeHandlers);
 
     return true;
   }
@@ -62,18 +87,13 @@ export default class PointsModel {
     }
     this._points = [].concat(this._points.slice(0, index), newData, this._points.slice(index + 1));
 
-    // this._callHandlers(this._dataChangeHandlers);
     return true;
   }
 
   setFilterTypeChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
   }
-  /*
-setDataChangeHandler(handler) {
-    this._dataChangeHandlers.push(handler);
-  }
- */
+
   _callHandlers(handlers) {
     handlers.forEach((handler) => handler());
   }

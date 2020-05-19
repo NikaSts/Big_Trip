@@ -43,10 +43,11 @@ export default class TripInfoComponent extends AbstractComponent {
   constructor(pointsModel) {
     super();
     this._pointsModel = pointsModel;
+
   }
 
   getTemplate() {
-    const points = this._pointsModel.getPoints();
+    const points = this._pointsModel.getPointsAll();
     return createTripInfoTemplate(points);
   }
 }

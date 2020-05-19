@@ -1,14 +1,13 @@
 import AbstractSmartComponent from '../abstract-smart-component';
 import {createEditPointTemplate} from './edit-point-template';
 import {convertDateStringToTimestamp} from '../../utils/common';
-import {availableOffers, destinations} from '../../mock/points-mock';
 import {State} from '../../controllers/point-controller';
 
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
 
-const parseFormData = (formData) => {
+const parseFormData = (formData, availableOffers, destinations) => {
   const pointType = formData.get(`event-type`);
   const cityName = formData.get(`event-destination`);
   const destinationData = destinations.find((destination) => destination.name === cityName);
@@ -21,26 +20,25 @@ const parseFormData = (formData) => {
     basePrice: formData.get(`event-price`),
     isFavorite: Boolean(formData.get(`event-favorite`)),
     offers: availableOffers[pointType].filter((offer) => checkedOffers.includes(offer.title)),
-    destination: {
-      name: cityName,
-      description: destinationData.description,
-      photos: destinationData.photos,
-    }
+    destination: destinationData,
   };
 };
 
 export default class EditPointComponent extends AbstractSmartComponent {
-  constructor(point, state) {
+  constructor(point, state, pointsModel) {
     super();
     this._point = point;
     this._state = state;
+    this._pointsModel = pointsModel;
+
+    this._availableOffers = this._pointsModel.getOffers();
+    this._destinations = pointsModel.getDestinations();
 
     this._type = point.type;
     this._startDate = point.startDate;
     this._endDate = point.endDate;
 
-    this._filteredAvailableOffers = availableOffers[point.type].filter((offer) => point.offers.every((pointOffer) => pointOffer.title !== offer.title));
-
+    this._filteredAvailableOffers = this._pointsModel.getOffersByType(point.type).filter((offer) => point.offers.every((pointOffer) => pointOffer.title !== offer.title));
     this._offers = [...point.offers, ...this._filteredAvailableOffers];
 
     this._destination = Object.assign({}, point.destination);
@@ -58,7 +56,6 @@ export default class EditPointComponent extends AbstractSmartComponent {
   }
 
   getTemplate() {
-
     return createEditPointTemplate({
       type: this._type,
       startDate: this._startDate,
@@ -67,13 +64,13 @@ export default class EditPointComponent extends AbstractSmartComponent {
       destination: this._destination,
       isFavorite: this._isFavorite,
       basePrice: this._basePrice,
-    }, this._state);
+    }, this._state, this._availableOffers, this._destinations);
   }
 
   getData() {
     const form = this.getElement();
     const formData = new FormData(form);
-    const data = parseFormData(formData);
+    const data = parseFormData(formData, this._availableOffers, this._destinations);
     return data;
   }
 
@@ -185,7 +182,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
           return;
         }
         this._type = target.value;
-        this._offers = availableOffers[this._type];
+        this._offers = this._pointsModel.getOffersByType(this._type); // this._availableOffers[this._type];
         this.rerender();
       });
 
@@ -195,7 +192,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
 
     destinationNameInput.addEventListener(`input`, (evt) => {
       const inputValue = evt.target.value;
-      const newDestination = destinations.find((destination) => destination.name === inputValue);
+      const newDestination = this._destinations.find((destination) => destination.name === inputValue);
       if (inputValue === `` || !newDestination) {
         return;
       }
@@ -213,8 +210,8 @@ export default class EditPointComponent extends AbstractSmartComponent {
         if (!target) {
           return;
         }
-        const offerType = target.id.split(`-`)[2];
-        const targetOffer = this._offers.find((offer) => offer.type === offerType);
+        const offerTitle = target.value;
+        const targetOffer = this._offers.find((offer) => offer.title === offerTitle);
         targetOffer.isChecked = !targetOffer.isChecked;
         this.rerender();
       });

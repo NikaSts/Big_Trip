@@ -68,7 +68,7 @@ export default class TripController {
       return;
     }
     this._onViewChange();
-    this._creatingPoint = new PointController(this._onDataChange, this._onViewChange);
+    this._creatingPoint = new PointController(this._onDataChange, this._onViewChange, this._pointsModel);
     const newPointComponent = this._creatingPoint.render(EmptyPoint, PointControllerState.ADD);
     this.rerender();
 
@@ -158,7 +158,7 @@ export default class TripController {
 
     const points = day.points;
     points.forEach((point) => {
-      const pointController = new PointController(onDataChange, onViewChange);
+      const pointController = new PointController(onDataChange, onViewChange, this._pointsModel);
       dayComponent.addPoint(pointController.render(point, PointControllerState.DEFAULT));
       this._pointControllers.push(pointController);
     });

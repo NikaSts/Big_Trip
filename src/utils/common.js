@@ -1,18 +1,5 @@
 import moment from "moment";
 
-// RANDOM
-const getRandomNumber = (min, max) => {
-  return Math.floor(Math.random() * (max - min)) + min;
-};
-
-const getRandomItem = (items) => {
-  return items[getRandomNumber(0, items.length)];
-};
-
-const getRandomBoolean = (number) => {
-  return Math.random() > number;
-};
-
 
 // DATE AND TIME
 const getStringOfDate = (timestamp) => {
@@ -103,4 +90,4 @@ const getTypeById = (attributeValue, prefix) => {
 };
 
 
-export {getRandomNumber, getRandomItem, getRandomBoolean, getStringOfDate, getDateOfString, formatDate, formatTime, formatDateAndTime, convertDateStringToTimestamp, getDuration, getFormattedDuration, getTripDays, getPointPrice, capitalizeFirstLetter, getTypeById};
+export {getStringOfDate, getDateOfString, formatDate, formatTime, formatDateAndTime, convertDateStringToTimestamp, getDuration, getFormattedDuration, getTripDays, getPointPrice, capitalizeFirstLetter, getTypeById};

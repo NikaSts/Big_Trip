@@ -1,7 +1,6 @@
 import {replaceComponent, removeComponent} from '../utils/render';
 import PointComponent from '../components/point';
 import EditPointComponent from '../components/edit-point/edit-point';
-import {availableOffers} from '../mock/points-mock';
 
 
 const State = {
@@ -13,12 +12,12 @@ const State = {
 const EmptyPoint = {
   id: String(Date.now() + Math.random()),
   type: `taxi`,
-  offers: availableOffers[`taxi`],
+  offers: [],
   basePrice: 0,
   destination: {
     name: ``,
     description: ``,
-    photos: [],
+    pictures: [],
   },
   startDate: Date.now(),
   endDate: Date.now(),
@@ -26,9 +25,11 @@ const EmptyPoint = {
 };
 
 export default class PointController {
-  constructor(onDataChange, onViewChange) {
+  constructor(onDataChange, onViewChange, pointsModel) {
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._pointsModel = pointsModel;
+
     this._state = State.DEFAULT;
     this._pointComponent = null;
     this._editPointComponent = null;
@@ -45,7 +46,7 @@ export default class PointController {
     if (!oldPointComponent &&
       !oldEditPointComponent) {
       this._pointComponent = new PointComponent(this._point);
-      this._editPointComponent = new EditPointComponent(this._point, this._state);
+      this._editPointComponent = new EditPointComponent(this._point, this._state, this._pointsModel);
     }
 
     this._pointComponent.setEditButtonClickHandler(() => {
