@@ -1,5 +1,5 @@
 import {replaceComponent, removeComponent} from '../utils/render';
-import {convertStrDateToTimestamp} from '../utils/common';
+import {formatToISOString} from '../utils/common';
 import PointComponent from '../components/point';
 import EditPointComponent from '../components/edit-point/edit-point';
 import PointAdapter from '../models/points-adapter';
@@ -31,15 +31,17 @@ const parseFormData = (id, formData, availableOffers, destinations) => {
   const cityName = formData.get(`event-destination`);
   const destinationData = destinations.find((destination) => destination.name === cityName);
   const checkedOffers = formData.getAll(`event-offer-1`);
+  const offers = availableOffers[pointType].filter((offer) => checkedOffers.includes(offer.title));
+  offers.forEach((offer) => delete offer.isChecked);
 
   return new PointAdapter({
     id,
     "type": pointType,
-    "date_from": convertStrDateToTimestamp(formData.get(`event-start-time`)),
-    "date_to": convertStrDateToTimestamp(formData.get(`event-end-time`)),
-    "basePrice": formData.get(`event-price`),
-    "isFavorite": Boolean(formData.get(`event-favorite`)),
-    "offers": availableOffers[pointType].filter((offer) => checkedOffers.includes(offer.title)),
+    "date_from": formatToISOString(formData.get(`event-start-time`)),
+    "date_to": formatToISOString(formData.get(`event-end-time`)),
+    "base_price": Number(formData.get(`event-price`)),
+    "is_favorite": Boolean(formData.get(`event-favorite`)),
+    offers,
     "destination": destinationData,
   });
 };

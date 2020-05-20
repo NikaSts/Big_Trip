@@ -2,10 +2,9 @@ import moment from "moment";
 
 
 // DATE AND TIME
-const getStringOfDate = (timestamp) => {
-  const date = new Date(timestamp);
-  const datatime = date.toJSON().slice(0, -8); // 2020-04-30T21:40
-  return datatime;
+const formatToISOString = (timestamp) => {
+  const date = getDateOfString(timestamp);
+  return date.toISOString();
 };
 
 const getDateOfString = (date) => {
@@ -13,7 +12,7 @@ const getDateOfString = (date) => {
 };
 
 const formatDate = (date) => {
-  return moment(date).format(`MMM DD`);
+  return moment(Number(date)).format(`MMM DD`);
 };
 
 const formatTime = (time) => {
@@ -34,7 +33,8 @@ const getDuration = (start, end) => {
   return end - start;
 };
 
-const getFormattedDuration = (duration) => {
+const getFormattedDuration = (start, end) => {
+  const duration = getDuration(start, end);
   const minutes = moment.duration(duration).minutes();
   const hours = moment.duration(duration).hours();
   const days = moment.duration(duration).days();
@@ -45,6 +45,11 @@ const getFormattedDuration = (duration) => {
     return `${hours}H ${minutes}M`;
   }
   return `${minutes}M`;
+};
+
+const getDurationInHours = (duration) => {
+  const hours = moment.duration(duration).asHours();
+  return Math.round(hours);
 };
 
 
@@ -90,4 +95,4 @@ const getTypeById = (attributeValue, prefix) => {
 };
 
 
-export {getStringOfDate, getDateOfString, formatDate, formatTime, formatDateAndTime, convertStrDateToTimestamp, getDuration, getFormattedDuration, getTripDays, getPointPrice, capitalizeFirstLetter, getTypeById};
+export {formatToISOString, getDateOfString, formatDate, formatTime, formatDateAndTime, convertStrDateToTimestamp, getDuration, getFormattedDuration, getDurationInHours, getTripDays, getPointPrice, capitalizeFirstLetter, getTypeById};

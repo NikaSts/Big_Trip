@@ -1,7 +1,7 @@
 import AbstractSmartComponent from './abstract-smart-component';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {getDuration, getFormattedDuration} from '../utils/common';
+import {getDuration, getDurationInHours} from '../utils/common';
 import {pointGroupToType, TypeGroup} from '../utils/consts';
 
 
@@ -218,7 +218,7 @@ const renderTimeChart = (ctx, points) => {
           color: `#000000`,
           anchor: `end`,
           align: `start`,
-          formatter: (val) => `${getFormattedDuration(val)}`
+          formatter: (val) => `${getDurationInHours(val)}`
         }
       },
       title: {

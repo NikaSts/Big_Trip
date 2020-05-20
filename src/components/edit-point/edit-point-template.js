@@ -49,7 +49,7 @@ const createEditPointTemplate = (options = {}, state, availableOffers, destinati
           <label class="event__label  event__type-output" for="event-destination-1">
             ${capitalizedType} ${transferGroup ? `to` : `in`}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1" min="10" required>
           <datalist id="destination-list-1">
           ${cityName.map((city) =>
       `<option value=${city}></option>`
@@ -70,7 +70,7 @@ const createEditPointTemplate = (options = {}, state, availableOffers, destinati
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}" required>
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit" ${isValidDestination ? `` : `disabled`}>Save</button>

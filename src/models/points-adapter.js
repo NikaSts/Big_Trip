@@ -1,3 +1,5 @@
+import {formatToISOString} from '../utils/common';
+
 export default class PointAdapter {
   constructor(data) {
     this.id = data[`id`];
@@ -9,7 +11,7 @@ export default class PointAdapter {
     this.offers = data[`offers`] || [];
     if (this.offers.length > 0) {
       // eslint-disable-next-line no-return-assign
-      this.offers.map((offer) => offer.isChecked = true); // что ему не нравится??
+      this.offers.map((offer) => offer.isChecked = true);
     }
     this.destination = data[`destination`];
   }
@@ -18,10 +20,10 @@ export default class PointAdapter {
     return {
       "id": this.id,
       "type": this.type,
-      "date_from": this.startDate,
-      "date_to": this.endDate,
-      "basePrice": this.basePrice,
-      "isFavorite": this.isFavorite,
+      "date_from": formatToISOString(this.startDate),
+      "date_to": formatToISOString(this.endDate),
+      "base_price": this.basePrice,
+      "is_favorite": this.isFavorite,
       "offers": this.offers,
       "destination": this.destination,
     };

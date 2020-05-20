@@ -52,7 +52,6 @@ export default class API {
     const headers = new Headers();
     headers.append(`Authorization`, this._authorization);
     headers.append(`Content-Type`, `application/json`);
-
     return fetch(`https://11.ecmascript.pages.academy/big-trip/points/${id}`, {
       method: Method.PUT,
       body: JSON.stringify(data.toRAW()),

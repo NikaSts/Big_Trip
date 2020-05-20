@@ -59,6 +59,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this.setCloseHandler(this._closeHandler);
     this.setDeleteHandler(this._deleteHandler);
     this.setFavoriteButtonClickHandler(this._favoriteHandler);
+    this.applyFlatpickr();
     this._subscribeOnEvents();
   }
 
@@ -122,22 +123,22 @@ export default class EditPointComponent extends AbstractSmartComponent {
       // eslint-disable-next-line camelcase
       time_24hr: true,
       altFormat: `d/m/y H:i`,
-      dateFormat: `d/m/y H:i`,
+      dateFormat: `U`,
     };
 
     this._startPicker = flatpickr(startTimeInput, Object.assign({}, picker, {
       defaultDate: this._point.startDate || `today`,
       onClose() {
-        startTimeInput.value = this.selectedDates[0];
-        this._startDate = Number(new Date(this.selectedDates[0]));
+        // startTimeInput.value = this.selectedDates[0];
+        this._startDate = this.selectedDates[0];
       }
     }));
 
     this._endPicker = flatpickr(endTimeInput, Object.assign({}, picker, {
       defaultDate: this._point.endDate || `today`,
       onClose() {
-        endTimeInput.value = this.selectedDates[0];
-        this._endDate = Number(new Date(this.selectedDates[0]));
+        // endTimeInput.value = this.selectedDates[0];
+        this._endDate = this.selectedDates[0];
       }
     }));
   }
@@ -162,7 +163,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
           return;
         }
         this._type = target.value;
-        this._offers = this._pointsModel.getOffersByType(this._type); // this._availableOffers[this._type];
+        this._offers = this._pointsModel.getOffersByType(this._type);
         this.rerender();
       });
 
