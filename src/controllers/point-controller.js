@@ -36,9 +36,9 @@ const parseFormData = (id, formData, availableOffers, destinations) => {
   return new PointAdapter({
     id,
     "type": pointType,
-    "startDate": formatToISOString(formData.get(`event-start-time`)),
-    "endDate": formatToISOString(formData.get(`event-end-time`)),
-    "base_price": formData.get(`event-price`),
+    "date_from": formatToISOString(formData.get(`event-start-time`)),
+    "date_to": formatToISOString(formData.get(`event-end-time`)),
+    "base_price": Number(formData.get(`event-price`)),
     "is_favorite": formData.get(`event-favorite`),
     offers,
     "destination": destinationData,
@@ -47,10 +47,11 @@ const parseFormData = (id, formData, availableOffers, destinations) => {
 
 
 export default class PointController {
-  constructor(onDataChange, onViewChange, pointsModel) {
+  constructor(onDataChange, onViewChange, pointsModel, api) {
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._pointsModel = pointsModel;
+    this._api = api;
 
     this._availableOffers = pointsModel.getOffers();
     this._destinations = pointsModel.getDestinations();
@@ -83,7 +84,7 @@ export default class PointController {
       const formData = this._editPointComponent.getData();
       const data = parseFormData(this._point.id, formData, this._availableOffers, this._destinations);
       this._onDataChange(this, this._point, data, this._state);
-      this.setDefaultView();
+      // this.setDefaultView();
     });
 
     this._editPointComponent.setCloseHandler(() => {
@@ -96,9 +97,12 @@ export default class PointController {
     });
 
     this._editPointComponent.setFavoriteButtonClickHandler(() => {
-      const newPoint = PointAdapter.clone(this._point);
-      newPoint.isFavorite = !newPoint.isFavorite;
-      this._onDataChange(this, this._point, newPoint, this._state, true);
+      this._point.isFavorite = !this._point.isFavorite;
+
+      this._api.updatePoint(this._point.id, this._point)
+            .then((pointsModel) => {
+              this._pointsModel.updatePoint(this._point.id, pointsModel);
+            });
     });
 
     if (state === State.ADD) {

@@ -69,7 +69,7 @@ export default class TripController {
       return;
     }
     this._onViewChange();
-    this._creatingPoint = new PointController(this._onDataChange, this._onViewChange, this._pointsModel);
+    this._creatingPoint = new PointController(this._onDataChange, this._onViewChange, this._pointsModel, this._api);
     const newPointComponent = this._creatingPoint.render(EmptyPoint, PointControllerState.ADD);
     this.rerender();
 
@@ -95,7 +95,7 @@ export default class TripController {
     this._tripDaysComponent.removeChildrenElements();
   }
 
-  _onDataChange(pointController, oldData, newData, state, isEditing = false) {
+  _onDataChange(pointController, oldData, newData, state) {
     switch (state) {
       case PointControllerState.ADD:
         if (newData === null) {
@@ -111,10 +111,6 @@ export default class TripController {
         if (newData === null) {
           this._pointsModel.removePoint(oldData.id);
         } else {
-          if (isEditing) {
-            return;
-          }
-
           this._api.updatePoint(oldData.id, newData)
             .then((pointsModel) => {
               const isSuccess = this._pointsModel.updatePoint(oldData.id, pointsModel);
@@ -122,9 +118,10 @@ export default class TripController {
                 return;
               }
               pointController.render(pointsModel, PointControllerState.DEFAULT);
+              this.rerender(this._activeSortType);
             });
         }
-        this.rerender(this._activeSortType);
+        // this.rerender(this._activeSortType);
         break;
       default:
         throw new Error(`Case ${state} not found`);
@@ -163,7 +160,7 @@ export default class TripController {
 
     const points = day.points;
     points.forEach((point) => {
-      const pointController = new PointController(onDataChange, onViewChange, this._pointsModel);
+      const pointController = new PointController(onDataChange, onViewChange, this._pointsModel, this._api);
       dayComponent.addPoint(pointController.render(point, PointControllerState.DEFAULT));
       this._pointControllers.push(pointController);
     });
