@@ -1,5 +1,5 @@
 
-const Type = {
+export const Type = {
   TAXI: `taxi`,
   BUS: `bus`,
   TRAIN: `train`,
@@ -12,15 +12,12 @@ const Type = {
   RESTAURANT: `restaurant`,
 };
 
-const TypeGroup = {
+export const TypeGroup = {
   TRANSFER: `transfer`,
   ACTIVITY: `activity`,
 };
 
-const pointGroupToType = {
+export const pointGroupToType = {
   [TypeGroup.TRANSFER]: [Type.TAXI, Type.BUS, Type.TRAIN, Type.FLIGHT, Type.SHIP, Type.TRANSPORT, Type.DRIVE],
   [TypeGroup.ACTIVITY]: [Type.SIGHTSEEING, Type.CHECK_IN, Type.RESTAURANT],
 };
-
-
-export {TypeGroup, pointGroupToType};

@@ -2,38 +2,38 @@ import moment from "moment";
 
 
 // DATE AND TIME
-const formatToISOString = (timestamp) => {
+export const formatToISOString = (timestamp) => {
   const date = getDateOfString(timestamp);
   return date.toISOString();
 };
 
-const getDateOfString = (date) => {
+export const getDateOfString = (date) => {
   return new Date(Number(date));
 };
 
-const formatDate = (date) => {
+export const formatDate = (date) => {
   return moment(Number(date)).format(`MMM DD`);
 };
 
-const formatTime = (time) => {
+export const formatTime = (time) => {
   return moment(time).format(`hh:mm`);
 };
 
-const formatDateAndTime = (timestamp) => {
+export const formatDateAndTime = (timestamp) => {
   return moment(timestamp).format(`DD/MM/YY HH:mm`);
 };
 
-const convertStrDateToTimestamp = (StrDate) => {
+export const convertStrDateToTimestamp = (StrDate) => {
   return moment(StrDate, `DD/MM/YY HH:mm`).valueOf();
 };
 
 
 // DURATION
-const getDuration = (start, end) => {
+export const getDuration = (start, end) => {
   return end - start;
 };
 
-const getFormattedDuration = (start, end) => {
+export const getFormattedDuration = (start, end) => {
   const duration = getDuration(start, end);
   const minutes = moment.duration(duration).minutes();
   const hours = moment.duration(duration).hours();
@@ -47,7 +47,7 @@ const getFormattedDuration = (start, end) => {
   return `${minutes}M`;
 };
 
-const getDurationInHours = (duration) => {
+export const getDurationInHours = (duration) => {
   const hours = moment.duration(duration).asHours();
   return Math.round(hours);
 };
@@ -64,7 +64,7 @@ const getDayPoints = (acc, point) => {
   return acc;
 };
 
-const getTripDays = (points) => {
+export const getTripDays = (points) => {
   const groups = points.reduce(getDayPoints, {});
 
   return Object.keys(groups).map((date) => {
@@ -75,7 +75,7 @@ const getTripDays = (points) => {
   });
 };
 
-const getPointPrice = (point) => {
+export const getPointPrice = (point) => {
   const cb = (offerPriceSum, offer) => {
     if (offer.isChecked) {
       offerPriceSum += offer.price;
@@ -86,13 +86,17 @@ const getPointPrice = (point) => {
   return point.basePrice + point.offers.reduce(cb, 0);
 };
 
-const capitalizeFirstLetter = (string) => {
+export const capitalizeFirstLetter = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-const getTypeById = (attributeValue, prefix) => {
+export const getTypeById = (attributeValue, prefix) => {
   return attributeValue.substring(prefix.length);
 };
 
+export const getPointOffers = (offers, checkedOffers) => {
+  const pointOffers = offers.filter((offer) => checkedOffers.includes(offer.title));
+  pointOffers.forEach((offer) => delete offer.isChecked);
+  return pointOffers;
+};
 
-export {formatToISOString, getDateOfString, formatDate, formatTime, formatDateAndTime, convertStrDateToTimestamp, getDuration, getFormattedDuration, getDurationInHours, getTripDays, getPointPrice, capitalizeFirstLetter, getTypeById};

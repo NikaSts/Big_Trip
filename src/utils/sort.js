@@ -1,15 +1,15 @@
 import {getDuration, getPointPrice} from '../utils/common';
 
 
-const SortType = {
+export const SortType = {
   DEFAULT: `event`,
   TIME: `time`,
   PRICE: `price`,
 };
 
-const SORT_TYPES = [SortType.DEFAULT, SortType.TIME, SortType.PRICE];
+export const SORT_TYPES = [SortType.DEFAULT, SortType.TIME, SortType.PRICE];
 
-const getSortedPoints = (points, sortType = SortType.DEFAULT) => {
+export const getSortedPoints = (points, sortType = SortType.DEFAULT) => {
   let sortedPoints = [];
 
   switch (sortType) {
@@ -32,5 +32,3 @@ const getSortedPoints = (points, sortType = SortType.DEFAULT) => {
   }
   return sortedPoints;
 };
-
-export {SORT_TYPES, SortType, getSortedPoints};
