@@ -1,5 +1,5 @@
 import {replaceComponent, removeComponent} from '../utils/render';
-import {formatToISOString} from '../utils/common';
+import {formatToISOString, getPointOffers} from '../utils/common';
 import PointComponent from '../components/point';
 import EditPointComponent from '../components/edit-point/edit-point';
 import PointAdapter from '../models/points-adapter';
@@ -31,16 +31,15 @@ const parseFormData = (id, formData, availableOffers, destinations) => {
   const cityName = formData.get(`event-destination`);
   const destinationData = destinations.find((destination) => destination.name === cityName);
   const checkedOffers = formData.getAll(`event-offer-1`);
-  const offers = availableOffers[pointType].filter((offer) => checkedOffers.includes(offer.title));
-  offers.forEach((offer) => delete offer.isChecked);
+  const offers = getPointOffers(availableOffers[pointType], checkedOffers);
 
   return new PointAdapter({
     id,
     "type": pointType,
-    "date_from": formatToISOString(formData.get(`event-start-time`)),
-    "date_to": formatToISOString(formData.get(`event-end-time`)),
-    "base_price": Number(formData.get(`event-price`)),
-    "is_favorite": Boolean(formData.get(`event-favorite`)),
+    "startDate": formatToISOString(formData.get(`event-start-time`)),
+    "endDate": formatToISOString(formData.get(`event-end-time`)),
+    "base_price": formData.get(`event-price`),
+    "is_favorite": formData.get(`event-favorite`),
     offers,
     "destination": destinationData,
   });
@@ -97,7 +96,7 @@ export default class PointController {
     });
 
     this._editPointComponent.setFavoriteButtonClickHandler(() => {
-      const newPoint = PointAdapter.clone(point);
+      const newPoint = PointAdapter.clone(this._point);
       newPoint.isFavorite = !newPoint.isFavorite;
       this._onDataChange(this, this._point, newPoint, this._state, true);
     });

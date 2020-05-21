@@ -2,15 +2,13 @@ import {createPointTypeTemplate} from './point-type-template';
 import {createDestinationTemplate} from './destination-template';
 import {createAvailableOfferTemplate} from './offer-template';
 import {TypeGroup, pointGroupToType} from '../../utils/consts';
-import {capitalizeFirstLetter, formatDateAndTime} from '../../utils/common';
+import {capitalizeFirstLetter} from '../../utils/common';
 import {State} from '../../controllers/point-controller';
 
 
 const createEditPointTemplate = (options = {}, state, availableOffers, destinations) => {
   const {type, startDate, endDate, offers, destination, isFavorite, basePrice} = options;
   const capitalizedType = capitalizeFirstLetter(type);
-  const start = formatDateAndTime(startDate);
-  const end = formatDateAndTime(endDate);
 
   const isValidDestination = !!destination.name;
   const cityName = destinations.map((city) => city.name);
@@ -59,10 +57,10 @@ const createEditPointTemplate = (options = {}, state, availableOffers, destinati
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${start}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startDate}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${end}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endDate}">
         </div>
 
         <div class="event__field-group  event__field-group--price">

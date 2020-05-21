@@ -19,7 +19,6 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._type = point.type;
     this._startDate = point.startDate;
     this._endDate = point.endDate;
-
     this._filteredAvailableOffers = pointsModel.getOffersByType(point.type).filter((offer) => point.offers.every((pointOffer) => pointOffer.title !== offer.title));
     this._offers = [...point.offers, ...this._filteredAvailableOffers];
 
@@ -106,40 +105,26 @@ export default class EditPointComponent extends AbstractSmartComponent {
   }
 
   applyFlatpickr() {
-    if (this._startPicker || this._endPicker) {
-      this._startPicker.destroy();
-      this._endPicker.destroy();
-      this._startPicker = null;
-      this._endPicker = null;
-    }
+    const startTimeInput = this.getElement().querySelector(`[name="event-start-time"]`);
+    const endTimeInput = this.getElement().querySelector(`[name="event-end-time"]`);
 
-    const startTimeInput = this.getElement().querySelector(`#event-start-time-1`);
-    const endTimeInput = this.getElement().querySelector(`#event-end-time-1`);
+    this.removeFlatpickr();
 
     const picker = {
-      altInput: true,
-      allowInput: true,
-      enableTime: true,
-      // eslint-disable-next-line camelcase
-      time_24hr: true,
-      altFormat: `d/m/y H:i`,
-      dateFormat: `U`,
+      'altInput': true,
+      'allowInput': true,
+      'enableTime': true,
+      'time_24hr': true,
+      'altFormat': `d/m/y H:i`,
+      'dateFormat': `U`,
     };
 
     this._startPicker = flatpickr(startTimeInput, Object.assign({}, picker, {
-      defaultDate: this._point.startDate || `today`,
-      onClose() {
-        // startTimeInput.value = this.selectedDates[0];
-        this._startDate = this.selectedDates[0];
-      }
+      defaultDate: this._startDate,
     }));
 
     this._endPicker = flatpickr(endTimeInput, Object.assign({}, picker, {
-      defaultDate: this._point.endDate || `today`,
-      onClose() {
-        // endTimeInput.value = this.selectedDates[0];
-        this._endDate = this.selectedDates[0];
-      }
+      defaultDate: this._endDate,
     }));
   }
 
@@ -201,6 +186,18 @@ export default class EditPointComponent extends AbstractSmartComponent {
       .addEventListener(`click`, () => {
         this._isFavorite = !this._isFavorite;
         this.rerender();
+      });
+
+    element.querySelector(`[name="event-start-time"]`)
+      .addEventListener(`input`, (evt) => {
+        const inputValue = evt.target.value;
+        this._startDate = inputValue;
+      });
+
+    element.querySelector(`[name="event-end-time"]`)
+      .addEventListener(`change`, (evt) => {
+        const inputValue = evt.target.value;
+        this._endDate = inputValue;
       });
   }
 }

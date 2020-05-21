@@ -3,12 +3,8 @@ import moment from "moment";
 
 // DATE AND TIME
 export const formatToISOString = (timestamp) => {
-  const date = getDateOfString(timestamp);
+  const date = new Date(Number(timestamp));
   return date.toISOString();
-};
-
-export const getDateOfString = (date) => {
-  return new Date(Number(date));
 };
 
 export const formatDate = (date) => {
@@ -17,14 +13,6 @@ export const formatDate = (date) => {
 
 export const formatTime = (time) => {
   return moment(time).format(`hh:mm`);
-};
-
-export const formatDateAndTime = (timestamp) => {
-  return moment(timestamp).format(`DD/MM/YY HH:mm`);
-};
-
-export const convertStrDateToTimestamp = (StrDate) => {
-  return moment(StrDate, `DD/MM/YY HH:mm`).valueOf();
 };
 
 
@@ -99,4 +87,3 @@ export const getPointOffers = (offers, checkedOffers) => {
   pointOffers.forEach((offer) => delete offer.isChecked);
   return pointOffers;
 };
-
