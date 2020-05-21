@@ -75,8 +75,6 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._offers = [...point.offers, ...this._filteredAvailableOffers];
     this._destination = point.destination;
     this._basePrice = point.basePrice;
-
-    this.rerender();
   }
 
   setSubmitHandler(onFormSubmit) {

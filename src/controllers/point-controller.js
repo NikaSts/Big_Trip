@@ -84,7 +84,6 @@ export default class PointController {
       const formData = this._editPointComponent.getData();
       const data = parseFormData(this._point.id, formData, this._availableOffers, this._destinations);
       this._onDataChange(this, this._point, data, this._state);
-      // this.setDefaultView();
     });
 
     this._editPointComponent.setCloseHandler(() => {
@@ -141,7 +140,6 @@ export default class PointController {
   _closeEditForm() {
     this._editPointComponent.removeFlatpickr();
     document.removeEventListener(`keydown`, this._onEscKeyDown);
-    this._editPointComponent.reset();
     replaceComponent(this._editPointComponent, this._pointComponent);
     this._state = State.DEFAULT;
   }
