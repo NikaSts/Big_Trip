@@ -116,7 +116,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
       'enableTime': true,
       'time_24hr': true,
       'altFormat': `d/m/y H:i`,
-      'dateFormat': `U`,
+      'dateFormat': `u`,
     };
 
     this._startPicker = flatpickr(startTimeInput, Object.assign({}, picker, {

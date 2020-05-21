@@ -8,7 +8,7 @@ import StatisticsComponent from './components/statistics';
 import {renderComponent, Position} from './utils/render';
 
 
-const AUTHORIZATION = `Basic pf65JKle370uswCX8m`;
+const AUTHORIZATION = `Basic pf65JKle370!uswCX8m`;
 
 const api = new API(AUTHORIZATION);
 const pointsModel = new PointsModel();
