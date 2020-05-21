@@ -1,11 +1,14 @@
 import API from './api';
 import PointsModel from './models/points-model';
 import MenuComponent, {MenuControl} from './components/menu';
-import FilterController from './controllers/filter-controller';
+import LoadingComponent from './components/loading';
 import TripInfoComponent from './components/trip-info';
-import TripController from './controllers/trip-controller';
 import StatisticsComponent from './components/statistics';
-import {renderComponent, Position} from './utils/render';
+
+import TripController from './controllers/trip-controller';
+import FilterController from './controllers/filter-controller';
+
+import {renderComponent, Position, removeComponent} from './utils/render';
 
 
 const AUTHORIZATION = `Basic pf65JKle370!uswCX8m`;
@@ -22,6 +25,7 @@ const addButton = document.querySelector(`.trip-main__event-add-btn`);
 const tripInfoComponent = new TripInfoComponent(pointsModel);
 const menuComponent = new MenuComponent();
 const statisticsComponent = new StatisticsComponent(pointsModel);
+const loadingComponent = new LoadingComponent();
 const filterController = new FilterController(tripControls, pointsModel);
 const tripController = new TripController(tripContainer, pointsModel, api);
 
@@ -48,15 +52,16 @@ menuComponent.onMenuControlsClick((menuControl) => {
   }
 });
 
+renderComponent(tripContainer, loadingComponent);
 Promise.all([api.getPoints(), api.getOffers(), api.getDestinations()])
   .then(([points, offers, destinations]) => {
     pointsModel.setPoints(points);
     pointsModel.setOffers(offers);
     pointsModel.setDestinations(destinations);
 
+    removeComponent(loadingComponent);
     renderComponent(tripDetails, tripInfoComponent, Position.AFTERBEGIN);
     filterController.render();
-
     tripController.render();
   });
 
