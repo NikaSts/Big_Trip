@@ -1,24 +1,8 @@
 import AbstractSmartComponent from './abstract-smart-component';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {getDuration, getDurationInHours} from '../utils/common';
-import {pointGroupToType, TypeGroup} from '../utils/consts';
-
-
-const BAR_HEIGHT = 55;
-
-const iconMap = {
-  'taxi': `🚕`,
-  'bus': `🚌`,
-  'train': `🚂`,
-  'ship': `🚢`,
-  'transport': `🚊`,
-  'drive': `🚗`,
-  'flight': `✈️`,
-  'check-in': `🏨`,
-  'sightseeing': `🏛️`,
-  'restaurant': `🍽️`
-};
+import {getDuration, getDurationInHours} from '../utils/funcs';
+import {BAR_HEIGHT, iconMap, pointGroupToType, TypeGroup} from '../utils/consts';
 
 
 const renderMoneyChart = (ctx, points) => {

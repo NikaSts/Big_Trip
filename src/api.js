@@ -1,64 +1,64 @@
 import PointAdapter from './models/points-adapter';
-
-
-const Method = {
-  GET: `GET`,
-  POST: `POST`,
-  PUT: `PUT`,
-  DELETE: `DELETE`
-};
-
-const checkStatus = (response) => {
-  if (response.status >= 200 && response.status < 300) {
-    return response;
-  } else {
-    throw new Error(`${response.status}: ${response.statusText}`);
-  }
-};
+import {Method} from './utils/consts';
 
 
 export default class API {
-  constructor(authorization) {
+  constructor(endPoint, authorization) {
+    this._endPoint = endPoint;
     this._authorization = authorization;
   }
 
   getPoints() {
-    const headers = new Headers();
-    headers.append(`Authorization`, this._authorization);
-
-    return fetch(`https://11.ecmascript.pages.academy/big-trip/points`, {headers})
-      .then(checkStatus)
+    return this._load({
+      url: `points`,
+      method: Method.GET
+    })
       .then((response) => response.json())
       .then(PointAdapter.parsePoints);
   }
 
   getDestinations() {
-    const headers = new Headers();
-    headers.append(`Authorization`, this._authorization);
-
-    return fetch(`https://11.ecmascript.pages.academy/big-trip/destinations`, {headers})
+    return this._load({
+      url: `destinations`,
+      method: Method.GET
+    })
       .then((response) => response.json());
   }
 
   getOffers() {
-    const headers = new Headers();
-    headers.append(`Authorization`, this._authorization);
-
-    return fetch(`https://11.ecmascript.pages.academy/big-trip/offers`, {headers})
+    return this._load({
+      url: `offers`,
+      method: Method.GET
+    })
       .then((response) => response.json());
   }
 
   updatePoint(id, data) {
-    const headers = new Headers();
-    headers.append(`Authorization`, this._authorization);
-    headers.append(`Content-Type`, `application/json`);
-    return fetch(`https://11.ecmascript.pages.academy/big-trip/points/${id}`, {
+    return this._load({
+      url: `points/${id}`,
       method: Method.PUT,
       body: JSON.stringify(data.toRAW()),
-      headers,
+      headers: new Headers({"Content-Type": `application/json`}),
     })
-      .then(checkStatus)
       .then((response) => response.json())
       .then(PointAdapter.parsePoint);
+  }
+
+  _load({url, method, body = null, headers = new Headers()}) {
+    headers.append(`Authorization`, this._authorization);
+
+    return fetch(`${this._endPoint}/${url}`, {method, body, headers})
+      .then(this._checkStatus)
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  _checkStatus(response) {
+    if (response.status >= 200 && response.status < 300) {
+      return response;
+    } else {
+      throw new Error(`${response.status}: ${response.statusText}`);
+    }
   }
 }

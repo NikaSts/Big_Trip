@@ -1,7 +1,7 @@
 import AbstractComponent from './abstract-component';
 
 
-export const createLoadingPointsTemplate = () => {
+const createLoadingPointsTemplate = () => {
   return (
     `<p class="trip-events__msg">Loading...</p>`
   );

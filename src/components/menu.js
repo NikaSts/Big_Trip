@@ -1,12 +1,6 @@
 import AbstractComponent from './abstract-component';
+import {MenuControl, MENU_CONTROLS} from '../utils/consts';
 
-
-const MenuControl = {
-  TABLE: `Table`,
-  STATS: `Stats`,
-};
-
-const MENU_CONTROLS = [MenuControl.TABLE, MenuControl.STATS];
 
 const createMenuMarkup = (control, activeControl) => {
   const isActive = control === activeControl;
@@ -52,7 +46,4 @@ export default class MenuComponent extends AbstractComponent {
     this.getElement().querySelectorAll(`A`).forEach((control) => control.classList.remove(`trip-tabs__btn--active`));
     activeControl.classList.add(`trip-tabs__btn--active`);
   }
-
 }
-
-export {MenuControl};

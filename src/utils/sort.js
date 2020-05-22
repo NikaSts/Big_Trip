@@ -1,4 +1,4 @@
-import {getDuration, getPointPrice} from '../utils/common';
+import {getDuration, getPointPrice} from './funcs';
 
 
 export const SortType = {

@@ -1,30 +1,10 @@
 import {replaceComponent, removeComponent} from '../utils/render';
-import {formatToISOString, getPointOffers} from '../utils/common';
+import {formatToISOString, getPointOffers} from '../utils/funcs';
 import PointComponent from '../components/point';
 import EditPointComponent from '../components/edit-point/edit-point';
 import PointAdapter from '../models/points-adapter';
+import {State, EmptyPoint} from '../utils/consts';
 
-
-const State = {
-  DEFAULT: `default`,
-  EDIT: `edit`,
-  ADD: `add`,
-};
-
-const EmptyPoint = {
-  id: String(Date.now() + Math.random()),
-  type: `taxi`,
-  offers: [],
-  basePrice: 0,
-  destination: {
-    name: ``,
-    description: ``,
-    pictures: [],
-  },
-  startDate: Date.now(),
-  endDate: Date.now(),
-  isFavorite: false,
-};
 
 const parseFormData = (id, formData, availableOffers, destinations) => {
   const pointType = formData.get(`event-type`);

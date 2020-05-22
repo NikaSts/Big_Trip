@@ -1,4 +1,4 @@
-import {formatDate, formatToISOString} from '../utils/common';
+import {formatDate, formatToISOString} from '../utils/funcs';
 import AbstractComponent from './abstract-component';
 import {renderComponent} from '../utils/render';
 

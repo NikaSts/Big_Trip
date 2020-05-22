@@ -1,6 +1,6 @@
 import API from './api';
 import PointsModel from './models/points-model';
-import MenuComponent, {MenuControl} from './components/menu';
+import MenuComponent from './components/menu';
 import LoadingComponent from './components/loading';
 import TripInfoComponent from './components/trip-info';
 import StatisticsComponent from './components/statistics';
@@ -9,11 +9,10 @@ import TripController from './controllers/trip-controller';
 import FilterController from './controllers/filter-controller';
 
 import {renderComponent, Position, removeComponent} from './utils/render';
+import {END_POINT, AUTHORIZATION, MenuControl} from './utils/consts';
 
 
-const AUTHORIZATION = `Basic pf65JKle370!uswCX8m`;
-
-const api = new API(AUTHORIZATION);
+const api = new API(END_POINT, AUTHORIZATION);
 const pointsModel = new PointsModel();
 
 const tripContainer = document.querySelector(`.trip-events`);

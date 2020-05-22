@@ -2,7 +2,7 @@ import {createPointTypeTemplate} from './point-type-template';
 import {createDestinationTemplate} from './destination-template';
 import {createAvailableOfferTemplate} from './offer-template';
 import {TypeGroup, pointGroupToType} from '../../utils/consts';
-import {capitalizeFirstLetter} from '../../utils/common';
+import {capitalizeFirstLetter} from '../../utils/funcs';
 import {State} from '../../controllers/point-controller';
 
 

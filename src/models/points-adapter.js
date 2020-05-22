@@ -1,4 +1,4 @@
-import {formatToISOString} from '../utils/common';
+import {formatToISOString} from '../utils/funcs';
 
 export default class PointAdapter {
   constructor(data) {

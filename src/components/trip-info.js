@@ -1,6 +1,7 @@
-import {formatDate} from '../utils/common';
+import {formatDate} from '../utils/funcs';
 import AbstractComponent from './abstract-component';
-import {getTripDays, getPointPrice} from '../utils/common';
+import {getTripDays, getPointPrice} from '../utils/funcs';
+
 
 const createInfoMainMarkup = (points) => {
   const tripDays = getTripDays(points).sort((a, b) => a.date - b.date);

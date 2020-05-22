@@ -1,8 +1,7 @@
 import AbstractComponent from './abstract-component';
-import {capitalizeFirstLetter, getTypeById} from '../utils/common';
+import {capitalizeFirstLetter, getTypeById} from '../utils/funcs';
+import {FILTER_ID_PREFIX} from '../utils/consts';
 
-
-const FILTER_ID_PREFIX = `filter-`;
 
 const createFilterMarkup = (filter, activeFilter) => {
   const isChecked = filter === activeFilter;

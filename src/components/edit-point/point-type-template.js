@@ -1,4 +1,4 @@
-import {capitalizeFirstLetter} from '../../utils/common';
+import {capitalizeFirstLetter} from '../../utils/funcs';
 
 const createPointTypeTemplate = (types, options) => {
   return types

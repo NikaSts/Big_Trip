@@ -1,4 +1,4 @@
-import {getFormattedDuration, capitalizeFirstLetter, formatToISOString, formatTime} from '../utils/common';
+import {getFormattedDuration, capitalizeFirstLetter, formatToISOString, formatTime} from '../utils/funcs';
 import {pointGroupToType, TypeGroup} from '../utils/consts';
 import AbstractComponent from './abstract-component';
 
