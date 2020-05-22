@@ -1,4 +1,4 @@
-import PointAdapter from './models/points-adapter';
+import PointsAdapterIn from './models/points-adapter-in';
 import {Method} from './utils/consts';
 
 
@@ -14,7 +14,7 @@ export default class API {
       method: Method.GET
     })
       .then((response) => response.json())
-      .then(PointAdapter.parsePoints);
+      .then(PointsAdapterIn.parsePoints);
   }
 
   getDestinations() {
@@ -41,7 +41,7 @@ export default class API {
       headers: new Headers({"Content-Type": `application/json`}),
     })
       .then((response) => response.json())
-      .then(PointAdapter.parsePoint);
+      .then(PointsAdapterIn.parsePoint);
   }
 
   _load({url, method, body = null, headers = new Headers()}) {

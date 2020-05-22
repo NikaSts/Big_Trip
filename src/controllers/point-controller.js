@@ -1,8 +1,8 @@
 import {replaceComponent, removeComponent} from '../utils/render';
-import {formatToISOString, getPointOffers} from '../utils/funcs';
+import {getPointOffers} from '../utils/funcs';
 import PointComponent from '../components/point';
 import EditPointComponent from '../components/edit-point/edit-point';
-import PointAdapter from '../models/points-adapter';
+import PointsAdapterOut from '../models/points-adapter-out';
 import {State, EmptyPoint} from '../utils/consts';
 
 
@@ -13,13 +13,13 @@ const parseFormData = (id, formData, availableOffers, destinations) => {
   const checkedOffers = formData.getAll(`event-offer-1`);
   const offers = getPointOffers(availableOffers[pointType], checkedOffers);
 
-  return new PointAdapter({
+  return new PointsAdapterOut({
     id,
     "type": pointType,
-    "date_from": formatToISOString(formData.get(`event-start-time`)),
-    "date_to": formatToISOString(formData.get(`event-end-time`)),
-    "base_price": Number(formData.get(`event-price`)),
-    "is_favorite": formData.get(`event-favorite`),
+    "startDate": formData.get(`event-start-time`),
+    "endDate": formData.get(`event-end-time`),
+    "basePrice": formData.get(`event-price`),
+    "isFavorite": formData.get(`event-favorite`),
     offers,
     "destination": destinationData,
   });
@@ -76,12 +76,9 @@ export default class PointController {
     });
 
     this._editPointComponent.setFavoriteButtonClickHandler(() => {
-      this._point.isFavorite = !this._point.isFavorite;
-
-      this._api.updatePoint(this._point.id, this._point)
-            .then((pointsModel) => {
-              this._pointsModel.updatePoint(this._point.id, pointsModel);
-            });
+      const newPoint = PointsAdapterOut.clone(this._point);
+      newPoint.isFavorite = !newPoint.isFavorite;
+      this._onDataChange(this, this._point, newPoint, this._state, true);
     });
 
     if (state === State.ADD) {

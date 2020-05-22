@@ -96,7 +96,7 @@ export default class TripController {
     this._tripDaysComponent.removeChildrenElements();
   }
 
-  _onDataChange(pointController, oldData, newData, state) {
+  _onDataChange(pointController, oldData, newData, state, isEditing = false) {
     switch (state) {
       case PointControllerState.ADD:
         if (newData === null) {
@@ -116,6 +116,9 @@ export default class TripController {
             .then((pointsModel) => {
               const isSuccess = this._pointsModel.updatePoint(oldData.id, pointsModel);
               if (!isSuccess) {
+                return;
+              }
+              if (isEditing) {
                 return;
               }
               pointController.render(pointsModel, PointControllerState.DEFAULT);
