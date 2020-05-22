@@ -1,6 +1,7 @@
 import AbstractSmartComponent from '../abstract-smart-component';
 import {createEditPointTemplate} from './edit-point-template';
 import {State} from '../../controllers/point-controller';
+import {getPointOffers} from '../../utils/funcs';
 
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
@@ -13,14 +14,14 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._state = state;
     this._pointsModel = pointsModel;
 
-    this._availableOffers = pointsModel.getOffers();
     this._destinations = pointsModel.getDestinations();
 
     this._type = point.type;
     this._startDate = point.startDate;
     this._endDate = point.endDate;
-    this._filteredAvailableOffers = pointsModel.getOffersByType(point.type).filter((offer) => point.offers.every((pointOffer) => pointOffer.title !== offer.title));
-    this._offers = [...point.offers, ...this._filteredAvailableOffers];
+
+    this._offersByType = this._pointsModel.getOffersByType(this._type);
+    this._checkedOffers = point.offers;
 
     this._destination = Object.assign({}, point.destination);
     this._isFavorite = point.isFavorite;
@@ -41,11 +42,11 @@ export default class EditPointComponent extends AbstractSmartComponent {
       type: this._type,
       startDate: this._startDate,
       endDate: this._endDate,
-      offers: this._offers,
+      offers: this._checkedOffers,
       destination: this._destination,
       isFavorite: this._isFavorite,
       basePrice: this._basePrice,
-    }, this._state, this._availableOffers, this._destinations);
+    }, this._state, this._offersByType, this._destinations);
   }
 
   getData() {
@@ -72,7 +73,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._type = point.type;
     this._startDate = point.startDate;
     this._endDate = point.endDate;
-    this._offers = [...point.offers, ...this._filteredAvailableOffers];
+    this._checkedOffers = point.offers;
     this._destination = point.destination;
     this._basePrice = point.basePrice;
   }
@@ -146,7 +147,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
           return;
         }
         this._type = target.value;
-        this._offers = this._pointsModel.getOffersByType(this._type);
+        this._offersByType = this._pointsModel.getOffersByType(this._type);
         this.rerender();
       });
 
@@ -174,9 +175,10 @@ export default class EditPointComponent extends AbstractSmartComponent {
         if (!target) {
           return;
         }
-        const offerTitle = target.value;
-        const targetOffer = this._offers.find((offer) => offer.title === offerTitle);
-        targetOffer.isChecked = !targetOffer.isChecked;
+        target.toggleAttribute(`checked`);
+        const offers = element.querySelectorAll(`.event__offer-checkbox` + `[checked=""]`);
+        const checkedOffers = [...offers].map((offer) => offer.value);
+        this._checkedOffers = getPointOffers(this._offersByType, checkedOffers);
         this.rerender();
       });
 
@@ -187,7 +189,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
       });
 
     element.querySelector(`[name="event-start-time"]`)
-      .addEventListener(`input`, (evt) => {
+      .addEventListener(`change`, (evt) => {
         const inputValue = evt.target.value;
         this._startDate = inputValue;
       });

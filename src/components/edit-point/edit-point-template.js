@@ -6,7 +6,7 @@ import {capitalizeFirstLetter} from '../../utils/funcs';
 import {State} from '../../controllers/point-controller';
 
 
-const createEditPointTemplate = (options = {}, state, availableOffers, destinations) => {
+const createEditPointTemplate = (options = {}, state, offersByType, destinations) => {
   const {type, startDate, endDate, offers, destination, isFavorite, basePrice} = options;
   const capitalizedType = capitalizeFirstLetter(type);
 
@@ -14,7 +14,7 @@ const createEditPointTemplate = (options = {}, state, availableOffers, destinati
   const cityName = destinations.map((city) => city.name);
   const isNew = state === State.ADD;
   const hasOffers = offers.length > 0;
-  const offersToShow = hasOffers ? createAvailableOfferTemplate(offers) : ``;
+  const offersToShow = hasOffers ? createAvailableOfferTemplate(offers, offersByType) : ``;
 
   const transferGroup = pointGroupToType[TypeGroup.TRANSFER].includes(type);
   const transferTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.TRANSFER], options);

@@ -9,10 +9,6 @@ export default class PointAdapter {
     this.basePrice = data[`base_price`];
     this.isFavorite = Boolean(data[`is_favorite`]);
     this.offers = data[`offers`] || [];
-    if (this.offers.length > 0) {
-      // eslint-disable-next-line no-return-assign
-      this.offers.map((offer) => offer.isChecked = true);
-    }
     this.destination = data[`destination`];
   }
 

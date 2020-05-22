@@ -4,8 +4,6 @@ import {SortType, getSortedPoints} from '../utils/sort';
 
 const parseOffers = (offers) => {
   return offers.reduce((acc, originalOffer) => {
-    // eslint-disable-next-line no-return-assign
-    originalOffer.offers.map((offer) => offer.isChecked = false);
     acc[originalOffer.type] = originalOffer.offers;
     return acc;
   }, {});

@@ -84,6 +84,9 @@ export const getTypeById = (attributeValue, prefix) => {
 
 export const getPointOffers = (offers, checkedOffers) => {
   const pointOffers = offers.filter((offer) => checkedOffers.includes(offer.title));
-  pointOffers.forEach((offer) => delete offer.isChecked);
   return pointOffers;
+};
+
+export const isChecked = (offer, checkedOffers) => {
+  return checkedOffers.some((checkedOffer) => offer.title === checkedOffer.title);
 };

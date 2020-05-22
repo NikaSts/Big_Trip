@@ -14,9 +14,7 @@ const createPointTemplate = (point) => {
 
   const duration = getFormattedDuration(startDate, endDate);
   const hasOffers = offers.length > 0;
-  const availableOffers = hasOffers ? offers
-    .filter((offer) => offer.isChecked)
-    .slice(0, 3) : ``;
+  const offersToShow = hasOffers ? offers.slice(0, 3) : ``;
 
   const transferGroup = pointGroupToType[TypeGroup.TRANSFER].includes(type);
 
@@ -43,7 +41,7 @@ const createPointTemplate = (point) => {
 
 				<h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers${!hasOffers ? ` visually-hidden` : ``}">
-        ${hasOffers ? availableOffers.map((offer) =>
+        ${hasOffers ? offersToShow.map((offer) =>
       `<li class="event__offer">
 						<span class="event__offer-title">${offer.title}</span>
 						&plus;
