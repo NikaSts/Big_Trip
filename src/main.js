@@ -28,10 +28,30 @@ const loadingComponent = new LoadingComponent();
 const filterController = new FilterController(tripControls, pointsModel);
 const tripController = new TripController(tripContainer, pointsModel, api);
 
-renderComponent(tripViewTitle, menuComponent, Position.AFTEREND);
-renderComponent(tripContainer, statisticsComponent, Position.AFTEREND);
-statisticsComponent.hide();
+const renderUI = () => {
+  removeComponent(loadingComponent);
+  renderComponent(tripDetails, tripInfoComponent, Position.AFTERBEGIN);
+  filterController.render();
+  tripController.render();
+  renderComponent(tripContainer, statisticsComponent, Position.AFTEREND);
+  statisticsComponent.hide();
+};
 
+
+renderComponent(tripViewTitle, menuComponent, Position.AFTEREND);
+renderComponent(tripContainer, loadingComponent);
+
+Promise.all([api.getPoints(), api.getOffers(), api.getDestinations()])
+  .then(([points, offers, destinations]) => {
+    pointsModel.setPoints(points);
+    pointsModel.setOffers(offers);
+    pointsModel.setDestinations(destinations);
+
+    renderUI();
+  })
+  .catch(() => {
+    renderUI();
+  });
 
 menuComponent.onMenuControlsClick((menuControl) => {
   switch (menuControl) {
@@ -50,20 +70,6 @@ menuComponent.onMenuControlsClick((menuControl) => {
       throw new Error(`Case ${menuControl} not found`);
   }
 });
-
-renderComponent(tripContainer, loadingComponent);
-Promise.all([api.getPoints(), api.getOffers(), api.getDestinations()])
-  .then(([points, offers, destinations]) => {
-    pointsModel.setPoints(points);
-    pointsModel.setOffers(offers);
-    pointsModel.setDestinations(destinations);
-
-    removeComponent(loadingComponent);
-    renderComponent(tripDetails, tripInfoComponent, Position.AFTERBEGIN);
-    filterController.render();
-    tripController.render();
-  });
-
 
 addButton.addEventListener(`click`, () => {
   filterController.setDefaults();
