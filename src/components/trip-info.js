@@ -1,18 +1,16 @@
 import {formatDate} from '../utils/funcs';
 import AbstractComponent from './abstract-component';
-import {getTripDays, getPointPrice} from '../utils/funcs';
+import {getPointPrice} from '../utils/funcs';
 
 
 const createInfoMainMarkup = (points) => {
-  const tripDays = getTripDays(points).sort((a, b) => a.date - b.date);
+  const [firstTripPoint] = points.slice(0, 1);
+  const firstTripDate = formatDate(firstTripPoint.startDate);
+  const firstVisitedCity = firstTripPoint.destination.name;
 
-  const firstTripDate = formatDate(tripDays[0].date);
-  const [lastTripDay] = tripDays.slice(-1);
-  const lastTripDate = formatDate(lastTripDay.date);
-
-  const firstVisitedCity = tripDays[0].points[0].destination.name;
-  const [lastTripDayPoint] = lastTripDay.points.slice(-1);
-  const lastVisitedCity = lastTripDayPoint.destination.name;
+  const [lastTripPoint] = points.sort((a, b) => a.endDate - b.endDate).slice(-1);
+  const lastTripDate = formatDate(lastTripPoint.endDate);
+  const lastVisitedCity = lastTripPoint.destination.name;
 
   return (
     `<div class="trip-info__main">

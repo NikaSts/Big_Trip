@@ -43,7 +43,7 @@ export const EmptyPoint = {
   isFavorite: false,
 };
 
-export const AUTHORIZATION = `Basic pf65JKle370!uswCX8m`;
+export const AUTHORIZATION = `Basic pf65Kle370!uswCX8m`;
 export const END_POINT = `https://11.ecmascript.pages.academy/big-trip`;
 
 export const HIDDEN_CLASS = `visually-hidden`;
