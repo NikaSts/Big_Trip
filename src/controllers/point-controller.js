@@ -3,7 +3,7 @@ import {getPointOffers} from '../utils/funcs';
 import PointComponent from '../components/point';
 import EditPointComponent from '../components/edit-point/edit-point';
 import PointsAdapterOut from '../models/points-adapter-out';
-import {State, EmptyPoint} from '../utils/consts';
+import {State, EmptyPoint, SHAKE_ANIMATION_TIMEOUT} from '../utils/consts';
 
 
 const parseFormData = (id, formData, availableOffers, destinations) => {
@@ -104,6 +104,14 @@ export default class PointController {
       this._editPointComponent.reset();
       this._closeEditForm();
     }
+  }
+
+  shake() {
+    this._editPointComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._editPointComponent.getElement().style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
   _openEditForm() {
