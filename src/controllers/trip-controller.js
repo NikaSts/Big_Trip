@@ -96,7 +96,7 @@ export default class TripController {
     this._tripDaysComponent.removeChildrenElements();
   }
 
-  _onDataChange(pointController, oldData, newData, state, isEditing = false) {
+  _onDataChange(pointController, oldData, newData, state, isFavoriteButtonClick = false) {
     switch (state) {
       case PointControllerState.ADD:
         if (newData === null) {
@@ -107,6 +107,9 @@ export default class TripController {
               this._pointsModel.createPoint(pointModel);
               pointController.render(pointModel, PointControllerState.DEFAULT);
               this.rerender();
+            })
+            .catch(() => {
+              pointController.shake();
             });
         }
         this._creatingPoint = null;
@@ -117,19 +120,22 @@ export default class TripController {
             .then(() => {
               this._pointsModel.removePoint(oldData.id);
               this.rerender(this._activeSortType);
+            })
+            .catch(() => {
+              pointController.shake();
             });
         } else {
           this._api.updatePoint(oldData.id, newData)
             .then((pointModel) => {
               const isSuccess = this._pointsModel.updatePoint(oldData.id, pointModel);
-              if (!isSuccess) {
-                return;
-              }
-              if (isEditing) {
+              if (!isSuccess || isFavoriteButtonClick) {
                 return;
               }
               pointController.render(pointModel, PointControllerState.DEFAULT);
               this.rerender(this._activeSortType);
+            })
+            .catch(() => {
+              pointController.shake();
             });
         }
         break;

@@ -78,3 +78,5 @@ export const iconMap = {
   'sightseeing': `🏛️`,
   'restaurant': `🍽️`
 };
+
+export const SHAKE_ANIMATION_TIMEOUT = 600;
