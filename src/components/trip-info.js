@@ -1,17 +1,16 @@
-import {getDateOfString, formatDate} from '../utils/common';
-import AbstractComponent from './abstract-component';
-import {getTripDays, getPointPrice} from '../utils/common';
+import {formatDate} from '../utils/funcs';
+import AbstractSmartComponent from './abstract-smart-component';
+import {getPointPrice} from '../utils/funcs';
+
 
 const createInfoMainMarkup = (points) => {
-  const tripDays = getTripDays(points).sort((a, b) => a.date - b.date);
+  const [firstTripPoint] = points.slice(0, 1);
+  const firstTripDate = formatDate(firstTripPoint.startDate);
+  const firstVisitedCity = firstTripPoint.destination.name;
 
-  const firstTripDate = formatDate(getDateOfString(tripDays[0].date));
-  const [lastTripDay] = tripDays.slice(-1);
-  const lastTripDate = formatDate(getDateOfString(lastTripDay.date));
-
-  const firstVisitedCity = tripDays[0].points[0].destination.name;
-  const [lastTripDayPoint] = lastTripDay.points.slice(-1);
-  const lastVisitedCity = lastTripDayPoint.destination.name;
+  const [lastTripPoint] = points.sort((a, b) => a.endDate - b.endDate).slice(-1);
+  const lastTripDate = formatDate(lastTripPoint.endDate);
+  const lastVisitedCity = lastTripPoint.destination.name;
 
   return (
     `<div class="trip-info__main">
@@ -24,7 +23,6 @@ const createInfoMainMarkup = (points) => {
 
 const createTripInfoTemplate = (points) => {
   const isNoPoints = points.length === 0;
-
   const totalPrice = points.reduce((basePriceSum, point) => {
     return basePriceSum + getPointPrice(point);
   }, 0);
@@ -39,14 +37,16 @@ const createTripInfoTemplate = (points) => {
   );
 };
 
-export default class TripInfoComponent extends AbstractComponent {
+export default class TripInfoComponent extends AbstractSmartComponent {
   constructor(pointsModel) {
     super();
     this._pointsModel = pointsModel;
   }
 
   getTemplate() {
-    const points = this._pointsModel.getPoints();
+    const points = this._pointsModel.getPointsAll();
     return createTripInfoTemplate(points);
   }
+
+  recoveryListeners() { }
 }

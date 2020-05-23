@@ -1,22 +1,20 @@
-import {getDuration, getFormattedDuration, capitalizeFirstLetter, getStringOfDate, formatTime} from '../utils/common';
-import {pointGroupToType, TypeGroup} from '../mock/points-mock';
+import {getFormattedDuration, capitalizeFirstLetter, formatToISOString, formatTime} from '../utils/funcs';
+import {pointGroupToType, TypeGroup} from '../utils/consts';
 import AbstractComponent from './abstract-component';
 
 
 const createPointTemplate = (point) => {
   const {type, startDate, endDate, destination, basePrice, offers} = point;
   const capitalizedType = capitalizeFirstLetter(type);
-  const startDateTime = getStringOfDate(startDate);
-  const endDateTime = getStringOfDate(endDate);
+  const startDateTime = formatToISOString(startDate);
+  const endDateTime = formatToISOString(endDate);
 
   const startTime = formatTime(startDate);
   const endTime = formatTime(endDate);
 
-  const duration = getFormattedDuration(getDuration(startDate, endDate));
+  const duration = getFormattedDuration(startDate, endDate);
   const hasOffers = offers.length > 0;
-  const availableOffers = hasOffers ? offers
-    .filter((offer) => offer.isChecked)
-    .slice(0, 3) : ``;
+  const offersToShow = hasOffers ? offers.slice(0, 3) : ``;
 
   const transferGroup = pointGroupToType[TypeGroup.TRANSFER].includes(type);
 
@@ -43,7 +41,7 @@ const createPointTemplate = (point) => {
 
 				<h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers${!hasOffers ? ` visually-hidden` : ``}">
-        ${hasOffers ? availableOffers.map((offer) =>
+        ${hasOffers ? offersToShow.map((offer) =>
       `<li class="event__offer">
 						<span class="event__offer-title">${offer.title}</span>
 						&plus;

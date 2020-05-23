@@ -8,8 +8,8 @@ const createDestinationTemplate = (destination) => {
 
       <div class="event__photos-container">
         <div class="event__photos-tape">
-          ${destination.photos.map((src) => (
-      `<img class="event__photo" src="${src}" alt="Event photo">`
+          ${destination.pictures.map((picture) => (
+      `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`
     )).join(` `)}
         </div>
       </div>

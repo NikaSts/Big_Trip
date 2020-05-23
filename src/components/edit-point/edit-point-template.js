@@ -1,22 +1,20 @@
 import {createPointTypeTemplate} from './point-type-template';
 import {createDestinationTemplate} from './destination-template';
 import {createAvailableOfferTemplate} from './offer-template';
-import {TypeGroup, pointGroupToType, CITY_NAMES} from '../../mock/points-mock';
-import {capitalizeFirstLetter, formatDateAndTime} from '../../utils/common';
+import {TypeGroup, pointGroupToType} from '../../utils/consts';
+import {capitalizeFirstLetter} from '../../utils/funcs';
 import {State} from '../../controllers/point-controller';
 
 
-const createEditPointTemplate = (options = {}, state) => {
+const createEditPointTemplate = (options = {}, state, offersByType, destinations) => {
   const {type, startDate, endDate, offers, destination, isFavorite, basePrice} = options;
   const capitalizedType = capitalizeFirstLetter(type);
-  const start = formatDateAndTime(startDate);
-  const end = formatDateAndTime(endDate);
 
   const isValidDestination = !!destination.name;
-
+  const cityName = destinations.map((city) => city.name);
   const isNew = state === State.ADD;
-  const hasOffers = offers.length > 0;
-  const offersToShow = hasOffers ? createAvailableOfferTemplate(offers) : ``;
+  const hasOffers = offersByType.length > 0;
+  const offersToShow = hasOffers ? createAvailableOfferTemplate(offers, offersByType) : ``;
 
   const transferGroup = pointGroupToType[TypeGroup.TRANSFER].includes(type);
   const transferTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.TRANSFER], options);
@@ -49,9 +47,9 @@ const createEditPointTemplate = (options = {}, state) => {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${capitalizedType} ${transferGroup ? `to` : `in`}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1" min="10" required>
           <datalist id="destination-list-1">
-          ${CITY_NAMES.map((city) =>
+          ${cityName.map((city) =>
       `<option value=${city}></option>`
     ).join(` `)}
           </datalist>
@@ -59,10 +57,10 @@ const createEditPointTemplate = (options = {}, state) => {
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${start}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startDate}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${end}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endDate}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -70,7 +68,7 @@ const createEditPointTemplate = (options = {}, state) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}" required>
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit" ${isValidDestination ? `` : `disabled`}>Save</button>

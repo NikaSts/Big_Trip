@@ -1,47 +1,27 @@
 import AbstractSmartComponent from '../abstract-smart-component';
 import {createEditPointTemplate} from './edit-point-template';
-import {convertDateStringToTimestamp} from '../../utils/common';
-import {availableOffers, destinations} from '../../mock/points-mock';
 import {State} from '../../controllers/point-controller';
+import {getPointOffers} from '../../utils/funcs';
 
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
 
-const parseFormData = (formData) => {
-  const pointType = formData.get(`event-type`);
-  const cityName = formData.get(`event-destination`);
-  const destinationData = destinations.find((destination) => destination.name === cityName);
-  const checkedOffers = formData.getAll(`event-offer-1`);
-
-  return {
-    type: pointType,
-    startDate: convertDateStringToTimestamp(formData.get(`event-start-time`)),
-    endDate: convertDateStringToTimestamp(formData.get(`event-end-time`)),
-    basePrice: formData.get(`event-price`),
-    isFavorite: Boolean(formData.get(`event-favorite`)),
-    offers: availableOffers[pointType].filter((offer) => checkedOffers.includes(offer.title)),
-    destination: {
-      name: cityName,
-      description: destinationData.description,
-      photos: destinationData.photos,
-    }
-  };
-};
-
 export default class EditPointComponent extends AbstractSmartComponent {
-  constructor(point, state) {
+  constructor(point, state, pointsModel) {
     super();
     this._point = point;
     this._state = state;
+    this._pointsModel = pointsModel;
+
+    this._destinations = pointsModel.getDestinations();
 
     this._type = point.type;
     this._startDate = point.startDate;
     this._endDate = point.endDate;
 
-    this._filteredAvailableOffers = availableOffers[point.type].filter((offer) => point.offers.every((pointOffer) => pointOffer.title !== offer.title));
-
-    this._offers = [...point.offers, ...this._filteredAvailableOffers];
+    this._offersByType = this._pointsModel.getOffersByType(this._type);
+    this._checkedOffers = point.offers;
 
     this._destination = Object.assign({}, point.destination);
     this._isFavorite = point.isFavorite;
@@ -58,23 +38,20 @@ export default class EditPointComponent extends AbstractSmartComponent {
   }
 
   getTemplate() {
-
     return createEditPointTemplate({
       type: this._type,
       startDate: this._startDate,
       endDate: this._endDate,
-      offers: this._offers,
+      offers: this._checkedOffers,
       destination: this._destination,
       isFavorite: this._isFavorite,
       basePrice: this._basePrice,
-    }, this._state);
+    }, this._state, this._offersByType, this._destinations);
   }
 
   getData() {
     const form = this.getElement();
-    const formData = new FormData(form);
-    const data = parseFormData(formData);
-    return data;
+    return new FormData(form);
   }
 
   recoveryListeners() {
@@ -82,6 +59,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this.setCloseHandler(this._closeHandler);
     this.setDeleteHandler(this._deleteHandler);
     this.setFavoriteButtonClickHandler(this._favoriteHandler);
+    this.applyFlatpickr();
     this._subscribeOnEvents();
   }
 
@@ -95,11 +73,9 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._type = point.type;
     this._startDate = point.startDate;
     this._endDate = point.endDate;
-    this._offers = [...point.offers, ...this._filteredAvailableOffers];
+    this._checkedOffers = point.offers;
     this._destination = point.destination;
     this._basePrice = point.basePrice;
-
-    this.rerender();
   }
 
   setSubmitHandler(onFormSubmit) {
@@ -128,40 +104,26 @@ export default class EditPointComponent extends AbstractSmartComponent {
   }
 
   applyFlatpickr() {
-    if (this._startPicker || this._endPicker) {
-      this._startPicker.destroy();
-      this._endPicker.destroy();
-      this._startPicker = null;
-      this._endPicker = null;
-    }
+    const startTimeInput = this.getElement().querySelector(`[name="event-start-time"]`);
+    const endTimeInput = this.getElement().querySelector(`[name="event-end-time"]`);
 
-    const startTimeInput = this.getElement().querySelector(`#event-start-time-1`);
-    const endTimeInput = this.getElement().querySelector(`#event-end-time-1`);
+    this.removeFlatpickr();
 
     const picker = {
-      altInput: true,
-      allowInput: true,
-      enableTime: true,
-      // eslint-disable-next-line camelcase
-      time_24hr: true,
-      altFormat: `d/m/y H:i`,
-      dateFormat: `d/m/y H:i`,
+      'altInput': true,
+      'allowInput': true,
+      'enableTime': true,
+      'time_24hr': true,
+      'altFormat': `d/m/y H:i`,
+      'dateFormat': `u`,
     };
 
     this._startPicker = flatpickr(startTimeInput, Object.assign({}, picker, {
-      defaultDate: this._point.startDate || `today`,
-      onClose() {
-        startTimeInput.value = this.selectedDates[0];
-        this._startDate = Number(new Date(this.selectedDates[0]));
-      }
+      defaultDate: this._startDate,
     }));
 
     this._endPicker = flatpickr(endTimeInput, Object.assign({}, picker, {
-      defaultDate: this._point.endDate || `today`,
-      onClose() {
-        endTimeInput.value = this.selectedDates[0];
-        this._endDate = Number(new Date(this.selectedDates[0]));
-      }
+      defaultDate: this._endDate,
     }));
   }
 
@@ -185,7 +147,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
           return;
         }
         this._type = target.value;
-        this._offers = availableOffers[this._type];
+        this._offersByType = this._pointsModel.getOffersByType(this._type);
         this.rerender();
       });
 
@@ -195,7 +157,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
 
     destinationNameInput.addEventListener(`input`, (evt) => {
       const inputValue = evt.target.value;
-      const newDestination = destinations.find((destination) => destination.name === inputValue);
+      const newDestination = this._destinations.find((destination) => destination.name === inputValue);
       if (inputValue === `` || !newDestination) {
         return;
       }
@@ -213,9 +175,10 @@ export default class EditPointComponent extends AbstractSmartComponent {
         if (!target) {
           return;
         }
-        const offerType = target.id.split(`-`)[2];
-        const targetOffer = this._offers.find((offer) => offer.type === offerType);
-        targetOffer.isChecked = !targetOffer.isChecked;
+        target.toggleAttribute(`checked`);
+        const offers = element.querySelectorAll(`.event__offer-checkbox` + `[checked=""]`);
+        const checkedOffers = [...offers].map((offer) => offer.value);
+        this._checkedOffers = getPointOffers(this._offersByType, checkedOffers);
         this.rerender();
       });
 
@@ -223,6 +186,18 @@ export default class EditPointComponent extends AbstractSmartComponent {
       .addEventListener(`click`, () => {
         this._isFavorite = !this._isFavorite;
         this.rerender();
+      });
+
+    element.querySelector(`[name="event-start-time"]`)
+      .addEventListener(`change`, (evt) => {
+        const inputValue = evt.target.value;
+        this._startDate = inputValue;
+      });
+
+    element.querySelector(`[name="event-end-time"]`)
+      .addEventListener(`change`, (evt) => {
+        const inputValue = evt.target.value;
+        this._endDate = inputValue;
       });
   }
 }

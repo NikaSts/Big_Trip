@@ -1,24 +1,8 @@
 import AbstractSmartComponent from './abstract-smart-component';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {getDuration, getFormattedDuration} from '../utils/common';
-import {pointGroupToType, TypeGroup} from '../mock/points-mock';
-
-
-const BAR_HEIGHT = 55;
-
-const iconMap = {
-  'taxi': `🚕`,
-  'bus': `🚌`,
-  'train': `🚂`,
-  'ship': `🚢`,
-  'transport': `🚊`,
-  'drive': `🚗`,
-  'flight': `✈️`,
-  'check-in': `🏨`,
-  'sightseeing': `🏛️`,
-  'restaurant': `🍽️`
-};
+import {getDuration, getDurationInHours} from '../utils/funcs';
+import {BAR_HEIGHT, iconMap, pointGroupToType, TypeGroup} from '../utils/consts';
 
 
 const renderMoneyChart = (ctx, points) => {
@@ -218,7 +202,7 @@ const renderTimeChart = (ctx, points) => {
           color: `#000000`,
           anchor: `end`,
           align: `start`,
-          formatter: (val) => `${getFormattedDuration(val)}`
+          formatter: (val) => `${getDurationInHours(val)}`
         }
       },
       title: {
@@ -286,7 +270,7 @@ const createStatisticsTemplate = () => {
 export default class StatisticsComponent extends AbstractSmartComponent {
   constructor(pointsModel) {
     super();
-    this._points = pointsModel;
+    this._pointsModel = pointsModel;
 
     this._moneyChart = null;
     this._transportChart = null;
@@ -320,7 +304,7 @@ export default class StatisticsComponent extends AbstractSmartComponent {
     const moneyCtx = element.querySelector(`.statistics__chart--money`);
     const transportCtx = element.querySelector(`.statistics__chart--transport`);
     const timeCtx = element.querySelector(`.statistics__chart--time`);
-    const points = this._points.getPointsAll();
+    const points = this._pointsModel.getPointsAll();
 
     this._resetCharts();
 

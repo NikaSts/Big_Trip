@@ -1,10 +1,10 @@
-const Filter = {
+export const Filter = {
   DEFAULT: `everything`,
   FUTURE: `future`,
   PAST: `past`,
 };
 
-const FILTERS = [Filter.DEFAULT, Filter.FUTURE, Filter.PAST];
+export const FILTERS = [Filter.DEFAULT, Filter.FUTURE, Filter.PAST];
 
 const isPast = (date) => {
   return !!date && (date < Date.now());
@@ -13,7 +13,7 @@ const isFuture = (date) => {
   return !!date && (date > Date.now());
 };
 
-const getFiltredPoints = (points, filterType) => {
+export const getFiltredPoints = (points, filterType) => {
   let filtredPoints = [];
   switch (filterType) {
     case Filter.PAST:
@@ -28,4 +28,3 @@ const getFiltredPoints = (points, filterType) => {
   return filtredPoints;
 };
 
-export {FILTERS, Filter, getFiltredPoints};

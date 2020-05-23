@@ -1,34 +1,41 @@
 import {replaceComponent, removeComponent} from '../utils/render';
+import {getPointOffers} from '../utils/funcs';
 import PointComponent from '../components/point';
 import EditPointComponent from '../components/edit-point/edit-point';
-import {availableOffers} from '../mock/points-mock';
+import PointsAdapterOut from '../models/points-adapter-out';
+import {State, EmptyPoint} from '../utils/consts';
 
 
-const State = {
-  DEFAULT: `default`,
-  EDIT: `edit`,
-  ADD: `add`,
+const parseFormData = (id, formData, availableOffers, destinations) => {
+  const pointType = formData.get(`event-type`);
+  const cityName = formData.get(`event-destination`);
+  const destinationData = destinations.find((destination) => destination.name === cityName);
+  const checkedOffers = formData.getAll(`event-offer-1`);
+  const offers = getPointOffers(availableOffers[pointType], checkedOffers);
+
+  return new PointsAdapterOut({
+    id,
+    "type": pointType,
+    "startDate": formData.get(`event-start-time`),
+    "endDate": formData.get(`event-end-time`),
+    "basePrice": formData.get(`event-price`),
+    "isFavorite": formData.get(`event-favorite`),
+    offers,
+    "destination": destinationData,
+  });
 };
 
-const EmptyPoint = {
-  id: String(Date.now() + Math.random()),
-  type: `taxi`,
-  offers: availableOffers[`taxi`],
-  basePrice: 0,
-  destination: {
-    name: ``,
-    description: ``,
-    photos: [],
-  },
-  startDate: Date.now(),
-  endDate: Date.now(),
-  isFavorite: false,
-};
 
 export default class PointController {
-  constructor(onDataChange, onViewChange) {
+  constructor(onDataChange, onViewChange, pointsModel, api) {
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._pointsModel = pointsModel;
+    this._api = api;
+
+    this._availableOffers = pointsModel.getOffers();
+    this._destinations = pointsModel.getDestinations();
+
     this._state = State.DEFAULT;
     this._pointComponent = null;
     this._editPointComponent = null;
@@ -45,7 +52,7 @@ export default class PointController {
     if (!oldPointComponent &&
       !oldEditPointComponent) {
       this._pointComponent = new PointComponent(this._point);
-      this._editPointComponent = new EditPointComponent(this._point, this._state);
+      this._editPointComponent = new EditPointComponent(this._point, this._state, this._pointsModel);
     }
 
     this._pointComponent.setEditButtonClickHandler(() => {
@@ -54,9 +61,9 @@ export default class PointController {
 
     this._editPointComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
-      const data = this._editPointComponent.getData();
+      const formData = this._editPointComponent.getData();
+      const data = parseFormData(this._point.id, formData, this._availableOffers, this._destinations);
       this._onDataChange(this, this._point, data, this._state);
-      this.setDefaultView();
     });
 
     this._editPointComponent.setCloseHandler(() => {
@@ -69,9 +76,9 @@ export default class PointController {
     });
 
     this._editPointComponent.setFavoriteButtonClickHandler(() => {
-      this._onDataChange(this, this._point, Object.assign({}, this._point, {
-        isFavorite: !point.isFavorite,
-      }), this._state, true);
+      const newPoint = PointsAdapterOut.clone(this._point);
+      newPoint.isFavorite = !newPoint.isFavorite;
+      this._onDataChange(this, this._point, newPoint, this._state, true);
     });
 
     if (state === State.ADD) {
@@ -110,7 +117,6 @@ export default class PointController {
   _closeEditForm() {
     this._editPointComponent.removeFlatpickr();
     document.removeEventListener(`keydown`, this._onEscKeyDown);
-    this._editPointComponent.reset();
     replaceComponent(this._editPointComponent, this._pointComponent);
     this._state = State.DEFAULT;
   }

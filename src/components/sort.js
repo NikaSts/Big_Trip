@@ -1,8 +1,7 @@
 import AbstractComponent from './abstract-component';
-import {capitalizeFirstLetter, getTypeById} from '../utils/common';
+import {capitalizeFirstLetter, getTypeById} from '../utils/funcs';
+import {SORT_ID_PREFIX} from '../utils/consts';
 
-
-const SORT_ID_PREFIX = `sort-`;
 
 const createSortMarkup = (sortType, activeSortType) => {
   const isChecked = sortType === activeSortType;

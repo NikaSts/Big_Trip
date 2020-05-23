@@ -1,4 +1,4 @@
-import {getStringOfDate, formatDate} from '../utils/common';
+import {formatDate, formatToISOString} from '../utils/funcs';
 import AbstractComponent from './abstract-component';
 import {renderComponent} from '../utils/render';
 
@@ -8,8 +8,8 @@ const createDayTemplate = (tripDay, index) => {
   const {date} = tripDay;
 
   const isDateValid = (date !== 0);
-  const dateTime = isDateValid ? getStringOfDate(Number(date)) : ``;
-  const tripDate = isDateValid ? formatDate(Number(date)) : ``;
+  const dateTime = isDateValid ? formatToISOString(date) : ``;
+  const tripDate = isDateValid ? formatDate(date) : ``;
 
   return (
     `<li class="trip-days__item day">
