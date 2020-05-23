@@ -80,3 +80,8 @@ export const iconMap = {
 };
 
 export const SHAKE_ANIMATION_TIMEOUT = 600;
+
+export const DefaultData = {
+  deleteButtonText: `Delete`,
+  saveButtonText: `Save`,
+};
