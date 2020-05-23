@@ -112,8 +112,19 @@ export default class PointController {
     }
   }
 
-  shake() {
+  setFormDisabled() {
+    this._editPointComponent.getElement().querySelectorAll(`form input, form fieldset, form button`)
+      .forEach((element) => element.setAttribute(`disabled`, `disabled`));
+  }
+
+  clearFormDisabled() {
+    this._editPointComponent.getElement().querySelectorAll(`form input, form fieldset, form button`)
+      .forEach((element) => element.removeAttribute(`disabled`));
+  }
+
+  showLoadError() {
     this._editPointComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    this._editPointComponent.getElement().style.border = `2px solid red`;
 
     setTimeout(() => {
       this._editPointComponent.getElement().style.animation = ``;

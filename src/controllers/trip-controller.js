@@ -102,6 +102,7 @@ export default class TripController {
         if (newData === null) {
           pointController.destroy();
         } else {
+          pointController.setFormDisabled();
           this._api.createPoint(newData)
             .then((pointModel) => {
               this._pointsModel.createPoint(pointModel);
@@ -109,33 +110,39 @@ export default class TripController {
               this.rerender();
             })
             .catch(() => {
-              pointController.shake();
+              pointController.showLoadError();
+              pointController.clearFormDisabled();
             });
         }
         this._creatingPoint = null;
         break;
       case PointControllerState.EDIT:
         if (newData === null) {
+          pointController.setFormDisabled();
           this._api.deletePoint(oldData.id)
             .then(() => {
               this._pointsModel.removePoint(oldData.id);
               this.rerender(this._activeSortType);
             })
             .catch(() => {
-              pointController.shake();
+              pointController.showLoadError();
+              pointController.clearFormDisabled();
             });
         } else {
+          pointController.setFormDisabled();
           this._api.updatePoint(oldData.id, newData)
             .then((pointModel) => {
               const isSuccess = this._pointsModel.updatePoint(oldData.id, pointModel);
               if (!isSuccess || isFavoriteButtonClick) {
+                pointController.clearFormDisabled();
                 return;
               }
               pointController.render(pointModel, PointControllerState.DEFAULT);
               this.rerender(this._activeSortType);
             })
             .catch(() => {
-              pointController.shake();
+              pointController.showLoadError();
+              pointController.clearFormDisabled();
             });
         }
         break;
