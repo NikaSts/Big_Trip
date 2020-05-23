@@ -13,7 +13,7 @@ const createEditPointTemplate = (options = {}, state, offersByType, destinations
   const isValidDestination = !!destination.name;
   const cityName = destinations.map((city) => city.name);
   const isNew = state === State.ADD;
-  const hasOffers = offers.length > 0;
+  const hasOffers = offersByType.length > 0;
   const offersToShow = hasOffers ? createAvailableOfferTemplate(offers, offersByType) : ``;
 
   const transferGroup = pointGroupToType[TypeGroup.TRANSFER].includes(type);
