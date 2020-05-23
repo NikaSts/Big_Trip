@@ -1,5 +1,5 @@
 import {formatDate} from '../utils/funcs';
-import AbstractComponent from './abstract-component';
+import AbstractSmartComponent from './abstract-smart-component';
 import {getPointPrice} from '../utils/funcs';
 
 
@@ -23,7 +23,6 @@ const createInfoMainMarkup = (points) => {
 
 const createTripInfoTemplate = (points) => {
   const isNoPoints = points.length === 0;
-
   const totalPrice = points.reduce((basePriceSum, point) => {
     return basePriceSum + getPointPrice(point);
   }, 0);
@@ -38,15 +37,16 @@ const createTripInfoTemplate = (points) => {
   );
 };
 
-export default class TripInfoComponent extends AbstractComponent {
+export default class TripInfoComponent extends AbstractSmartComponent {
   constructor(pointsModel) {
     super();
     this._pointsModel = pointsModel;
-
   }
 
   getTemplate() {
     const points = this._pointsModel.getPointsAll();
     return createTripInfoTemplate(points);
   }
+
+  recoveryListeners() { }
 }

@@ -90,3 +90,10 @@ export const getPointOffers = (offers, checkedOffers) => {
 export const isChecked = (offer, checkedOffers) => {
   return checkedOffers.some((checkedOffer) => offer.title === checkedOffer.title);
 };
+
+export const parseOffers = (offers) => {
+  return offers.reduce((acc, originalOffer) => {
+    acc[originalOffer.type] = originalOffer.offers;
+    return acc;
+  }, {});
+};

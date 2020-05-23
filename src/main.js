@@ -35,13 +35,41 @@ const renderUI = () => {
   tripController.render();
   renderComponent(tripContainer, statisticsComponent, Position.AFTEREND);
   statisticsComponent.hide();
+
+  pointsModel.setDataChangeHandler(() => {
+    tripInfoComponent.rerender();
+  });
+
+  menuComponent.onMenuControlsClick((menuControl) => {
+    switch (menuControl) {
+      case MenuControl.TABLE:
+        tripController.show();
+        statisticsComponent.hide();
+        addButton.removeAttribute(`disabled`);
+        break;
+      case MenuControl.STATS:
+        statisticsComponent.show();
+        tripController.hide();
+        tripController.rerender();
+        addButton.setAttribute(`disabled`, `disabled`);
+        break;
+      default:
+        throw new Error(`Case ${menuControl} not found`);
+    }
+  });
+
+  addButton.addEventListener(`click`, () => {
+    filterController.setDefaults();
+    filterController.rerender();
+    tripController.createPoint();
+  });
 };
 
+const init = () => {
+  renderComponent(tripViewTitle, menuComponent, Position.AFTEREND);
+  renderComponent(tripContainer, loadingComponent);
 
-renderComponent(tripViewTitle, menuComponent, Position.AFTEREND);
-renderComponent(tripContainer, loadingComponent);
-
-Promise.all([api.getPoints(), api.getOffers(), api.getDestinations()])
+  Promise.all([api.getPoints(), api.getOffers(), api.getDestinations()])
   .then(([points, offers, destinations]) => {
     pointsModel.setPoints(points);
     pointsModel.setOffers(offers);
@@ -52,27 +80,6 @@ Promise.all([api.getPoints(), api.getOffers(), api.getDestinations()])
   .catch(() => {
     renderUI();
   });
+};
 
-menuComponent.onMenuControlsClick((menuControl) => {
-  switch (menuControl) {
-    case MenuControl.TABLE:
-      tripController.show();
-      statisticsComponent.hide();
-      addButton.removeAttribute(`disabled`);
-      break;
-    case MenuControl.STATS:
-      statisticsComponent.show();
-      tripController.hide();
-      tripController.rerender();
-      addButton.setAttribute(`disabled`, `disabled`);
-      break;
-    default:
-      throw new Error(`Case ${menuControl} not found`);
-  }
-});
-
-addButton.addEventListener(`click`, () => {
-  filterController.setDefaults();
-  filterController.rerender();
-  tripController.createPoint();
-});
+init();

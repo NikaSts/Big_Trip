@@ -1,13 +1,6 @@
 import {Filter, getFiltredPoints} from '../utils/filters';
 import {SortType, getSortedPoints} from '../utils/sort';
-
-
-const parseOffers = (offers) => {
-  return offers.reduce((acc, originalOffer) => {
-    acc[originalOffer.type] = originalOffer.offers;
-    return acc;
-  }, {});
-};
+import {parseOffers} from '../utils/funcs';
 
 
 export default class PointsModel {
@@ -18,6 +11,7 @@ export default class PointsModel {
     this._activeSortType = SortType.DEFAULT;
 
     this._filterChangeHandlers = [];
+    this._dataChangeHandlers = [];
   }
 
   getPointsAll() {
@@ -32,6 +26,7 @@ export default class PointsModel {
 
   setPoints(points) {
     this._points = Array.from(points);
+    this._callHandlers(this._dataChangeHandlers);
   }
 
   getDestinations() {
@@ -66,6 +61,7 @@ export default class PointsModel {
 
   createPoint(point) {
     this._points = [].concat(point, this._points);
+    this._callHandlers(this._dataChangeHandlers);
   }
 
   removePoint(id) {
@@ -74,7 +70,7 @@ export default class PointsModel {
       return false;
     }
     this._points = [].concat(this._points.slice(0, index), this._points.slice(index + 1));
-
+    this._callHandlers(this._dataChangeHandlers);
     return true;
   }
 
@@ -84,12 +80,16 @@ export default class PointsModel {
       return false;
     }
     this._points = [].concat(this._points.slice(0, index), newData, this._points.slice(index + 1));
-
+    this._callHandlers(this._dataChangeHandlers);
     return true;
   }
 
   setFilterTypeChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
+  }
+
+  setDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
   }
 
   _callHandlers(handlers) {
