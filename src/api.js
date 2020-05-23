@@ -11,7 +11,7 @@ export default class API {
   getPoints() {
     return this._load({
       url: `points`,
-      method: Method.GET
+      method: Method.GET,
     })
       .then((response) => response.json())
       .then(PointsAdapterIn.parsePoints);
@@ -20,7 +20,7 @@ export default class API {
   getDestinations() {
     return this._load({
       url: `destinations`,
-      method: Method.GET
+      method: Method.GET,
     })
       .then((response) => response.json());
   }
@@ -28,7 +28,7 @@ export default class API {
   getOffers() {
     return this._load({
       url: `offers`,
-      method: Method.GET
+      method: Method.GET,
     })
       .then((response) => response.json());
   }
@@ -42,6 +42,24 @@ export default class API {
     })
       .then((response) => response.json())
       .then(PointsAdapterIn.parsePoint);
+  }
+
+  createPoint(data) {
+    return this._load({
+      url: `points`,
+      method: Method.POST,
+      body: JSON.stringify(data.toRAW()),
+      headers: new Headers({"Content-Type": `application/json`}),
+    })
+      .then((response) => response.json())
+      .then(PointsAdapterIn.parsePoint);
+  }
+
+  deletePoint(id) {
+    return this._load({
+      url: `points/${id}`,
+      method: Method.DELETE,
+    });
   }
 
   _load({url, method, body = null, headers = new Headers()}) {
