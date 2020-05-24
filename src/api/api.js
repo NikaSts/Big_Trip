@@ -1,5 +1,5 @@
-import PointsAdapterIn from './models/points-adapter-in';
-import {Method} from './utils/consts';
+import PointsAdapterIn from '../models/points-adapter-in';
+import {Method} from '../utils/consts';
 
 
 export default class API {
@@ -75,8 +75,7 @@ export default class API {
   _checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
       return response;
-    } else {
-      throw new Error(`${response.status}: ${response.statusText}`);
     }
+    throw new Error(`${response.status}: ${response.statusText}`);
   }
 }

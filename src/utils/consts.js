@@ -93,3 +93,8 @@ export const ButtonText = {
   DELETING: `Deleting...`,
 };
 
+export const STORE_PREFIX = `bigtrip-localstorage`;
+export const STORE_VER = `v1`;
+export const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+
+export const SHOW_OFFERS = 3;

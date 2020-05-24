@@ -1,4 +1,6 @@
-import API from './api';
+import API from './api/api';
+import Store from "./api/store.js";
+import Provider from "./api/provider.js";
 import PointsModel from './models/points-model';
 import MenuComponent from './components/menu';
 import LoadingComponent from './components/loading';
@@ -9,10 +11,12 @@ import TripController from './controllers/trip-controller';
 import FilterController from './controllers/filter-controller';
 
 import {renderComponent, Position, removeComponent} from './utils/render';
-import {END_POINT, AUTHORIZATION, MenuControl} from './utils/consts';
+import {END_POINT, AUTHORIZATION, STORE_NAME, MenuControl} from './utils/consts';
 
 
 const api = new API(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 const pointsModel = new PointsModel();
 
 const tripContainer = document.querySelector(`.trip-events`);
@@ -26,7 +30,7 @@ const menuComponent = new MenuComponent();
 const statisticsComponent = new StatisticsComponent(pointsModel);
 const loadingComponent = new LoadingComponent();
 const filterController = new FilterController(tripControls, pointsModel);
-const tripController = new TripController(tripContainer, pointsModel, api);
+const tripController = new TripController(tripContainer, pointsModel, apiWithProvider);
 
 const renderUI = () => {
   removeComponent(loadingComponent);
@@ -69,7 +73,7 @@ const init = () => {
   renderComponent(tripViewTitle, menuComponent, Position.AFTEREND);
   renderComponent(tripContainer, loadingComponent);
 
-  Promise.all([api.getPoints(), api.getOffers(), api.getDestinations()])
+  Promise.all([apiWithProvider.getPoints(), apiWithProvider.getOffers(), apiWithProvider.getDestinations()])
   .then(([points, offers, destinations]) => {
     pointsModel.setPoints(points);
     pointsModel.setOffers(offers);
