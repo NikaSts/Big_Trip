@@ -6,7 +6,7 @@ import {capitalizeFirstLetter} from '../../utils/funcs';
 import {State} from '../../controllers/point-controller';
 
 
-const createEditPointTemplate = (options = {}, state, offersByType, destinations) => {
+const createEditPointTemplate = (options = {}, state, offersByType, destinations, externalData) => {
   const {type, startDate, endDate, offers, destination, isFavorite, basePrice} = options;
   const capitalizedType = capitalizeFirstLetter(type);
 
@@ -19,6 +19,9 @@ const createEditPointTemplate = (options = {}, state, offersByType, destinations
   const transferGroup = pointGroupToType[TypeGroup.TRANSFER].includes(type);
   const transferTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.TRANSFER], options);
   const activityTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.ACTIVITY], options);
+
+  const deleteButtonText = externalData.deleteButtonText;
+  const saveButtonText = externalData.saveButtonText;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -71,8 +74,8 @@ const createEditPointTemplate = (options = {}, state, offersByType, destinations
           <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}" required>
         </div>
 
-        <button class="event__save-btn  btn  btn--blue" type="submit" ${isValidDestination ? `` : `disabled`}>Save</button>
-        <button class="event__reset-btn" type="reset">${isNew ? `Cancel` : `Delete`}</button>
+        <button class="event__save-btn  btn  btn--blue" type="submit" ${isValidDestination ? `` : `disabled`}>${saveButtonText}</button>
+        <button class="event__reset-btn" type="reset">${isNew ? `Cancel` : `${deleteButtonText}`}</button>
 
         <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
         <label class="event__favorite-btn ${isNew ? `visually-hidden` : ``}" for="event-favorite-1">

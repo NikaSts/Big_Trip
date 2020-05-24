@@ -2,6 +2,7 @@ import AbstractSmartComponent from '../abstract-smart-component';
 import {createEditPointTemplate} from './edit-point-template';
 import {State} from '../../controllers/point-controller';
 import {getPointOffers} from '../../utils/funcs';
+import {DefaultData} from '../../utils/consts';
 
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
@@ -14,6 +15,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._state = state;
     this._pointsModel = pointsModel;
 
+    this._externalData = DefaultData;
     this._destinations = pointsModel.getDestinations();
 
     this._type = point.type;
@@ -46,12 +48,17 @@ export default class EditPointComponent extends AbstractSmartComponent {
       destination: this._destination,
       isFavorite: this._isFavorite,
       basePrice: this._basePrice,
-    }, this._state, this._offersByType, this._destinations);
+    }, this._state, this._offersByType, this._destinations, this._externalData);
   }
 
   getData() {
     const form = this.getElement();
     return new FormData(form);
+  }
+
+  setData(data) {
+    this._externalData = Object.assign({}, DefaultData, data);
+    this.rerender();
   }
 
   recoveryListeners() {
@@ -61,10 +68,6 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this.setFavoriteButtonClickHandler(this._favoriteHandler);
     this.applyFlatpickr();
     this._subscribeOnEvents();
-  }
-
-  rerender() {
-    super.rerender();
   }
 
   reset() {
