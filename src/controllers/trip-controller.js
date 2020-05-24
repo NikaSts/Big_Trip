@@ -2,11 +2,11 @@ import SortComponent from '../components/sort';
 import TripDaysComponent from '../components/trip-days';
 import DayComponent from '../components/day';
 import NoPointsComponent from '../components/no-points';
-import PointController, {State as PointControllerState, EmptyPoint} from './point-controller';
+import PointController from './point-controller';
 import {getTripDays} from '../utils/funcs';
 import {SORT_TYPES, SortType} from '../utils/sort';
 import {renderComponent, removeComponent, Position} from '../utils/render';
-import {HIDDEN_CLASS} from '../utils/consts';
+import {HIDDEN_CLASS, State as PointControllerState, EmptyPoint} from '../utils/consts';
 
 
 export default class TripController {

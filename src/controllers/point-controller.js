@@ -3,7 +3,7 @@ import {getPointOffers} from '../utils/funcs';
 import PointComponent from '../components/point';
 import EditPointComponent from '../components/edit-point/edit-point';
 import PointsAdapterOut from '../models/points-adapter-out';
-import {State, EmptyPoint, SHAKE_ANIMATION_TIMEOUT} from '../utils/consts';
+import {State, EmptyPoint, BORDER_STYLE, ButtonText} from '../utils/consts';
 
 
 const parseFormData = (id, formData, availableOffers, destinations) => {
@@ -63,9 +63,7 @@ export default class PointController {
       evt.preventDefault();
       const formData = this._editPointComponent.getData();
       const data = parseFormData(this._point.id, formData, this._availableOffers, this._destinations);
-      this._editPointComponent.setData({
-        saveButtonText: `Saving...`,
-      });
+      this._changeButtonText(ButtonText.SAVING);
       this._onDataChange(this, this._point, data, this._state);
     });
 
@@ -75,9 +73,7 @@ export default class PointController {
 
     this._editPointComponent.setDeleteHandler((evt) => {
       evt.preventDefault();
-      this._editPointComponent.setData({
-        deleteButtonText: `Deleting...`,
-      });
+      this._changeButtonText(ButtonText.SAVE, ButtonText.DELETING);
       this._onDataChange(this, this._point, null, this._state);
     });
 
@@ -123,16 +119,16 @@ export default class PointController {
   }
 
   showLoadError() {
-    this._editPointComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
-    this._editPointComponent.getElement().style.border = `2px solid red`;
+    const editForm = this._editPointComponent.getElement();
+    const onAnimationEnd = () => {
+      editForm.removeEventListener(`animationend`, onAnimationEnd);
+      editForm.classList.remove(`shake`);
+      this._changeButtonText();
+    };
 
-    setTimeout(() => {
-      this._editPointComponent.getElement().style.animation = ``;
-      this._editPointComponent.setData({
-        saveButtonText: `Save`,
-        deleteButtonText: `Delete`,
-      });
-    }, SHAKE_ANIMATION_TIMEOUT);
+    editForm.classList.add(`shake`);
+    editForm.style.border = BORDER_STYLE;
+    editForm.addEventListener(`animationend`, onAnimationEnd);
   }
 
   _openEditForm() {
@@ -150,6 +146,13 @@ export default class PointController {
     this._state = State.DEFAULT;
   }
 
+  _changeButtonText(saveButtonText = ButtonText.SAVE, deleteButtonText = ButtonText.DELETE) {
+    this._editPointComponent.setData({
+      saveButtonText,
+      deleteButtonText,
+    });
+  }
+
   _onEscKeyDown(evt) {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
     if (isEscKey) {
@@ -161,5 +164,3 @@ export default class PointController {
     }
   }
 }
-
-export {State, EmptyPoint};
