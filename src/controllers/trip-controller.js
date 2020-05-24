@@ -133,12 +133,14 @@ export default class TripController {
           this._api.updatePoint(oldData.id, newData)
             .then((pointModel) => {
               const isSuccess = this._pointsModel.updatePoint(oldData.id, pointModel);
-              if (!isSuccess || isFavoriteButtonClick) {
+              if (isSuccess && isFavoriteButtonClick) {
                 pointController.clearFormDisabled();
-                return;
+                pointController.toggleIsFavorite();
               }
-              pointController.render(pointModel, PointControllerState.DEFAULT);
-              this.rerender(this._activeSortType);
+              if (isSuccess && !isFavoriteButtonClick) {
+                pointController.render(pointModel, PointControllerState.DEFAULT);
+                this.rerender(this._activeSortType);
+              }
             })
             .catch(() => {
               pointController.showLoadError();

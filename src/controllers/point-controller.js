@@ -131,6 +131,10 @@ export default class PointController {
     editForm.addEventListener(`animationend`, onAnimationEnd);
   }
 
+  toggleIsFavorite() {
+    this._editPointComponent.toggleIsFavorite();
+  }
+
   _openEditForm() {
     this._editPointComponent.applyFlatpickr();
     document.addEventListener(`keydown`, this._onEscKeyDown);

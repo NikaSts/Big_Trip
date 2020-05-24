@@ -25,7 +25,6 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._checkedOffers = point.offers;
 
     this._destination = Object.assign({}, point.destination);
-    this._isFavorite = point.isFavorite;
     this._basePrice = point.basePrice;
 
     this._deleteHandler = null;
@@ -39,13 +38,12 @@ export default class EditPointComponent extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createEditPointTemplate({
+    return createEditPointTemplate(this._point, {
       type: this._type,
       startDate: this._startDate,
       endDate: this._endDate,
       offers: this._checkedOffers,
       destination: this._destination,
-      isFavorite: this._isFavorite,
       basePrice: this._basePrice,
     }, this._state, this._offersByType, this._destinations, this._externalData);
   }
@@ -103,6 +101,11 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this.getElement().querySelector(`.event__favorite-btn`)
       .addEventListener(`click`, onFavoriteButtonClick);
     this._favoriteHandler = onFavoriteButtonClick;
+  }
+
+  toggleIsFavorite() {
+    this._point.isFavorite = !this._point.isFavorite;
+    this.rerender();
   }
 
   applyFlatpickr() {
@@ -181,12 +184,6 @@ export default class EditPointComponent extends AbstractSmartComponent {
         const offers = element.querySelectorAll(`.event__offer-checkbox` + `[checked=""]`);
         const checkedOffers = [...offers].map((offer) => offer.value);
         this._checkedOffers = getPointOffers(this._offersByType, checkedOffers);
-        this.rerender();
-      });
-
-    element.querySelector(`.event__favorite-btn`)
-      .addEventListener(`click`, () => {
-        this._isFavorite = !this._isFavorite;
         this.rerender();
       });
 
