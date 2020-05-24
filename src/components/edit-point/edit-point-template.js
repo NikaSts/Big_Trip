@@ -5,8 +5,9 @@ import {TypeGroup, pointGroupToType, State} from '../../utils/consts';
 import {capitalizeFirstLetter} from '../../utils/funcs';
 
 
-const createEditPointTemplate = (options = {}, state, offersByType, destinations, externalData) => {
-  const {type, startDate, endDate, offers, destination, isFavorite, basePrice} = options;
+const createEditPointTemplate = (point, options = {}, state, offersByType, destinations, externalData) => {
+  const {isFavorite} = point;
+  const {type, startDate, endDate, offers, destination, basePrice} = options;
   const capitalizedType = capitalizeFirstLetter(type);
 
   const isValidDestination = !!destination.name;
