@@ -79,9 +79,17 @@ export const iconMap = {
   'restaurant': `🍽️`
 };
 
-export const SHAKE_ANIMATION_TIMEOUT = 600;
-
 export const DefaultData = {
   deleteButtonText: `Delete`,
   saveButtonText: `Save`,
 };
+
+export const BORDER_STYLE = `2px solid red`;
+
+export const ButtonText = {
+  SAVE: `Save`,
+  DELETE: `Delete`,
+  SAVING: `Saving...`,
+  DELETING: `Deleting...`,
+};
+

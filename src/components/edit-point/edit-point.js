@@ -1,8 +1,7 @@
 import AbstractSmartComponent from '../abstract-smart-component';
 import {createEditPointTemplate} from './edit-point-template';
-import {State} from '../../controllers/point-controller';
 import {getPointOffers} from '../../utils/funcs';
-import {DefaultData} from '../../utils/consts';
+import {DefaultData, State} from '../../utils/consts';
 
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";

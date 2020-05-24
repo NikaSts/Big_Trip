@@ -1,9 +1,8 @@
 import {createPointTypeTemplate} from './point-type-template';
 import {createDestinationTemplate} from './destination-template';
 import {createAvailableOfferTemplate} from './offer-template';
-import {TypeGroup, pointGroupToType} from '../../utils/consts';
+import {TypeGroup, pointGroupToType, State} from '../../utils/consts';
 import {capitalizeFirstLetter} from '../../utils/funcs';
-import {State} from '../../controllers/point-controller';
 
 
 const createEditPointTemplate = (options = {}, state, offersByType, destinations, externalData) => {
