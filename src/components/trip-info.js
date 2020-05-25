@@ -1,20 +1,31 @@
-import {formatDate} from '../utils/funcs';
-import AbstractSmartComponent from './abstract-smart-component';
-import {getPointPrice} from '../utils/funcs';
+import {formatDate, getPointPrice} from '../utils/funcs';
+import AbstractSmartComponent from './abstract-smart';
+import {ONE_ITEM} from '../utils/consts';
 
 
 const createInfoMainMarkup = (points) => {
-  const [firstTripPoint] = points.slice(0, 1);
+  points.sort((a, b) => a.startDate - b.startDate);
+  const [firstTripPoint] = points.slice(0, ONE_ITEM);
   const firstTripDate = formatDate(firstTripPoint.startDate);
   const firstVisitedCity = firstTripPoint.destination.name;
 
-  const [lastTripPoint] = points.sort((a, b) => a.endDate - b.endDate).slice(-1);
+  const [lastTripPoint] = points.sort((a, b) => a.endDate - b.endDate).slice(-ONE_ITEM);
   const lastTripDate = formatDate(lastTripPoint.endDate);
   const lastVisitedCity = lastTripPoint.destination.name;
 
+  const cities = points.map((point) => point.destination.name);
+
+  const showVisitedCities = () => {
+    let visitedCities = cities.map((city) => city).join(` &mdash; `);
+    if (cities.length > 3) {
+      visitedCities = `${firstVisitedCity} &mdash; . . . &mdash; ${lastVisitedCity}`;
+    }
+    return visitedCities;
+  };
+
   return (
     `<div class="trip-info__main">
-      <h1 class="trip-info__title">${firstVisitedCity} &mdash; Chamonix &mdash; ${lastVisitedCity}</h1>
+      <h1 class="trip-info__title">${showVisitedCities()}</h1>
 
       <p class="trip-info__dates">${firstTripDate}&nbsp;&mdash;&nbsp;${lastTripDate}</p>
     </div>`

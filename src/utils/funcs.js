@@ -12,7 +12,7 @@ export const formatDate = (date) => {
 };
 
 export const formatTime = (time) => {
-  return moment(time).format(`hh:mm`);
+  return moment(time).format(`HH:mm`);
 };
 
 
@@ -65,7 +65,7 @@ export const getTripDays = (points) => {
 
 export const getPointPrice = (point) => {
   const cb = (offerPriceSum, offer) => {
-    if (offer.isChecked) {
+    if (offer) {
       offerPriceSum += offer.price;
     }
     return offerPriceSum;

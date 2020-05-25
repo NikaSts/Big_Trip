@@ -1,6 +1,6 @@
 import {formatToISOString} from '../utils/funcs';
 
-export default class PointsAdapterOut {
+export default class PointsOutAdapter {
   constructor(data) {
     this.id = data[`id`];
     this.type = data[`type`];
@@ -26,6 +26,6 @@ export default class PointsAdapterOut {
   }
 
   static clone(data) {
-    return new PointsAdapterOut(data);
+    return new PointsOutAdapter(data);
   }
 }
