@@ -1,9 +1,12 @@
+import {STORE_OFFERS_NAME, STORE_DESTINATIONS_NAME} from "../utils/consts";
+
+
 export default class Store {
   constructor(key, storage) {
     this._storage = storage;
     this._storePointsKey = key;
-    this._storeOffersKey = `offers`;
-    this._storeDestinationsKey = `destinations`;
+    this._storeOffersKey = STORE_OFFERS_NAME;
+    this._storeDestinationsKey = STORE_DESTINATIONS_NAME;
   }
 
   getPoints() {

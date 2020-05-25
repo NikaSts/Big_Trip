@@ -11,11 +11,11 @@ import TripController from './controllers/trip-controller';
 import FilterController from './controllers/filter-controller';
 
 import {renderComponent, Position, removeComponent} from './utils/render';
-import {END_POINT, AUTHORIZATION, STORE_NAME, MenuControl} from './utils/consts';
+import {END_POINT, AUTHORIZATION, STORE_POINTS_NAME, MenuControl} from './utils/consts';
 
 
 const api = new API(END_POINT, AUTHORIZATION);
-const store = new Store(STORE_NAME, window.localStorage);
+const store = new Store(STORE_POINTS_NAME, window.localStorage);
 const apiWithProvider = new Provider(api, store);
 const pointsModel = new PointsModel();
 
@@ -83,6 +83,16 @@ const init = () => {
   })
   .catch(() => {
     renderUI();
+  });
+
+  window.addEventListener(`online`, () => {
+    document.title = document.title.replace(` [offline]`, ``);
+
+    apiWithProvider.sync();
+  });
+
+  window.addEventListener(`offline`, () => {
+    document.title += ` [offline]`;
   });
 };
 
