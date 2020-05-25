@@ -2,7 +2,7 @@ import {replaceComponent, removeComponent} from '../utils/render';
 import {getPointOffers} from '../utils/funcs';
 import PointComponent from '../components/point';
 import EditPointComponent from '../components/edit-point/edit-point';
-import PointsAdapterOut from '../models/points-adapter-out';
+import PointsOutAdapter from '../models/points-out-adapter';
 import {State, EmptyPoint, BORDER_STYLE, ButtonText} from '../utils/consts';
 
 
@@ -13,7 +13,7 @@ const parseFormData = (id, formData, availableOffers, destinations) => {
   const checkedOffers = formData.getAll(`event-offer-1`);
   const offers = getPointOffers(availableOffers[pointType], checkedOffers);
 
-  return new PointsAdapterOut({
+  return new PointsOutAdapter({
     id,
     "type": pointType,
     "startDate": formData.get(`event-start-time`),
@@ -78,7 +78,7 @@ export default class PointController {
     });
 
     this._editPointComponent.setFavoriteButtonClickHandler(() => {
-      const newPoint = PointsAdapterOut.clone(this._point);
+      const newPoint = PointsOutAdapter.clone(this._point);
       newPoint.isFavorite = !newPoint.isFavorite;
       this._onDataChange(this, this._point, newPoint, this._state, true);
     });
@@ -104,6 +104,7 @@ export default class PointController {
         this._onDataChange(this, EmptyPoint, null, this._state);
       }
       this._editPointComponent.reset();
+      this._editPointComponent.rerender();
       this._closeEditForm();
     }
   }

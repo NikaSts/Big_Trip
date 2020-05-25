@@ -1,5 +1,5 @@
-import PointsAdapterIn from './models/points-adapter-in';
-import {Method} from './utils/consts';
+import PointsInAdapter from './models/points-in-adapter';
+import {Method, Code} from './utils/consts';
 
 
 export default class API {
@@ -14,7 +14,7 @@ export default class API {
       method: Method.GET,
     })
       .then((response) => response.json())
-      .then(PointsAdapterIn.parsePoints);
+      .then(PointsInAdapter.parsePoints);
   }
 
   getDestinations() {
@@ -41,7 +41,7 @@ export default class API {
       headers: new Headers({"Content-Type": `application/json`}),
     })
       .then((response) => response.json())
-      .then(PointsAdapterIn.parsePoint);
+      .then(PointsInAdapter.parsePoint);
   }
 
   createPoint(data) {
@@ -52,7 +52,7 @@ export default class API {
       headers: new Headers({"Content-Type": `application/json`}),
     })
       .then((response) => response.json())
-      .then(PointsAdapterIn.parsePoint);
+      .then(PointsInAdapter.parsePoint);
   }
 
   deletePoint(id) {
@@ -73,10 +73,9 @@ export default class API {
   }
 
   _checkStatus(response) {
-    if (response.status >= 200 && response.status < 300) {
+    if (response.status >= Code.SUCCESS && response.status < Code.REDIRECT) {
       return response;
-    } else {
-      throw new Error(`${response.status}: ${response.statusText}`);
     }
+    throw new Error(`${response.status}: ${response.statusText}`);
   }
 }

@@ -1,5 +1,5 @@
 import {formatDate, formatToISOString} from '../utils/funcs';
-import AbstractComponent from './abstract-component';
+import AbstractComponent from './abstract';
 import {renderComponent} from '../utils/render';
 
 

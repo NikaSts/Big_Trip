@@ -40,7 +40,7 @@ const renderUI = () => {
     tripInfoComponent.rerender();
   });
 
-  menuComponent.onMenuControlsClick((menuControl) => {
+  menuComponent.setMenuControlsClickHandler((menuControl) => {
     switch (menuControl) {
       case MenuControl.TABLE:
         tripController.show();
@@ -70,16 +70,13 @@ const init = () => {
   renderComponent(tripContainer, loadingComponent);
 
   Promise.all([api.getPoints(), api.getOffers(), api.getDestinations()])
-  .then(([points, offers, destinations]) => {
-    pointsModel.setPoints(points);
-    pointsModel.setOffers(offers);
-    pointsModel.setDestinations(destinations);
+    .then(([points, offers, destinations]) => {
+      pointsModel.setPoints(points);
+      pointsModel.setOffers(offers);
+      pointsModel.setDestinations(destinations);
 
-    renderUI();
-  })
-  .catch(() => {
-    renderUI();
-  });
+      renderUI();
+    });
 };
 
 init();
