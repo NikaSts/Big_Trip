@@ -1,8 +1,8 @@
-import AbstractSmartComponent from './abstract-smart-component';
+import AbstractSmartComponent from './abstract-smart';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {getDuration, getDurationInHours} from '../utils/funcs';
-import {BAR_HEIGHT, iconMap, pointGroupToType, TypeGroup} from '../utils/consts';
+import {BAR_HEIGHT, iconMap, pointGroupToType, TypeGroup, ChartVariables} from '../utils/consts';
 
 
 const renderMoneyChart = (ctx, points) => {
@@ -34,7 +34,7 @@ const renderMoneyChart = (ctx, points) => {
       plugins: {
         datalabels: {
           font: {
-            size: 13
+            size: ChartVariables.LABELS_FONT_SIZE,
           },
           color: `#000000`,
           anchor: `end`,
@@ -46,21 +46,26 @@ const renderMoneyChart = (ctx, points) => {
         display: true,
         text: `MONEY`,
         fontColor: `#000000`,
-        fontSize: 23,
+        fontSize: ChartVariables.TITLE_FONT_SIZE,
         position: `left`
+      },
+      layout: {
+        padding: {
+          left: ChartVariables.LAYOUT_PADDING_LEFT,
+        }
       },
       scales: {
         yAxes: [{
           ticks: {
             fontColor: `#000000`,
-            padding: 5,
-            fontSize: 13,
+            padding: ChartVariables.AXES_Y_PADDING,
+            fontSize: ChartVariables.AXES_Y_FONT_SIZE,
           },
           gridLines: {
             display: false,
             drawBorder: false
           },
-          barThickness: 44,
+          barThickness: ChartVariables.BAR_THICKNESS,
         }],
         xAxes: [{
           ticks: {
@@ -71,7 +76,7 @@ const renderMoneyChart = (ctx, points) => {
             display: false,
             drawBorder: false
           },
-          minBarLength: 50
+          minBarLength: ChartVariables.MIN_BAR_LENGTH,
         }],
       },
       legend: {
@@ -118,7 +123,7 @@ const renderTransportChart = (ctx, points) => {
       plugins: {
         datalabels: {
           font: {
-            size: 13
+            size: ChartVariables.LABELS_FONT_SIZE,
           },
           color: `#000000`,
           anchor: `end`,
@@ -130,21 +135,26 @@ const renderTransportChart = (ctx, points) => {
         display: true,
         text: `TRANSPORT`,
         fontColor: `#000000`,
-        fontSize: 23,
+        fontSize: ChartVariables.TITLE_FONT_SIZE,
         position: `left`
+      },
+      layout: {
+        padding: {
+          left: ChartVariables.LAYOUT_PADDING_LEFT,
+        }
       },
       scales: {
         yAxes: [{
           ticks: {
             fontColor: `#000000`,
-            padding: 5,
-            fontSize: 13,
+            padding: ChartVariables.AXES_Y_PADDING,
+            fontSize: ChartVariables.AXES_Y_FONT_SIZE,
           },
           gridLines: {
             display: false,
             drawBorder: false
           },
-          barThickness: 44,
+          barThickness: ChartVariables.BAR_THICKNESS,
         }],
         xAxes: [{
           ticks: {
@@ -155,7 +165,7 @@ const renderTransportChart = (ctx, points) => {
             display: false,
             drawBorder: false
           },
-          minBarLength: 50
+          minBarLength: ChartVariables.MIN_BAR_LENGTH,
         }],
       },
       legend: {
@@ -197,7 +207,7 @@ const renderTimeChart = (ctx, points) => {
       plugins: {
         datalabels: {
           font: {
-            size: 13
+            size: ChartVariables.LABELS_FONT_SIZE,
           },
           color: `#000000`,
           anchor: `end`,
@@ -209,21 +219,26 @@ const renderTimeChart = (ctx, points) => {
         display: true,
         text: `TIME-SPEND`,
         fontColor: `#000000`,
-        fontSize: 23,
+        fontSize: ChartVariables.TITLE_FONT_SIZE,
         position: `left`
+      },
+      layout: {
+        padding: {
+          left: ChartVariables.LAYOUT_PADDING_LEFT,
+        }
       },
       scales: {
         yAxes: [{
           ticks: {
             fontColor: `#000000`,
-            padding: 5,
-            fontSize: 13,
+            padding: ChartVariables.AXES_Y_PADDING,
+            fontSize: ChartVariables.AXES_Y_FONT_SIZE,
           },
           gridLines: {
             display: false,
             drawBorder: false
           },
-          barThickness: 44,
+          barThickness: ChartVariables.BAR_THICKNESS,
         }],
         xAxes: [{
           ticks: {
@@ -234,7 +249,7 @@ const renderTimeChart = (ctx, points) => {
             display: false,
             drawBorder: false
           },
-          minBarLength: 50
+          minBarLength: ChartVariables.MIN_BAR_LENGTH,
         }],
       },
       legend: {
@@ -299,7 +314,6 @@ export default class StatisticsComponent extends AbstractSmartComponent {
 
   _renderCharts() {
     const element = this.getElement();
-    element.style.paddingLeft = `80px`;
 
     const moneyCtx = element.querySelector(`.statistics__chart--money`);
     const transportCtx = element.querySelector(`.statistics__chart--transport`);

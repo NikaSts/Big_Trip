@@ -1,8 +1,7 @@
-import AbstractSmartComponent from '../abstract-smart-component';
+import AbstractSmartComponent from '../abstract-smart';
 import {createEditPointTemplate} from './edit-point-template';
-import {State} from '../../controllers/point-controller';
 import {getPointOffers} from '../../utils/funcs';
-import {DefaultData} from '../../utils/consts';
+import {DefaultData, State} from '../../utils/consts';
 
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
@@ -23,10 +22,9 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._endDate = point.endDate;
 
     this._offersByType = this._pointsModel.getOffersByType(this._type);
-    this._checkedOffers = point.offers;
+    this._checkedOffers = point.offers.map((offer) => Object.assign({}, offer));
 
     this._destination = Object.assign({}, point.destination);
-    this._isFavorite = point.isFavorite;
     this._basePrice = point.basePrice;
 
     this._deleteHandler = null;
@@ -40,13 +38,12 @@ export default class EditPointComponent extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createEditPointTemplate({
+    return createEditPointTemplate(this._point, {
       type: this._type,
       startDate: this._startDate,
       endDate: this._endDate,
       offers: this._checkedOffers,
       destination: this._destination,
-      isFavorite: this._isFavorite,
       basePrice: this._basePrice,
     }, this._state, this._offersByType, this._destinations, this._externalData);
   }
@@ -106,6 +103,11 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._favoriteHandler = onFavoriteButtonClick;
   }
 
+  toggleIsFavorite() {
+    this._point.isFavorite = !this._point.isFavorite;
+    this.rerender();
+  }
+
   applyFlatpickr() {
     const startTimeInput = this.getElement().querySelector(`[name="event-start-time"]`);
     const endTimeInput = this.getElement().querySelector(`[name="event-end-time"]`);
@@ -127,6 +129,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
 
     this._endPicker = flatpickr(endTimeInput, Object.assign({}, picker, {
       defaultDate: this._endDate,
+      minDate: this._startDate,
     }));
   }
 
@@ -140,25 +143,31 @@ export default class EditPointComponent extends AbstractSmartComponent {
   }
 
   _subscribeOnEvents() {
-    const element = this.getElement();
-    const destinationNameInput = element.querySelector(`#event-destination-1`);
+    const form = this.getElement();
+    const FormElement = {
+      START_TIME_INPUT: form.querySelector(`[name="event-start-time"]`),
+      END_TIME_INPUT: form.querySelector(`[name="event-end-time"]`),
+      DESTINATION_NAME_INPUT: form.querySelector(`#event-destination-1`),
+      TYPE_LIST: form.querySelector(`.event__type-list`),
+      PRICE_INPUT: form.querySelector(`.event__input--price`),
+      AVAILABLE_OFFERS: form.querySelector(`.event__available-offers`),
+    };
 
-    element.querySelector(`.event__type-list`)
-      .addEventListener(`click`, (evt) => {
-        const target = evt.target.closest(`INPUT`);
-        if (!target) {
-          return;
-        }
-        this._type = target.value;
-        this._offersByType = this._pointsModel.getOffersByType(this._type);
-        this.rerender();
-      });
+    FormElement.TYPE_LIST.addEventListener(`click`, (evt) => {
+      const target = evt.target.closest(`INPUT`);
+      if (!target) {
+        return;
+      }
+      this._type = target.value;
+      this._offersByType = this._pointsModel.getOffersByType(this._type);
+      this.rerender();
+    });
 
-    destinationNameInput.addEventListener(`click`, (evt) => {
+    FormElement.DESTINATION_NAME_INPUT.addEventListener(`click`, (evt) => {
       evt.target.value = ``;
     });
 
-    destinationNameInput.addEventListener(`input`, (evt) => {
+    FormElement.DESTINATION_NAME_INPUT.addEventListener(`input`, (evt) => {
       const inputValue = evt.target.value;
       const newDestination = this._destinations.find((destination) => destination.name === inputValue);
       if (inputValue === `` || !newDestination) {
@@ -168,39 +177,32 @@ export default class EditPointComponent extends AbstractSmartComponent {
       this.rerender();
     });
 
-    element.querySelector(`.event__input--price`).addEventListener(`change`, (evt) => {
+    FormElement.PRICE_INPUT.addEventListener(`change`, (evt) => {
       this._basePrice = Number(evt.target.value);
     });
 
-    element.querySelector(`.event__available-offers`)
-      .addEventListener(`click`, (evt) => {
-        const target = evt.target.closest(`INPUT`);
-        if (!target) {
-          return;
-        }
-        target.toggleAttribute(`checked`);
-        const offers = element.querySelectorAll(`.event__offer-checkbox` + `[checked=""]`);
-        const checkedOffers = [...offers].map((offer) => offer.value);
-        this._checkedOffers = getPointOffers(this._offersByType, checkedOffers);
-        this.rerender();
-      });
+    FormElement.AVAILABLE_OFFERS.addEventListener(`click`, (evt) => {
+      const target = evt.target.closest(`INPUT`);
+      if (!target) {
+        return;
+      }
+      target.toggleAttribute(`checked`);
+      const offers = form.querySelectorAll(`.event__offer-checkbox` + `[checked=""]`);
+      const checkedOffers = [...offers].map((offer) => offer.value);
+      this._checkedOffers = getPointOffers(this._offersByType, checkedOffers);
+      this.rerender();
+    });
 
-    element.querySelector(`.event__favorite-btn`)
-      .addEventListener(`click`, () => {
-        this._isFavorite = !this._isFavorite;
-        this.rerender();
-      });
+    FormElement.START_TIME_INPUT.addEventListener(`change`, (evt) => {
+      const inputValue = evt.target.value;
+      this._startDate = inputValue;
+      this._endDate = this._endDate > this._startDate ? this._endDate : this._startDate;
+      this._updatePicker(this._endPicker, this._startDate);
+    });
 
-    element.querySelector(`[name="event-start-time"]`)
-      .addEventListener(`change`, (evt) => {
-        const inputValue = evt.target.value;
-        this._startDate = inputValue;
-      });
-
-    element.querySelector(`[name="event-end-time"]`)
-      .addEventListener(`change`, (evt) => {
-        const inputValue = evt.target.value;
-        this._endDate = inputValue;
-      });
+    FormElement.END_TIME_INPUT.addEventListener(`change`, (evt) => {
+      const inputValue = evt.target.value;
+      this._endDate = inputValue;
+    });
   }
 }

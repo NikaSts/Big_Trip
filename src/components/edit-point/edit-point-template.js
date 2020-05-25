@@ -1,13 +1,13 @@
 import {createPointTypeTemplate} from './point-type-template';
 import {createDestinationTemplate} from './destination-template';
 import {createAvailableOfferTemplate} from './offer-template';
-import {TypeGroup, pointGroupToType} from '../../utils/consts';
+import {TypeGroup, pointGroupToType, State} from '../../utils/consts';
 import {capitalizeFirstLetter} from '../../utils/funcs';
-import {State} from '../../controllers/point-controller';
 
 
-const createEditPointTemplate = (options = {}, state, offersByType, destinations, externalData) => {
-  const {type, startDate, endDate, offers, destination, isFavorite, basePrice} = options;
+const createEditPointTemplate = (point, options = {}, state, offersByType, destinations, externalData) => {
+  const {isFavorite} = point;
+  const {type, startDate, endDate, offers, destination, basePrice} = options;
   const capitalizedType = capitalizeFirstLetter(type);
 
   const isValidDestination = !!destination.name;
@@ -74,7 +74,7 @@ const createEditPointTemplate = (options = {}, state, offersByType, destinations
           <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}" required>
         </div>
 
-        <button class="event__save-btn  btn  btn--blue" type="submit" ${isValidDestination ? `` : `disabled`}>${saveButtonText}</button>
+        <button class="event__save-btn  btn  btn--blue" type="submit">${saveButtonText}</button>
         <button class="event__reset-btn" type="reset">${isNew ? `Cancel` : `${deleteButtonText}`}</button>
 
         <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>

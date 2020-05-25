@@ -1,4 +1,4 @@
-import AbstractComponent from './abstract-component';
+import AbstractComponent from './abstract';
 import {MenuControl, MENU_CONTROLS} from '../utils/consts';
 
 
@@ -30,7 +30,7 @@ export default class MenuComponent extends AbstractComponent {
     return createMenuTemplate(MENU_CONTROLS, this._activeControl);
   }
 
-  onMenuControlsClick(handler) {
+  setMenuControlsClickHandler(onMenuControlsClick) {
     this.getElement().addEventListener(`click`, (evt) => {
       const target = evt.target;
       if (target.tagName !== `A`) {
@@ -38,7 +38,7 @@ export default class MenuComponent extends AbstractComponent {
       }
       this._setActiveMenuControl(target);
       this._activeControl = target.textContent;
-      handler(this._activeControl);
+      onMenuControlsClick(this._activeControl);
     });
   }
 

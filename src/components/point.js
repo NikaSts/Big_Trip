@@ -1,6 +1,6 @@
 import {getFormattedDuration, capitalizeFirstLetter, formatToISOString, formatTime} from '../utils/funcs';
-import {pointGroupToType, TypeGroup} from '../utils/consts';
-import AbstractComponent from './abstract-component';
+import {pointGroupToType, TypeGroup, SHOW_OFFERS} from '../utils/consts';
+import AbstractComponent from './abstract';
 
 
 const createPointTemplate = (point) => {
@@ -14,7 +14,7 @@ const createPointTemplate = (point) => {
 
   const duration = getFormattedDuration(startDate, endDate);
   const hasOffers = offers.length > 0;
-  const offersToShow = hasOffers ? offers.slice(0, 3) : ``;
+  const offersToShow = hasOffers ? offers.slice(0, SHOW_OFFERS) : ``;
 
   const transferGroup = pointGroupToType[TypeGroup.TRANSFER].includes(type);
 
@@ -66,8 +66,8 @@ export default class PointComponent extends AbstractComponent {
   getTemplate() {
     return createPointTemplate(this._point);
   }
-  setEditButtonClickHandler(handler) {
+  setEditButtonClickHandler(onEditButtonClick) {
     this.getElement().querySelector(`.event__rollup-btn`)
-      .addEventListener(`click`, handler);
+      .addEventListener(`click`, onEditButtonClick);
   }
 }
