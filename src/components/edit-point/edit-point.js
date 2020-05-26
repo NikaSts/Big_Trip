@@ -1,7 +1,7 @@
 import AbstractSmartComponent from '../abstract-smart';
 import {createEditPointTemplate} from './edit-point-template';
 import {getPointOffers} from '../../utils/funcs';
-import {defaultButtonText, State} from '../../utils/consts';
+import {DefaultButtonText, State} from '../../utils/consts';
 
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
@@ -14,7 +14,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._state = state;
     this._pointsModel = pointsModel;
 
-    this._defaultButtonText = defaultButtonText;
+    this._defaultButtonText = DefaultButtonText;
     this._destinations = pointsModel.getDestinations();
 
     this._type = point.type;
@@ -54,7 +54,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
   }
 
   setButtonText(buttonText) {
-    this._defaultButtonText = Object.assign({}, defaultButtonText, buttonText);
+    this._defaultButtonText = Object.assign({}, DefaultButtonText, buttonText);
     this.rerender();
   }
 
