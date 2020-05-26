@@ -3,7 +3,7 @@ import {getPointOffers} from '../utils/funcs';
 import PointComponent from '../components/point';
 import EditPointComponent from '../components/edit-point/edit-point';
 import PointsOutAdapter from '../models/points-out-adapter';
-import {State, emptyPoint, BORDER_STYLE, ButtonText} from '../utils/consts';
+import {State, EmptyPoint, BORDER_STYLE, ButtonText} from '../utils/consts';
 
 
 const parseFormData = (id, formData, availableOffers, destinations) => {
@@ -101,7 +101,7 @@ export default class PointController {
   setDefaultView() {
     if (this._state !== State.DEFAULT) {
       if (this._state === State.ADD) {
-        this._onDataChange(this, emptyPoint, null, this._state);
+        this._onDataChange(this, EmptyPoint, null, this._state);
       }
       this._editPointComponent.reset();
       this._editPointComponent.rerender();
@@ -162,7 +162,7 @@ export default class PointController {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
     if (isEscKey) {
       if (this._state === State.ADD) {
-        this._onDataChange(this, emptyPoint, null, this._state);
+        this._onDataChange(this, EmptyPoint, null, this._state);
       }
       this.setDefaultView();
       document.removeEventListener(`keydown`, this._onEscKeyDown);

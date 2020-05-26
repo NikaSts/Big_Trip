@@ -6,7 +6,7 @@ import PointController from './point-controller';
 import {getTripDays} from '../utils/funcs';
 import {SORT_TYPES, SortType} from '../utils/sort';
 import {renderComponent, removeComponent, Position} from '../utils/render';
-import {HIDDEN_CLASS, State as PointControllerState, emptyPoint} from '../utils/consts';
+import {HIDDEN_CLASS, State as PointControllerState, EmptyPoint} from '../utils/consts';
 
 
 export default class TripController {
@@ -71,7 +71,7 @@ export default class TripController {
     }
     this._onViewChange();
     this._creatingPoint = new PointController(this._onDataChange, this._onViewChange, this._pointsModel, this._api);
-    const newPointComponent = this._creatingPoint.render(emptyPoint, PointControllerState.ADD);
+    const newPointComponent = this._creatingPoint.render(EmptyPoint, PointControllerState.ADD);
     this.rerender();
 
     removeComponent(this._noPointsComponent);
