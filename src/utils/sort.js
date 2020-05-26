@@ -1,4 +1,4 @@
-import {getDuration, getPointPrice} from './funcs';
+import {getDuration} from './funcs';
 
 
 export const SortType = {
@@ -23,8 +23,7 @@ export const getSortedPoints = (points, sortType = SortType.DEFAULT) => {
       break;
 
     case SortType.PRICE:
-      const pointWithTotalPrice = points.map((point) => Object.assign({}, point, {total: getPointPrice(point)}));
-      sortedPoints = pointWithTotalPrice.sort((a, b) => b.total - a.total);
+      sortedPoints = points.slice().sort((a, b) => b.basePrice - a.basePrice);
       break;
 
     default:
