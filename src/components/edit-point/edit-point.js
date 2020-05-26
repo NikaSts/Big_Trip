@@ -1,7 +1,7 @@
 import AbstractSmartComponent from '../abstract-smart';
 import {createEditPointTemplate} from './edit-point-template';
 import {getPointOffers} from '../../utils/funcs';
-import {DefaultData, State} from '../../utils/consts';
+import {defaultButtonText, State} from '../../utils/consts';
 
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
@@ -14,7 +14,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._state = state;
     this._pointsModel = pointsModel;
 
-    this._externalData = DefaultData;
+    this._defaultButtonText = defaultButtonText;
     this._destinations = pointsModel.getDestinations();
 
     this._type = point.type;
@@ -45,16 +45,16 @@ export default class EditPointComponent extends AbstractSmartComponent {
       offers: this._checkedOffers,
       destination: this._destination,
       basePrice: this._basePrice,
-    }, this._state, this._offersByType, this._destinations, this._externalData);
+    }, this._state, this._offersByType, this._destinations, this._defaultButtonText);
   }
 
-  getData() {
+  getFormData() {
     const form = this.getElement();
     return new FormData(form);
   }
 
-  setData(data) {
-    this._externalData = Object.assign({}, DefaultData, data);
+  setButtonText(buttonText) {
+    this._defaultButtonText = Object.assign({}, defaultButtonText, buttonText);
     this.rerender();
   }
 
@@ -187,7 +187,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
         return;
       }
       target.toggleAttribute(`checked`);
-      const offers = form.querySelectorAll(`.event__offer-checkbox` + `[checked=""]`);
+      const offers = form.querySelectorAll(`.event__offer-checkbox:checked`);
       const checkedOffers = [...offers].map((offer) => offer.value);
       this._checkedOffers = getPointOffers(this._offersByType, checkedOffers);
       this.rerender();

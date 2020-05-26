@@ -1,15 +1,15 @@
 import {formatToISOString} from '../utils/funcs';
 
 export default class PointsOutAdapter {
-  constructor(data) {
-    this.id = data[`id`];
-    this.type = data[`type`];
-    this.startDate = data[`startDate`];
-    this.endDate = data[`endDate`];
-    this.basePrice = data[`basePrice`];
-    this.isFavorite = data[`isFavorite`];
-    this.offers = data[`offers`];
-    this.destination = data[`destination`];
+  constructor(point) {
+    this.id = point[`id`];
+    this.type = point[`type`];
+    this.startDate = point[`startDate`];
+    this.endDate = point[`endDate`];
+    this.basePrice = point[`basePrice`];
+    this.isFavorite = point[`isFavorite`];
+    this.offers = point[`offers`];
+    this.destination = point[`destination`];
   }
 
   toRAW() {
@@ -25,7 +25,7 @@ export default class PointsOutAdapter {
     };
   }
 
-  static clone(data) {
-    return new PointsOutAdapter(data);
+  static clone(point) {
+    return new PointsOutAdapter(point);
   }
 }

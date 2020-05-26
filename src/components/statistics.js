@@ -6,12 +6,12 @@ import {BAR_HEIGHT, iconMap, pointGroupToType, TypeGroup, ChartVariables} from '
 
 
 const renderMoneyChart = (ctx, points) => {
-  const moneyStats = points.reduce((acc, point) => {
-    if (!acc[point.type]) {
-      acc[point.type] = 0;
+  const moneyStats = points.reduce((totalCost, point) => {
+    if (!totalCost[point.type]) {
+      totalCost[point.type] = 0;
     }
-    acc[point.type] += Number(point.basePrice);
-    return acc;
+    totalCost[point.type] += Number(point.basePrice);
+    return totalCost;
   }, {});
 
   const types = Object.keys(moneyStats).map((type) => `${iconMap[type]} ${type.toUpperCase()}`);
@@ -92,15 +92,15 @@ const renderMoneyChart = (ctx, points) => {
 };
 
 const renderTransportChart = (ctx, points) => {
-  const transportStats = points.reduce((acc, point) => {
+  const transportStats = points.reduce((transportFrequency, point) => {
     const isTransport = pointGroupToType[TypeGroup.TRANSFER].includes(point.type);
     if (isTransport) {
-      if (!acc[point.type]) {
-        acc[point.type] = 0;
+      if (!transportFrequency[point.type]) {
+        transportFrequency[point.type] = 0;
       }
-      acc[point.type] += 1;
+      transportFrequency[point.type] += 1;
     }
-    return acc;
+    return transportFrequency;
   }, {});
 
   const types = Object.keys(transportStats).map((type) => `${iconMap[type]} ${type.toUpperCase()}`);
@@ -179,12 +179,12 @@ const renderTransportChart = (ctx, points) => {
 };
 
 const renderTimeChart = (ctx, points) => {
-  const timeStats = points.reduce((acc, point) => {
-    if (!acc[point.type]) {
-      acc[point.type] = getDuration(point.startDate, point.endDate);
+  const timeStats = points.reduce((timeSpent, point) => {
+    if (!timeSpent[point.type]) {
+      timeSpent[point.type] = getDuration(point.startDate, point.endDate);
     }
-    acc[point.type] += getDuration(point.startDate, point.endDate);
-    return acc;
+    timeSpent[point.type] += getDuration(point.startDate, point.endDate);
+    return timeSpent;
   }, {});
 
   const types = Object.keys(timeStats).map((type) => `${iconMap[type]} ${type.toUpperCase()}`);
@@ -212,7 +212,7 @@ const renderTimeChart = (ctx, points) => {
           color: `#000000`,
           anchor: `end`,
           align: `start`,
-          formatter: (val) => `${getDurationInHours(val)}`
+          formatter: (val) => `${getDurationInHours(val)}H`
         }
       },
       title: {

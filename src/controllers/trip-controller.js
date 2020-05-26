@@ -6,7 +6,7 @@ import PointController from './point-controller';
 import {getTripDays} from '../utils/funcs';
 import {SORT_TYPES, SortType} from '../utils/sort';
 import {renderComponent, removeComponent, Position} from '../utils/render';
-import {HIDDEN_CLASS, State as PointControllerState, EmptyPoint} from '../utils/consts';
+import {HIDDEN_CLASS, State as PointControllerState, emptyPoint} from '../utils/consts';
 
 
 export default class TripController {
@@ -71,7 +71,7 @@ export default class TripController {
     }
     this._onViewChange();
     this._creatingPoint = new PointController(this._onDataChange, this._onViewChange, this._pointsModel, this._api);
-    const newPointComponent = this._creatingPoint.render(EmptyPoint, PointControllerState.ADD);
+    const newPointComponent = this._creatingPoint.render(emptyPoint, PointControllerState.ADD);
     this.rerender();
 
     removeComponent(this._noPointsComponent);
@@ -96,14 +96,14 @@ export default class TripController {
     this._tripDaysComponent.removeChildrenElements();
   }
 
-  _onDataChange(pointController, oldData, newData, state, isFavoriteButtonClick = false) {
+  _onDataChange(pointController, oldPoint, newPoint, state, isFavoriteButtonClick = false) {
     switch (state) {
       case PointControllerState.ADD:
-        if (newData === null) {
+        if (newPoint === null) {
           pointController.destroy();
         } else {
           pointController.setFormDisabled();
-          this._api.createPoint(newData)
+          this._api.createPoint(newPoint)
             .then((pointModel) => {
               this._pointsModel.createPoint(pointModel);
               pointController.render(pointModel, PointControllerState.DEFAULT);
@@ -117,11 +117,11 @@ export default class TripController {
         this._creatingPoint = null;
         break;
       case PointControllerState.EDIT:
-        if (newData === null) {
+        if (newPoint === null) {
           pointController.setFormDisabled();
-          this._api.deletePoint(oldData.id)
+          this._api.deletePoint(oldPoint.id)
             .then(() => {
-              this._pointsModel.removePoint(oldData.id);
+              this._pointsModel.removePoint(oldPoint.id);
               this.rerender(this._activeSortType);
             })
             .catch(() => {
@@ -130,9 +130,9 @@ export default class TripController {
             });
         } else {
           pointController.setFormDisabled();
-          this._api.updatePoint(oldData.id, newData)
+          this._api.updatePoint(oldPoint.id, newPoint)
             .then((pointModel) => {
-              const isSuccess = this._pointsModel.updatePoint(oldData.id, pointModel);
+              const isSuccess = this._pointsModel.updatePoint(oldPoint.id, pointModel);
               if (isSuccess && isFavoriteButtonClick) {
                 pointController.clearFormDisabled();
                 pointController.toggleIsFavorite();
