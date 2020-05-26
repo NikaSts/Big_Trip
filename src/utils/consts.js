@@ -30,7 +30,7 @@ export const State = {
   ADD: `add`,
 };
 
-export const EmptyPoint = {
+export const emptyPoint = {
   id: String(Date.now() + Math.random()),
   type: `taxi`,
   offers: [],
@@ -91,7 +91,7 @@ export const iconMap = {
   'restaurant': `🍽️`
 };
 
-export const DefaultData = {
+export const defaultButtonText = {
   deleteButtonText: `Delete`,
   saveButtonText: `Save`,
 };

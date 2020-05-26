@@ -42,14 +42,14 @@ export const getDurationInHours = (duration) => {
 
 
 // OTHER
-const getDayPoints = (acc, point) => {
+const getDayPoints = (trip, point) => {
   const date = new Date(point.startDate).setHours(0, 0, 0, 0);
 
-  if (!acc[date]) {
-    acc[date] = [];
+  if (!trip[date]) {
+    trip[date] = [];
   }
-  acc[date].push(point);
-  return acc;
+  trip[date].push(point);
+  return trip;
 };
 
 export const getTripDays = (points) => {
@@ -64,14 +64,12 @@ export const getTripDays = (points) => {
 };
 
 export const getPointPrice = (point) => {
-  const cb = (offerPriceSum, offer) => {
+  return point.basePrice + point.offers.reduce((offerPriceSum, offer) => {
     if (offer) {
       offerPriceSum += offer.price;
     }
     return offerPriceSum;
-  };
-
-  return point.basePrice + point.offers.reduce(cb, 0);
+  }, 0);
 };
 
 export const capitalizeFirstLetter = (string) => {
@@ -92,8 +90,8 @@ export const isChecked = (offer, checkedOffers) => {
 };
 
 export const parseOffers = (offers) => {
-  return offers.reduce((acc, originalOffer) => {
-    acc[originalOffer.type] = originalOffer.offers;
-    return acc;
+  return offers.reduce((parsedOffers, originalOffer) => {
+    parsedOffers[originalOffer.type] = originalOffer.offers;
+    return parsedOffers;
   }, {});
 };

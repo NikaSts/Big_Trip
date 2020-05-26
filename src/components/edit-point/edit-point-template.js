@@ -5,7 +5,7 @@ import {TypeGroup, pointGroupToType, State} from '../../utils/consts';
 import {capitalizeFirstLetter} from '../../utils/funcs';
 
 
-const createEditPointTemplate = (point, options = {}, state, offersByType, destinations, externalData) => {
+const createEditPointTemplate = (point, options = {}, state, offersByType, destinations, defaultButtonText) => {
   const {isFavorite} = point;
   const {type, startDate, endDate, offers, destination, basePrice} = options;
   const capitalizedType = capitalizeFirstLetter(type);
@@ -20,8 +20,8 @@ const createEditPointTemplate = (point, options = {}, state, offersByType, desti
   const transferTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.TRANSFER], options);
   const activityTypes = createPointTypeTemplate(pointGroupToType[TypeGroup.ACTIVITY], options);
 
-  const deleteButtonText = externalData.deleteButtonText;
-  const saveButtonText = externalData.saveButtonText;
+  const deleteButtonText = defaultButtonText.deleteButtonText;
+  const saveButtonText = defaultButtonText.saveButtonText;
 
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
