@@ -80,12 +80,12 @@ const init = () => {
     pointsModel.setDestinations(destinations);
 
     renderUI();
-  })
+/*   })
   .catch(() => {
     renderUI();
-  });
+ */  });
 
-  window.addEventListener(`online`, () => {
+/*   window.addEventListener(`online`, () => {
     document.title = document.title.replace(` [offline]`, ``);
 
     apiWithProvider.sync();
@@ -94,6 +94,6 @@ const init = () => {
   window.addEventListener(`offline`, () => {
     document.title += ` [offline]`;
   });
-};
+ */ };
 
 init();

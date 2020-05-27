@@ -13,8 +13,8 @@ export default class API {
       url: `points`,
       method: Method.GET,
     })
-      .then((response) => response.json())
-      .then(PointsAdapterIn.parsePoints);
+      .then((response) => response.json());
+    // .then(PointsAdapterIn.parsePoints);
   }
 
   getDestinations() {
@@ -40,8 +40,8 @@ export default class API {
       body: JSON.stringify(data.toRAW()),
       headers: new Headers({"Content-Type": `application/json`}),
     })
-      .then((response) => response.json())
-      .then(PointsAdapterIn.parsePoint);
+      .then((response) => response.json());
+    // .then(PointsAdapterIn.parsePoint);
   }
 
   createPoint(data) {
@@ -51,8 +51,8 @@ export default class API {
       body: JSON.stringify(data.toRAW()),
       headers: new Headers({"Content-Type": `application/json`}),
     })
-      .then((response) => response.json())
-      .then(PointsAdapterIn.parsePoint);
+      .then((response) => response.json());
+    // .then(PointsAdapterIn.parsePoint);
   }
 
   deletePoint(id) {
@@ -62,7 +62,17 @@ export default class API {
     });
   }
 
-  _load({url, method, body = null, headers = new Headers()}) {
+  /*   sync(points) {
+    return this._load({
+      url: `points/sync`,
+      method: Method.POST,
+      body: JSON.stringify(points.toRAW()),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then((response) => response.json());
+  }
+
+ */ _load({url, method, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})

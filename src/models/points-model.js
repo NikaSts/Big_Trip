@@ -25,6 +25,7 @@ export default class PointsModel {
   }
 
   setPoints(points) {
+    console.log(points);
     this._points = Array.from(points);
     this._callHandlers(this._dataChangeHandlers);
   }
