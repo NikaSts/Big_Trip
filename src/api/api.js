@@ -1,5 +1,4 @@
-import PointsInAdapter from './models/points-in-adapter';
-import {Method, Code} from './utils/consts';
+import {Method, Code} from '../utils/consts';
 
 
 export default class API {
@@ -13,8 +12,7 @@ export default class API {
       url: `points`,
       method: Method.GET,
     })
-      .then((response) => response.json())
-      .then(PointsInAdapter.parsePoints);
+      .then((response) => response.json());
   }
 
   getDestinations() {
@@ -33,17 +31,6 @@ export default class API {
       .then((response) => response.json());
   }
 
-  updatePoint(id, point) {
-    return this._load({
-      url: `points/${id}`,
-      method: Method.PUT,
-      body: JSON.stringify(point.toRAW()),
-      headers: new Headers({"Content-Type": `application/json`}),
-    })
-      .then((response) => response.json())
-      .then(PointsInAdapter.parsePoint);
-  }
-
   createPoint(point) {
     return this._load({
       url: `points`,
@@ -51,8 +38,17 @@ export default class API {
       body: JSON.stringify(point.toRAW()),
       headers: new Headers({"Content-Type": `application/json`}),
     })
-      .then((response) => response.json())
-      .then(PointsInAdapter.parsePoint);
+      .then((response) => response.json());
+  }
+
+  updatePoint(id, point) {
+    return this._load({
+      url: `points/${id}`,
+      method: Method.PUT,
+      body: JSON.stringify(point.toRAW()),
+      headers: new Headers({"Content-Type": `application/json`}),
+    })
+      .then((response) => response.json());
   }
 
   deletePoint(id) {
@@ -60,6 +56,16 @@ export default class API {
       url: `points/${id}`,
       method: Method.DELETE,
     });
+  }
+
+  sync(points) {
+    return this._load({
+      url: `points/sync`,
+      method: Method.POST,
+      body: JSON.stringify(points),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then((response) => response.json());
   }
 
   _load({url, method, body = null, headers = new Headers()}) {

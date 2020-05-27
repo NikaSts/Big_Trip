@@ -111,3 +111,15 @@ export const Code = {
   SUCCESS: 200,
   REDIRECT: 300,
 };
+
+const STORE_PREFIX = `bigtrip-localstorage`;
+const STORE_VER = `v1`;
+const DataName = {
+  POINTS: `points`,
+  OFFERS: `offers`,
+  DESTINATIONS: `destinations`,
+};
+
+export const STORE_POINTS_NAME = `${STORE_PREFIX}-${DataName.POINTS}-${STORE_VER}`;
+export const STORE_OFFERS_NAME = `${STORE_PREFIX}-${DataName.OFFERS}`;
+export const STORE_DESTINATIONS_NAME = `${STORE_PREFIX}-${DataName.DESTINATIONS}`;
