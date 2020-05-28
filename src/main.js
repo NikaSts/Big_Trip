@@ -15,8 +15,8 @@ import {END_POINT, AUTHORIZATION, STORE_POINTS_NAME, MenuControl} from './utils/
 
 const api = new API(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_POINTS_NAME, window.localStorage);
-const apiWithProvider = new Provider(api, store);
 const pointsModel = new PointsModel();
+const apiWithProvider = new Provider(api, store, pointsModel);
 
 const tripContainer = document.querySelector(`.trip-events`);
 const tripDetails = document.querySelector(`.trip-main`);
@@ -41,6 +41,7 @@ const renderUI = () => {
 
   pointsModel.setDataChangeHandler(() => {
     tripInfoComponent.rerender();
+    tripController.rerender();
   });
 
   menuComponent.setMenuControlsClickHandler((menuControl) => {

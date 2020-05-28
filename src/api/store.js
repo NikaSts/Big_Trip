@@ -46,10 +46,10 @@ export default class Store {
     );
   }
 
-  setItems(items) { // ---------------------- setPoints??
+  setPoints(points) {
     this._storage.setItem(
         this._storePointsKey,
-        JSON.stringify(items)
+        JSON.stringify(points)
     );
   }
 

@@ -23,6 +23,17 @@ const APP_DATA = [
   `/img/logo.png`
 ];
 
+const isValid = (response) => {
+  return response && response.status === CODE_SUCCESS && response.type === BASIC_TYPE;
+};
+
+const cacheResponse = (response, request) => {
+  const clonedResponse = response.clone();
+  caches.open(CACHE_NAME)
+        .then((cache) => cache.put(request, clonedResponse));
+  return response;
+};
+
 
 const onServiceWorkerInstall = (evt) => {
   evt.waitUntil(caches
@@ -39,17 +50,6 @@ const onServiceWorkerActivate = (evt) => {
                 .filter((key) => key !== null))
     )
   );
-};
-
-const isValid = (response) => {
-  return response && response.status === CODE_SUCCESS && response.type === BASIC_TYPE;
-};
-
-const cacheResponse = (response, request) => {
-  const clonedResponse = response.clone();
-  caches.open(CACHE_NAME)
-        .then((cache) => cache.put(request, clonedResponse));
-  return response;
 };
 
 const onServiceWorkerFetch = (evt) => {

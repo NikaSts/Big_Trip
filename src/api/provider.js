@@ -5,17 +5,18 @@ import {createStoreStructure, isOnline, getSyncedPoints} from '../utils/funcs';
 
 
 export default class Provider {
-  constructor(api, store) {
+  constructor(api, store, pointsModel) {
     this._api = api;
     this._store = store;
+    this._pointsModel = pointsModel;
   }
 
   getPoints() {
     if (isOnline()) {
       return this._api.getPoints()
         .then((points) => {
-          const items = createStoreStructure(points);
-          this._store.setItems(items);
+          const formattedPoints = createStoreStructure(points);
+          this._store.setPoints(formattedPoints);
           return points;
         })
         .then(PointsInAdapter.parsePoints);
@@ -91,11 +92,10 @@ export default class Provider {
           const createdPoints = response.created;
           const updatedPoints = getSyncedPoints(response.updated);
 
-          const items = createStoreStructure([...createdPoints, ...updatedPoints]);
-          this._store.setItems(items);
+          const points = createStoreStructure([...createdPoints, ...updatedPoints]);
+          this._store.setPoints(points);
 
-          // debugger;
-          const synchronizedPoints = PointsInAdapter.parsePoints(Object.values(items));
+          const synchronizedPoints = PointsInAdapter.parsePoints(Object.values(points));
           this._pointsModel.setPoints(synchronizedPoints);
         });
     }

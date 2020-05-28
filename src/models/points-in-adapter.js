@@ -15,7 +15,7 @@ export default class PointsInAdapter {
     return new PointsInAdapter(point);
   }
 
-  static parsePoints(point) {
-    return point.map(PointsInAdapter.parsePoint);
+  static parsePoints(points) {
+    return points.map(PointsInAdapter.parsePoint);
   }
 }
