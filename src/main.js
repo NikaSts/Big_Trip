@@ -41,7 +41,7 @@ const renderUI = () => {
 
   pointsModel.setDataChangeHandler(() => {
     tripInfoComponent.rerender();
-    tripController.rerender();
+    filterController.rerender();
   });
 
   menuComponent.setMenuControlsClickHandler((menuControl) => {
@@ -87,7 +87,11 @@ const init = () => {
 
   window.addEventListener(`online`, () => {
     document.title = document.title.replace(` [offline]`, ``);
-    apiWithProvider.sync();
+    apiWithProvider.sync()
+      .then((synchronizedPoints) => {
+        pointsModel.setPoints(synchronizedPoints);
+        tripController.rerender();
+      });
   });
 
   window.addEventListener(`offline`, () => {

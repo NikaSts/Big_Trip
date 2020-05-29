@@ -1,5 +1,5 @@
 import FilterComponent from "../components/filters";
-import {FILTERS, Filter} from "../utils/filters";
+import {FILTERS, Filter, getFiltredPoints} from "../utils/filters";
 import {renderComponent, removeComponent} from "../utils/render";
 
 
@@ -16,8 +16,16 @@ export default class FilterController {
 
   render() {
     const container = this._container;
+    const points = this._pointsModel.getPointsAll();
+    const filters = FILTERS.map((filterType) => {
+      return {
+        name: filterType,
+        isDisabled: getFiltredPoints(points, filterType).length < 1,
+        isChecked: filterType === this._activeFilterType,
+      };
+    });
 
-    this._filterComponent = new FilterComponent(FILTERS, this._activeFilterType);
+    this._filterComponent = new FilterComponent(filters);
     this._filterComponent.setFilterTypeChangeHandler(this._onFilterTypeChange);
     renderComponent(container, this._filterComponent);
   }
