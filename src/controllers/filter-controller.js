@@ -20,7 +20,7 @@ export default class FilterController {
     const filters = FILTERS.map((filterType) => {
       return {
         name: filterType,
-        isDisabled: getFiltredPoints(points, filterType).length < 1,
+        isDisabled: !getFiltredPoints(points, filterType).length,
         isChecked: filterType === this._activeFilterType,
       };
     });
