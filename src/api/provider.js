@@ -95,8 +95,7 @@ export default class Provider {
           const points = createStoreStructure([...createdPoints, ...updatedPoints]);
           this._store.setPoints(points);
 
-          const synchronizedPoints = PointsInAdapter.parsePoints(Object.values(points));
-          this._pointsModel.setPoints(synchronizedPoints);
+          return Promise.resolve(PointsInAdapter.parsePoints(Object.values(points)));
         });
     }
     return Promise.reject(new Error(`Sync data failed`));
