@@ -95,3 +95,20 @@ export const parseOffers = (offers) => {
     return parsedOffers;
   }, {});
 };
+
+export const getSyncedPoints = (points) => {
+  return points.filter(({success}) => success)
+      .map(({payload}) => payload.point);
+};
+
+export const createStoreStructure = (items) => {
+  return items.reduce((storeStructure, item) => {
+    return Object.assign({}, storeStructure, {
+      [item.id]: item,
+    });
+  }, {});
+};
+
+export const isOnline = () => {
+  return window.navigator.onLine;
+};

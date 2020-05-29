@@ -197,7 +197,6 @@ export default class EditPointComponent extends AbstractSmartComponent {
       const inputValue = evt.target.value;
       this._startDate = inputValue;
       this._endDate = this._endDate > this._startDate ? this._endDate : this._startDate;
-      this._updatePicker(this._endPicker, this._startDate);
     });
 
     FormElement.END_TIME_INPUT.addEventListener(`change`, (evt) => {
