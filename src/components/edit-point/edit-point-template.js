@@ -50,10 +50,10 @@ const createEditPointTemplate = (point, options = {}, state, offersByType, desti
           <label class="event__label  event__type-output" for="event-destination-1">
             ${capitalizedType} ${transferGroup ? `to` : `in`}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1" min="10" required>
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1" min="10" autocomplete="off" required>
           <datalist id="destination-list-1">
           ${cityName.map((city) =>
-      `<option value=${city}></option>`
+      `<option value="${city}"></option>`
     ).join(` `)}
           </datalist>
         </div>
