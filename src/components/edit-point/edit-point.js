@@ -31,8 +31,8 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._closeHandler = null;
     this._submitHandler = null;
     this._favoriteHandler = null;
-    this._startPicker = null;
-    this._endPicker = null;
+    this._startPickr = null;
+    this._endPickr = null;
 
     this._subscribeOnEvents();
   }
@@ -73,7 +73,8 @@ export default class EditPointComponent extends AbstractSmartComponent {
     this._type = point.type;
     this._startDate = point.startDate;
     this._endDate = point.endDate;
-    this._checkedOffers = point.offers;
+    this._checkedOffers = point.offers.map((offer) => Object.assign({}, offer));
+    this._offersByType = this._pointsModel.getOffersByType(this._type);
     this._destination = point.destination;
     this._basePrice = point.basePrice;
   }
@@ -114,32 +115,39 @@ export default class EditPointComponent extends AbstractSmartComponent {
 
     this.removeFlatpickr();
 
-    const picker = {
-      'altInput': true,
-      'allowInput': true,
-      'enableTime': true,
-      'time_24hr': true,
-      'altFormat': `d/m/y H:i`,
-      'dateFormat': `u`,
-    };
-
-    this._startPicker = flatpickr(startTimeInput, Object.assign({}, picker, {
+    this._startPickr = flatpickr(startTimeInput, Object.assign({}, this._setFlatpickr(), {
       defaultDate: this._startDate,
     }));
 
-    this._endPicker = flatpickr(endTimeInput, Object.assign({}, picker, {
+    this._endPickr = flatpickr(endTimeInput, Object.assign({}, this._setFlatpickr(), {
       defaultDate: this._endDate,
       minDate: this._startDate,
     }));
   }
 
   removeFlatpickr() {
-    if (this._startPicker || this._endPicker) {
-      this._startPicker.destroy();
-      this._endPicker.destroy();
-      this._startPicker = null;
-      this._endPicker = null;
+    if (this._startPickr || this._endPickr) {
+      this._startPickr.destroy();
+      this._endPickr.destroy();
+      this._startPickr = null;
+      this._endPickr = null;
     }
+  }
+
+  _setFlatpickr() {
+    return ({
+      'altInput': true,
+      'allowInput': true,
+      'enableTime': true,
+      'time_24hr': true,
+      'altFormat': `d/m/y H:i`,
+      'dateFormat': `u`,
+    });
+  }
+
+  _getFlatpickrUpdate(input, date) {
+    const defaultDate = (this._endDate > date) ? this._endDate : date;
+    return flatpickr(input, Object.assign({}, this._setFlatpickr(), {defaultDate, minDate: date}));
   }
 
   _subscribeOnEvents() {
@@ -160,6 +168,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
       }
       this._type = target.value;
       this._offersByType = this._pointsModel.getOffersByType(this._type);
+      this._checkedOffers = [];
       this.rerender();
     });
 
@@ -196,7 +205,7 @@ export default class EditPointComponent extends AbstractSmartComponent {
     FormElement.START_TIME_INPUT.addEventListener(`change`, (evt) => {
       const inputValue = evt.target.value;
       this._startDate = inputValue;
-      this._endDate = this._endDate > this._startDate ? this._endDate : this._startDate;
+      this._endPickr = this._getFlatpickrUpdate(FormElement.END_TIME_INPUT, inputValue);
     });
 
     FormElement.END_TIME_INPUT.addEventListener(`change`, (evt) => {
